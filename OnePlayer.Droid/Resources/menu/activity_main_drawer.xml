@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+  <group android:checkableBehavior="single">
+    <item
+      android:id="@+id/nav_home"
+      android:icon="@drawable/ic_menu_camera"
+      android:title="@string/home_page" />
+    <item
+      android:id="@+id/nav_artists"
+      android:icon="@drawable/ic_menu_gallery"
+      android:title="@string/artists_page" />
+    <item
+      android:id="@+id/nav_albums"
+      android:icon="@drawable/ic_menu_slideshow"
+      android:title="@string/albums_page" />
+    <item
+      android:id="@+id/nav_tracks"
+      android:icon="@drawable/ic_menu_manage"
+      android:title="@string/tracks_page" />
+    <item
+      android:id="@+id/nav_playlists"
+      android:icon="@drawable/ic_menu_manage"
+      android:title="@string/playlists_page" />
+  </group>
+
+  <item android:title="Communicate">
+    <menu>
+      <item
+        android:id="@+id/nav_share"
+        android:icon="@drawable/ic_menu_share"
+        android:title="Share" />
+      <item
+        android:id="@+id/nav_send"
+        android:icon="@drawable/ic_menu_send"
+        android:title="Send" />
+    </menu>
+  </item>
+
+</menu>
