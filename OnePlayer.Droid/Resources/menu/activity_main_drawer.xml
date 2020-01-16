@@ -3,40 +3,26 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:showIn="navigation_view">
 
-  <group android:checkableBehavior="single">
+  <group android:id="@+id/menu_group_top" android:checkableBehavior="single">
     <item
       android:id="@+id/nav_home"
       android:icon="@drawable/ic_menu_camera"
-      android:title="@string/home_page" />
+      android:title="@string/menu_item_home" />
     <item
-      android:id="@+id/nav_artists"
+      android:id="@+id/nav_library"
+      android:icon="@drawable/ic_menu_camera"
+      android:title="@string/menu_item_library" />
+    <item
+      android:id="@+id/nav_recent_plays"
       android:icon="@drawable/ic_menu_gallery"
-      android:title="@string/artists_page" />
-    <item
-      android:id="@+id/nav_albums"
-      android:icon="@drawable/ic_menu_slideshow"
-      android:title="@string/albums_page" />
-    <item
-      android:id="@+id/nav_tracks"
-      android:icon="@drawable/ic_menu_manage"
-      android:title="@string/tracks_page" />
-    <item
-      android:id="@+id/nav_playlists"
-      android:icon="@drawable/ic_menu_manage"
-      android:title="@string/playlists_page" />
+      android:title="@string/menu_item_recent_plays" />
   </group>
-
-  <item android:title="Communicate">
-    <menu>
-      <item
-        android:id="@+id/nav_share"
+  
+  <group android:id="@+id/menu_group_bottom"
+         android:checkableBehavior="single">
+    <item
+        android:id="@+id/nav_settings"
         android:icon="@drawable/ic_menu_share"
-        android:title="Share" />
-      <item
-        android:id="@+id/nav_send"
-        android:icon="@drawable/ic_menu_send"
-        android:title="Send" />
-    </menu>
-  </item>
-
+        android:title="@string/menu_item_settings" />
+  </group>
 </menu>

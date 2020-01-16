@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnePlayer.Droid", "OnePlayer.Droid\OnePlayer.Droid.csproj", "{4A5F1B3D-FD75-4937-A641-F93361F91BB2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnePlayer", "OnePlayer\OnePlayer.csproj", "{0A546AAF-A4B7-40BF-9C08-8E58B05DFA45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnePlayer.Tests", "OnePlayer.Tests\OnePlayer.Tests.csproj", "{3A74ED5E-E293-4F9E-8E8F-00D2271F277E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,6 +21,14 @@ Global
 		{4A5F1B3D-FD75-4937-A641-F93361F91BB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A5F1B3D-FD75-4937-A641-F93361F91BB2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A5F1B3D-FD75-4937-A641-F93361F91BB2}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0A546AAF-A4B7-40BF-9C08-8E58B05DFA45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A546AAF-A4B7-40BF-9C08-8E58B05DFA45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A546AAF-A4B7-40BF-9C08-8E58B05DFA45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A546AAF-A4B7-40BF-9C08-8E58B05DFA45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A74ED5E-E293-4F9E-8E8F-00D2271F277E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A74ED5E-E293-4F9E-8E8F-00D2271F277E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A74ED5E-E293-4F9E-8E8F-00D2271F277E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A74ED5E-E293-4F9E-8E8F-00D2271F277E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

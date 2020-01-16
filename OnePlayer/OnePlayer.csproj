@@ -1,0 +1,15 @@
+﻿ <Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>OnePlayer</RootNamespace>
+    <UserSecretsId>e4b4e46a-623b-4729-ac04-ab2fcb768617</UserSecretsId>
+    <AssemblyName>OnePlayer</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="sqlite-net-pcl" Version="1.6.292" />
+  </ItemGroup>
+
+</Project>

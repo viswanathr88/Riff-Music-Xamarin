@@ -1,0 +1,13 @@
+﻿
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  <!-- A RecyclerView with some commonly used attributes -->
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:text="Artists"/>
+</LinearLayout>

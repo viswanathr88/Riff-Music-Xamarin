@@ -1,6 +1,5 @@
-﻿using System;
-using Android;
-using Android.App;
+﻿using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Support.Design.Widget;
@@ -9,14 +8,16 @@ using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 
-namespace OnePlayer.Droid
+namespace OnePlayer.Droid.UI
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
+        private OnePlayer.Droid.Sync.OneDriveSyncServiceConnection syncServiceConnection = null;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
@@ -29,6 +30,34 @@ namespace OnePlayer.Droid
 
             NavigationView navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
             navigationView.SetNavigationItemSelectedListener(this);
+            navigationView.SetCheckedItem(Resource.Id.nav_library);
+            navigationView.Menu.PerformIdentifierAction(Resource.Id.nav_library, 0);
+        }
+
+        protected async override void OnStart()
+        {
+             base.OnStart();
+
+            if (this.syncServiceConnection == null)
+            {
+                this.syncServiceConnection = new Sync.OneDriveSyncServiceConnection();
+            }
+
+            var appContext = ApplicationContext as IOnePlayerApp;
+            bool loginExists = await appContext.LoginManager.LoginExistsAsync();
+
+            if (!this.syncServiceConnection.IsConnected)
+            {
+                if (loginExists)
+                {
+                    Intent serviceIntent = new Intent(this, typeof(OnePlayer.Droid.Sync.OneDriveSyncService));
+                    BindService(serviceIntent, this.syncServiceConnection, Bind.AutoCreate);
+                }
+            }
+            else if (!loginExists)
+            {
+                UnbindService(this.syncServiceConnection);
+            }
         }
 
         public override void OnBackPressed()
@@ -64,34 +93,35 @@ namespace OnePlayer.Droid
         public bool OnNavigationItemSelected(IMenuItem item)
         {
             int id = item.ItemId;
+            Android.Support.V4.App.Fragment fragment = null;
 
             if (id == Resource.Id.nav_home)
             {
-                // Handle the camera action
+                SetTitle(Resource.String.menu_item_home);
+                fragment = new Home.HomeFragment();
             }
-            else if (id == Resource.Id.nav_artists)
+            else if (id == Resource.Id.nav_library)
             {
-
+                SetTitle(Resource.String.menu_item_library);
+                fragment = new MusicLibrary.MusicLibraryFragment(this);
             }
-            else if (id == Resource.Id.nav_albums)
+            else if (id == Resource.Id.nav_recent_plays)
             {
-
+                SetTitle(Resource.String.menu_item_recent_plays);
+                fragment = new Home.RecentPlaysFragment();
             }
-            else if (id == Resource.Id.nav_tracks)
+            else if (id == Resource.Id.nav_settings)
             {
-
+                var intent = new Android.Content.Intent(this, typeof(Settings.SettingsActivity));
+                intent.SetFlags(Android.Content.ActivityFlags.NewTask);
+                StartActivity(intent);
             }
-            else if (id == Resource.Id.nav_playlists)
-            {
 
-            }
-            else if (id == Resource.Id.nav_share)
+            if (fragment != null)
             {
-
-            }
-            else if (id == Resource.Id.nav_send)
-            {
-
+                SupportFragmentManager.BeginTransaction()
+                    .Replace(Resource.Id.content_frame, fragment)
+                    .Commit();
             }
 
             DrawerLayout drawer = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);

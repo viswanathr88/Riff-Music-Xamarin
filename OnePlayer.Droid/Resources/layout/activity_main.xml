@@ -7,11 +7,35 @@
                                         android:layout_height="match_parent"
                                         android:fitsSystemWindows="true"
                                         tools:openDrawer="start">
+  
+  <!-- This LinearLayout represents the contents of the screen  -->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
 
-  <include
-    layout="@layout/app_bar_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    <!-- App bar and toolbar on top -->
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <!-- The main content view where fragments are loaded -->
+    <FrameLayout
+      android:id="@+id/content_frame"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
+  </LinearLayout>
 
   <android.support.design.widget.NavigationView
     android:id="@+id/nav_view"
