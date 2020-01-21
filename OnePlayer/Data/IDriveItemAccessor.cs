@@ -7,5 +7,6 @@
         DriveItem Add(DriveItem item);
 
         DriveItem Update(DriveItem item);
+        void Delete(string id);
     }
 }

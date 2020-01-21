@@ -9,7 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Folder Include="Data\Database\" />
+    <Folder Include="Data\Json\" />
   </ItemGroup>
 
 </Project>

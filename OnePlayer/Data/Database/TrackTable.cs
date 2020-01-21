@@ -1,6 +1,5 @@
 ﻿using OnePlayer.Data;
 using SQLite;
-using System;
 using System.Collections.Generic;
 
 namespace OnePlayer.Database
@@ -16,10 +15,6 @@ namespace OnePlayer.Database
 
         public Track Add(Track track)
         {
-            if (track.Id.HasValue)
-            {
-                throw new Exception("Id cannot have a value");
-            }
             this.connection.Insert(track);
             return track;
         }
@@ -36,10 +31,6 @@ namespace OnePlayer.Database
 
         public Track Update(Track track)
         {
-            if (!track.Id.HasValue)
-            {
-                throw new Exception("Id does have a value");
-            }
             this.connection.Update(track);
             return track;
         }

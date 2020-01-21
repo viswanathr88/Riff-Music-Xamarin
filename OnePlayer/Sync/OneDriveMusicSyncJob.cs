@@ -29,7 +29,7 @@ namespace OnePlayer.Sync
             this.webClient = webClient;
             this.library = library;
         }
-        public async Task StartAsync()
+        public async Task RunAsync()
         {
             if (IsSyncing)
             {
@@ -56,35 +56,45 @@ namespace OnePlayer.Sync
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
                 var response = await webClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-                response.EnsureSuccessStatusCode();
-                DeltaQueryResponse deltaQueryResponse = null;
-                using (var responseStream = await response.Content.ReadAsStreamAsync())
+                if (response.IsSuccessStatusCode)
                 {
-                    using (var streamReader = new System.IO.StreamReader(responseStream))
+                    DeltaQueryResponse deltaQueryResponse = null;
+                    using (var responseStream = await response.Content.ReadAsStreamAsync())
                     {
-                        using (var jsonReader = new JsonTextReader(streamReader))
+                        using (var streamReader = new System.IO.StreamReader(responseStream))
                         {
-                            var serializer = new JsonSerializer();
-                            deltaQueryResponse = serializer.Deserialize<DeltaQueryResponse>(jsonReader);
+                            using (var jsonReader = new JsonTextReader(streamReader))
+                            {
+                                var serializer = new JsonSerializer();
+                                deltaQueryResponse = serializer.Deserialize<DeltaQueryResponse>(jsonReader);
+                            }
                         }
                     }
-                }
 
-                if (deltaQueryResponse.value.Length > 0)
-                {
                     editor.AddRange(deltaQueryResponse.value);
+
+                    if (!string.IsNullOrEmpty(deltaQueryResponse.nextLink))
+                    {
+                        deltaUrl = deltaQueryResponse.nextLink;
+                    }
+                    else if (!string.IsNullOrEmpty(deltaQueryResponse.deltaLink))
+                    {
+                        deltaUrl = deltaQueryResponse.deltaLink;
+                        completed = true;
+                    }
+
+                    preferences.DeltaUrl = deltaUrl;
                 }
                 else
                 {
-                    completed = true;
+                    // Read the error message
+                    string errorMessage = await response.Content.ReadAsStringAsync();
+                    if (response.StatusCode == System.Net.HttpStatusCode.Gone)
+                    {
+                        // Look for the location header
+                        deltaUrl = response.Headers.Location.ToString();
+                    }
                 }
-
-                if (deltaUrl != deltaQueryResponse.deltaLink)
-                {
-                    deltaUrl = deltaQueryResponse.deltaLink;
-                    preferences.DeltaUrl = deltaQueryResponse.deltaLink;
-                }
-
             }
             while (!completed);
 

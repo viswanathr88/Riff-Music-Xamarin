@@ -6,7 +6,7 @@ namespace OnePlayer.Data
     public class Genre
     {
         [PrimaryKey, AutoIncrement]
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         [Indexed]
         public string NameLower { get; set; }
@@ -15,7 +15,7 @@ namespace OnePlayer.Data
     public class Artist
     {
         [PrimaryKey, AutoIncrement]
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         [Indexed]
         public string NameLower { get; set; }
@@ -24,7 +24,7 @@ namespace OnePlayer.Data
     public class Album
     {
         [PrimaryKey, AutoIncrement]
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         [Indexed]
         public string NameLower { get; set; }
@@ -39,7 +39,7 @@ namespace OnePlayer.Data
     public class Track
     {
         [PrimaryKey, AutoIncrement]
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         [Indexed]
         public string TitleLower { get; set; }
@@ -75,5 +75,12 @@ namespace OnePlayer.Data
         public DateTime LastModified { get; set; }
         public string DownloadUrl { get; set; }
         public int Size { get; set; }
+        [Indexed]
+        public DriveItemSource Source { get; set; }
     }
+
+    public enum DriveItemSource
+    {
+        OneDrive = 0
+    };
 }

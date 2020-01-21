@@ -58,14 +58,25 @@ namespace OnePlayer.Database
 
         public void Dispose()
         {
-            connection.Commit();
-            connection.Close();
+            Save(false);
+            connection?.Dispose();
         }
 
-        public void Save()
+        public void Save(bool beginNewTransaction = true)
         {
             connection.Commit();
-            connection.BeginTransaction();
+            if (beginNewTransaction)
+            {
+                connection.BeginTransaction();
+            }
+        }
+
+        public void RemoveOrphans()
+        {
+            connection.Query<int>($"DELETE FROM {nameof(Track)} WHERE {nameof(Track.Id)} NOT IN (SELECT DISTINCT {nameof(DriveItem.TrackId)} FROM {nameof(DriveItem)})");
+            connection.Query<int>($"DELETE FROM {nameof(Genre)} WHERE {nameof(Genre.Id)} NOT IN (SELECT DISTINCT {nameof(Track.GenreId)} FROM {nameof(Track)})");
+            connection.Query<int>($"DELETE FROM {nameof(Album)} WHERE {nameof(Album.Id)} NOT IN (SELECT DISTINCT {nameof(Track.AlbumId)} FROM {nameof(Track)})");
+            connection.Query<int>($"DELETE FROM {nameof(Artist)} WHERE {nameof(Artist.Id)} NOT IN (SELECT DISTINCT {nameof(Album.ArtistId)} FROM {nameof(Album)})");
         }
     }
 }

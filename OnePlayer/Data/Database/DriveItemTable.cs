@@ -19,6 +19,16 @@ namespace OnePlayer.Database
             return item;
         }
 
+        public void Delete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            connection.Delete<DriveItem>(id);
+        }
+
         public DriveItem Get(string id)
         {
             return connection.Table<DriveItem>().Where(item => item.Id == id).FirstOrDefault();

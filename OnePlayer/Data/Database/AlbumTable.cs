@@ -43,11 +43,6 @@ namespace OnePlayer.Database
 
         public Album Update(Album album)
         {
-            if (album.Id == null)
-            {
-                throw new Exception($"Album Id cannot be null for {nameof(Update)}");
-            }
-
             connection.Update(album);
             return album;
         }

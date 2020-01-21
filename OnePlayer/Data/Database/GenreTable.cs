@@ -15,12 +15,7 @@ namespace OnePlayer.Database
         }
 
         public Genre Add(Genre genre)
-        {
-            if (genre.Id.HasValue)
-            {
-                throw new Exception("Id already exists");
-            }
-            
+        {          
             connection.Insert(genre);
             return genre;
         }
@@ -43,11 +38,6 @@ namespace OnePlayer.Database
 
         public Genre Update(Genre genre)
         {
-            if (!genre.Id.HasValue)
-            {
-                throw new Exception("Id cannot be null");
-            }
-
             connection.Update(genre);
             return genre;
         }

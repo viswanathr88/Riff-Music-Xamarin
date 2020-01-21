@@ -18,7 +18,7 @@ namespace OnePlayer.Droid.Sync
         {
             var app = ApplicationContext as IOnePlayerApp;
             OneDriveMusicSyncJob job = new OneDriveMusicSyncJob(app.Preferences, app.LoginManager, app.WebClient, app.MusicLibrary);
-            await job.StartAsync();
+            await job.RunAsync();
         }
     }
 }

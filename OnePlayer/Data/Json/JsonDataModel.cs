@@ -147,6 +147,6 @@ namespace OnePlayer.Data.Json
 
     internal class Deleted
     {
-
+        public string State { get; set; }
     }
 }

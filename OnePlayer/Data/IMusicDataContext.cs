@@ -16,8 +16,10 @@ namespace OnePlayer.Data
 
         void Migrate();
 
-        void Save();
+        void Save(bool beginNewTransaction = true);
 
         void Rollback();
+
+        void RemoveOrphans();
     }
 }

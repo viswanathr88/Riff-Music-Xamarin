@@ -16,11 +16,6 @@ namespace OnePlayer.Database
 
         public Artist Add(Artist artist)
         {
-            if (artist.Id.HasValue)
-            {
-                throw new Exception("Id cannot have a value");
-            }
-
             this.connection.Insert(artist);
             return artist;
         }
@@ -43,11 +38,6 @@ namespace OnePlayer.Database
 
         public Artist Update(Artist artist)
         {
-            if (!artist.Id.HasValue)
-            {
-                throw new Exception("Id does not have a value");
-            }
-
             connection.Update(artist);
             return artist;
         }
