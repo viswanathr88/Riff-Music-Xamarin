@@ -2,6 +2,8 @@
 {
     public interface IDriveItemAccessor
     {
+        void EnsureCreated();
+
         DriveItem Get(string id);
 
         DriveItem Add(DriveItem item);

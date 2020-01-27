@@ -1,9 +1,8 @@
 ﻿using OnePlayer.Data;
 using SQLite;
-using System;
 using System.Collections.Generic;
 
-namespace OnePlayer.Database
+namespace OnePlayer.Data.Sqlite
 {
     sealed class GenreTable : IGenreAccessor
     {
@@ -18,6 +17,11 @@ namespace OnePlayer.Database
         {          
             connection.Insert(genre);
             return genre;
+        }
+
+        public void EnsureCreated()
+        {
+            connection.CreateTable<Genre>();
         }
 
         public Genre Find(string genreName)

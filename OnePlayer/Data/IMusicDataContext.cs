@@ -14,6 +14,10 @@ namespace OnePlayer.Data
 
         IDriveItemAccessor DriveItems { get; }
 
+        IIndexAccessor Index { get; }
+
+        IThumbnailInfoAccessor Thumbnails { get; }
+
         void Migrate();
 
         void Save(bool beginNewTransaction = true);

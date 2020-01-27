@@ -1,8 +1,7 @@
-﻿using OnePlayer.Data;
-using SQLite;
+﻿using SQLite;
 using System;
 
-namespace OnePlayer.Database
+namespace OnePlayer.Data.Sqlite
 {
     sealed class MusicDatabaseContext : IMusicDataContext
     {
@@ -26,6 +25,8 @@ namespace OnePlayer.Database
             Genres = new GenreTable(connection);
             Tracks = new TrackTable(connection);
             DriveItems = new DriveItemTable(connection);
+            Index = new IndexedTrackTable(connection);
+            Thumbnails = new ThumbnailInfoTable(connection);
         }
 
         public IAlbumAccessor Albums { get; }
@@ -38,16 +39,20 @@ namespace OnePlayer.Database
 
         public IDriveItemAccessor DriveItems { get; }
 
+        public IIndexAccessor Index { get; }
+
+        public IThumbnailInfoAccessor Thumbnails { get; }
+
         public void Migrate()
         {
-            using (var conn = new SQLiteConnection(dbPath, SQLiteOpenFlags.Create | SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.FullMutex))
-            {
-                connection.CreateTable<Genre>();
-                connection.CreateTable<Artist>();
-                connection.CreateTable<Album>();
-                connection.CreateTable<Track>();
-                connection.CreateTable<DriveItem>();
-            }
+            Genres.EnsureCreated();
+            Artists.EnsureCreated();
+            Albums.EnsureCreated();
+            Tracks.EnsureCreated();
+            DriveItems.EnsureCreated();
+            Index.EnsureCreated();
+            Thumbnails.EnsureCreated();
+            Save();
         }
 
         public void Rollback()
@@ -74,6 +79,8 @@ namespace OnePlayer.Database
         public void RemoveOrphans()
         {
             connection.Query<int>($"DELETE FROM {nameof(Track)} WHERE {nameof(Track.Id)} NOT IN (SELECT DISTINCT {nameof(DriveItem.TrackId)} FROM {nameof(DriveItem)})");
+            connection.Query<int>($"DELETE FROM {nameof(IndexedTrack)} WHERE docid NOT IN (SELECT DISTINCT {nameof(DriveItem.TrackId)} FROM {nameof(DriveItem)})");
+            connection.Query<int>($"DELETE FROM {nameof(ThumbnailInfo)} WHERE {nameof(ThumbnailInfo.Id)} NOT IN (SELECT DISTINCT {nameof(DriveItem.TrackId)} FROM {nameof(DriveItem)})");
             connection.Query<int>($"DELETE FROM {nameof(Genre)} WHERE {nameof(Genre.Id)} NOT IN (SELECT DISTINCT {nameof(Track.GenreId)} FROM {nameof(Track)})");
             connection.Query<int>($"DELETE FROM {nameof(Album)} WHERE {nameof(Album.Id)} NOT IN (SELECT DISTINCT {nameof(Track.AlbumId)} FROM {nameof(Track)})");
             connection.Query<int>($"DELETE FROM {nameof(Artist)} WHERE {nameof(Artist.Id)} NOT IN (SELECT DISTINCT {nameof(Album.ArtistId)} FROM {nameof(Album)})");

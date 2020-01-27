@@ -2,7 +2,7 @@
 using SQLite;
 using System;
 
-namespace OnePlayer.Database
+namespace OnePlayer.Data.Sqlite
 {
     sealed class DriveItemTable : IDriveItemAccessor
     {
@@ -27,6 +27,11 @@ namespace OnePlayer.Database
             }
 
             connection.Delete<DriveItem>(id);
+        }
+
+        public void EnsureCreated()
+        {
+            connection.CreateTable<DriveItem>();
         }
 
         public DriveItem Get(string id)

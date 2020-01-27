@@ -1,9 +1,7 @@
-﻿using OnePlayer.Data;
-using SQLite;
-using System;
+﻿using SQLite;
 using System.Collections.Generic;
 
-namespace OnePlayer.Database
+namespace OnePlayer.Data.Sqlite
 {
     sealed class AlbumTable : IAlbumAccessor
     {
@@ -18,6 +16,11 @@ namespace OnePlayer.Database
         {
             connection.Insert(album);
             return album;
+        }
+
+        public void EnsureCreated()
+        {
+            connection.CreateTable<Album>();
         }
 
         public Album FindByArtist(int artistId, string albumName)

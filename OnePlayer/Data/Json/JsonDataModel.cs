@@ -25,7 +25,7 @@ namespace OnePlayer.Data.Json
         public string id { get; set; }
         public DateTime lastModifiedDateTime { get; set; }
         public string name { get; set; }
-        public int size { get; set; }
+        public long size { get; set; }
         public string webUrl { get; set; }
         public Createdby createdBy { get; set; }
         public LastModifiedBy lastModifiedBy { get; set; }
@@ -39,6 +39,7 @@ namespace OnePlayer.Data.Json
         public Audio audio { get; set; }
         public File file { get; set; }
         public Deleted deleted { get; set; }
+        public Thumbnails Thumbnails { get; set; }
     }
 
     internal class Createdby
@@ -149,4 +150,28 @@ namespace OnePlayer.Data.Json
     {
         public string State { get; set; }
     }
+
+
+    public class ThumbnailResponse
+    {
+        [JsonProperty("@odata.context")]
+        public string DataContext { get; set; }
+        public Thumbnails[] Value { get; set; }
+    }
+
+    public class Thumbnails
+    {
+        public string Id { get; set; }
+        public Thumbnail Large { get; set; }
+        public Thumbnail Medium { get; set; }
+        public Thumbnail Small { get; set; }
+    }
+
+    public class Thumbnail
+    {
+        public int Height { get; set; }
+        public string Url { get; set; }
+        public int Width { get; set; }
+    }
+
 }

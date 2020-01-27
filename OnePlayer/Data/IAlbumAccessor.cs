@@ -4,6 +4,8 @@ namespace OnePlayer.Data
 {
     public interface IAlbumAccessor
     {
+        void EnsureCreated();
+
         Album Get(int id);
 
         IList<Album> GetAll();

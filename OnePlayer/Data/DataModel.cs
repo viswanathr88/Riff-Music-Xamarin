@@ -53,7 +53,6 @@ namespace OnePlayer.Data
         public string Artist { get; set; }
         [Indexed]
         public int Bitrate { get; set; }
-
         public int Duration { get; set; }
         [Indexed]
         public string Composers { get; set; }
@@ -77,6 +76,76 @@ namespace OnePlayer.Data
         public int Size { get; set; }
         [Indexed]
         public DriveItemSource Source { get; set; }
+    }
+
+    public class ThumbnailInfo
+    {
+        [PrimaryKey]
+        public int Id { get; set; }
+        [Indexed]
+        public string DriveItemId { get; set; }
+        public string SmallUrl { get; set; }
+        public string MediumUrl { get; set; }
+        public string LargeUrl { get; set; }
+        [Indexed]
+        public bool Cached { get; set; }
+        [Indexed]
+        public int AttemptCount { get; set; }
+    }
+
+    public class IndexedTrack
+    {
+        public int Id { get; set; }
+        public string ArtistName { get; set; }
+        public string AlbumName { get; set; }
+        public string GenreName { get; set; }
+        public string TrackName { get; set; }
+        public string TrackArtist { get; set; }
+    }
+
+    public class IndexedTrackWithOffset : IndexedTrack
+    {
+        public int ColumnIndex { get; set; }
+
+        public int ByteOffset { get; set; }
+    }
+
+    public class AlbumQueryItem
+    {
+        public string AlbumName { get; set; }
+
+        public string ArtistName { get; set; }
+
+        public int Rank { get; set; }
+    }
+
+    public class ArtistQueryItem
+    {
+        public string ArtistName { get; set; }
+
+        public int TrackCount { get; set; }
+
+        public int Rank { get; set; }
+    }
+
+    public class GenreQueryItem
+    {
+        public string GenreName { get; set; }
+
+        public int TrackCount { get; set; }
+
+        public int Rank { get; set; }
+    }
+
+    public class TrackQueryItem
+    {
+        public int Id { get; set; }
+        
+        public string TrackName { get; set; }
+
+        public string TrackArtist { get; set; }
+
+        public int Rank { get; set; }
     }
 
     public enum DriveItemSource

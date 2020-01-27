@@ -1,8 +1,7 @@
-﻿using OnePlayer.Data;
-using System;
+﻿using System;
 using System.IO;
 
-namespace OnePlayer.Database
+namespace OnePlayer.Data.Sqlite
 {
     sealed class MusicDatabaseContextFactory : IMusicDataContextFactory
     {

@@ -6,6 +6,8 @@ namespace OnePlayer.Data
 {
     public interface ITrackAccessor
     {
+        void EnsureCreated();
+
         Track Get(int id);
 
         IList<Track> GetAll();

@@ -4,6 +4,8 @@ namespace OnePlayer.Data
 {
     public interface IArtistAccessor
     {
+        void EnsureCreated();
+
         Artist Get(int id);
 
         Artist Find(string artistName);

@@ -7,10 +7,12 @@ using Android.Support.V4.View;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Views;
+using OnePlayer.Droid.UI.MusicLibrary;
 
 namespace OnePlayer.Droid.UI
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    //[MetaData("android.app.searchable", Resource = "@xml/searchable")]
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
         private OnePlayer.Droid.Sync.OneDriveSyncServiceConnection syncServiceConnection = null;
@@ -76,14 +78,17 @@ namespace OnePlayer.Droid.UI
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Menu.menu_main, menu);
-            return true;
+
+            return base.OnCreateOptionsMenu(menu);
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
             int id = item.ItemId;
-            if (id == Resource.Id.action_settings)
+            if (id == Resource.Id.menu_action_search)
             {
+                Intent intent = new Intent(this, typeof(SearchActivity));
+                StartActivity(intent);
                 return true;
             }
 

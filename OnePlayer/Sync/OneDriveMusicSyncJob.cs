@@ -2,6 +2,7 @@
 using OnePlayer.Authentication;
 using OnePlayer.Data;
 using OnePlayer.Data.Json;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace OnePlayer.Sync
     }
     public sealed class OneDriveMusicSyncJob
     {
-        private readonly string baseUrl = "https://graph.microsoft.com/v1.0/drive/special/music/delta";
+        private readonly string baseUrl = "https://graph.microsoft.com/v1.0/drive/special/music/delta?$expand=thumbnails";
         private SyncJobState state = SyncJobState.NotRunning;
         private readonly IPreferences preferences;
         private readonly LoginManager loginManager;
@@ -31,6 +32,10 @@ namespace OnePlayer.Sync
         }
         public async Task RunAsync()
         {
+            library.ItemAdded += Library_ItemAdded;
+            library.ItemRemoved += Library_ItemRemoved;
+            library.ItemModified += Library_ItemModified;
+
             if (IsSyncing)
             {
                 // We are already syncing.
@@ -99,6 +104,26 @@ namespace OnePlayer.Sync
             while (!completed);
 
             state = SyncJobState.NotRunning;
+
+            library.ItemAdded -= Library_ItemAdded;
+            library.ItemRemoved -= Library_ItemRemoved;
+            library.ItemModified -= Library_ItemModified;
+        }
+
+        private void Library_ItemModified(object sender, Data.DriveItem e)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void Library_ItemRemoved(object sender, Data.DriveItem e)
+        {
+            // TODO: Delete existing art file
+            throw new System.NotImplementedException();
+        }
+
+        private void Library_ItemAdded(object sender, Data.DriveItem e)
+        {
+            throw new System.NotImplementedException();
         }
 
         public bool IsSyncing => state == SyncJobState.Running;

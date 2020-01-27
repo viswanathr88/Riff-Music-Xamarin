@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="64dp"
+  android:padding="12dp">
+  <ImageView
+    android:id="@+id/search_item_art"
+    android:layout_width="32dp"
+    android:layout_height="32dp"
+    android:background="@color/cardview_dark_background"
+    android:layout_centerVertical="true"
+    />
+  
+  <RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_toRightOf="@+id/search_item_art"
+    android:paddingLeft="12dp">
+    <TextView
+      android:id="@+id/search_item_name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Loading..."
+      android:gravity="center_vertical"
+      android:textSize="16dp"
+      android:layout_marginLeft="6dp"
+      android:layout_marginRight="6dp"
+      android:textStyle="bold"
+      android:maxLines="1"
+      android:ellipsize="end"
+    />
+    <TextView
+      android:id="@+id/search_item_description"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Loading..."
+      android:gravity="center_vertical"
+      android:layout_marginLeft="6dp"
+      android:layout_marginRight="6dp"
+      android:layout_below="@+id/search_item_name"
+      android:textSize="12dp"
+      android:maxLines="1"
+      android:ellipsize="end"/>
+
+  </RelativeLayout>
+</RelativeLayout>

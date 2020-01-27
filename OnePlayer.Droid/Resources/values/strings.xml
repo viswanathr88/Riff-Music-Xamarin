@@ -38,4 +38,10 @@
   <string name="setting_clear_downloaded_music">Clear downloaded music</string>
   <string name="setting_clear_downloaded_music_summary">Remove all downloaded music from this device</string>
   <string name="setting_manage_downloaded_music">Manage downloaded music</string>
+  <string name="search_title">Search</string>
+  <string name="search_hint">Find music</string>
+  <string name="search_artist_description">Artist</string>
+  <string name="search_genre_description">Genre</string>
+  <string name="search_album_description">Album by %1$s</string>
+  <string name="search_track_description">Track by %1$s</string>
 </resources>

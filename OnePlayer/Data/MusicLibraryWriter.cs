@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace OnePlayer.Data
 {
@@ -12,6 +11,10 @@ namespace OnePlayer.Data
         {
             this.dataContextFactory = dataContextFactory;
         }
+
+        public event EventHandler<DriveItem> ItemAdded;
+        public event EventHandler<DriveItem> ItemRemoved;
+        public event EventHandler<DriveItem> ItemModified;
 
         public void AddRange(IEnumerable<Json.DriveItem> items)
         {
@@ -34,9 +37,10 @@ namespace OnePlayer.Data
                         context.RemoveOrphans();
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     context.Rollback();
+                    throw;
                 }
             }
         }
@@ -48,21 +52,20 @@ namespace OnePlayer.Data
             if (item.deleted != null)
             {
                 context.DriveItems.Delete(item.id);
+                ItemRemoved?.Invoke(this, driveItem);
                 return;
             }
 
             Track track = (driveItem != null) ? context.Tracks.Get(driveItem.TrackId) : null;
+            IndexedTrack indexedTrack = (track != null) ? context.Index.Get(track.Id) : null;
+            ThumbnailInfo thumbnailInfo = (track != null) ? context.Thumbnails.Get(track.Id) : null;
             Artist artist = context.Artists.Find(item.audio.albumArtist);
             Album album = artist != null ? context.Albums.FindByArtist(artist.Id, item.audio.album) : null;
             Genre genre = context.Genres.Find(item.audio.genre);
 
             // If we already have a genre, do nothing. If not create a new one
             bool isGenreNew = (genre == null);
-            genre = genre ?? new Genre()
-            {
-                Name = item.audio.genre,
-                NameLower = item.audio.genre.ToLower()
-            };
+            genre = genre ?? new Genre() { Name = item.audio.genre, NameLower = item.audio.genre.ToLower() };
             if (isGenreNew)
             {
                 context.Genres.Add(genre);
@@ -70,11 +73,7 @@ namespace OnePlayer.Data
 
             // If we already have an artist, do nothing. If not create a new one
             bool isArtistNew = (artist == null);
-            artist = artist ?? new Artist()
-            {
-                Name = item.audio.albumArtist,
-                NameLower = item.audio.albumArtist.ToLower()
-            };
+            artist = artist ?? new Artist() { Name = item.audio.albumArtist, NameLower = item.audio.albumArtist.ToLower() };
             if (isArtistNew)
             {
                 context.Artists.Add(artist);
@@ -82,8 +81,7 @@ namespace OnePlayer.Data
 
             // If we already have an album, do nothing. If not create a new one
             bool isAlbumNew = (album == null);
-            album = album ?? new Album()
-            {
+            album = album ?? new Album() { 
                 Name = item.audio.album,
                 NameLower = item.audio.album.ToLower(),
                 ArtistId = artist.Id
@@ -108,6 +106,29 @@ namespace OnePlayer.Data
             track.AlbumId = album.Id;
             _ = isTrackNew ? context.Tracks.Add(track) : context.Tracks.Update(track);
 
+            // Replicate whatever changes had to be done to the Track to IndexedTrack
+            bool isIndexedTrackNew = (indexedTrack == null);
+            indexedTrack = indexedTrack ?? new IndexedTrack();
+            indexedTrack.Id = track.Id;
+            indexedTrack.AlbumName = album.Name;
+            indexedTrack.ArtistName = artist.Name;
+            indexedTrack.GenreName = genre.Name;
+            indexedTrack.TrackArtist = track.Artist;
+            indexedTrack.TrackName = track.Title;
+            _ = isIndexedTrackNew ? context.Index.Add(indexedTrack) : context.Index.Update(indexedTrack);
+
+            // Add or update thumbnail
+            bool isThumbnailInfoNew = (thumbnailInfo == null);
+            thumbnailInfo = thumbnailInfo ?? new ThumbnailInfo();
+            thumbnailInfo.Id = track.Id;
+            thumbnailInfo.DriveItemId = item.id;
+            thumbnailInfo.AttemptCount = 0;
+            thumbnailInfo.Cached = false;
+            thumbnailInfo.SmallUrl = item.Thumbnails?.Small?.Url;
+            thumbnailInfo.MediumUrl = item.Thumbnails?.Medium?.Url;
+            thumbnailInfo.LargeUrl = item.Thumbnails?.Large?.Url;
+            _ = isThumbnailInfoNew ? context.Thumbnails.Add(thumbnailInfo) : context.Thumbnails.Update(thumbnailInfo);
+
             // If we have a driveItem already, update its properties. If not create a new one
             bool isDriveItemNew = (driveItem == null);
             driveItem = driveItem ?? new DriveItem();
@@ -117,10 +138,19 @@ namespace OnePlayer.Data
             driveItem.AddedDate = item.createdDateTime;
             driveItem.LastModified = item.lastModifiedDateTime;
             driveItem.DownloadUrl = item.DownloadUrl;
-            driveItem.Size = item.size;
+            driveItem.Size = (int)item.size;
             driveItem.TrackId = track.Id;
             driveItem.Source = DriveItemSource.OneDrive;
-            _ = isDriveItemNew ? context.DriveItems.Add(driveItem) : context.DriveItems.Update(driveItem);
+            if (isDriveItemNew)
+            {
+                context.DriveItems.Add(driveItem);
+                ItemAdded?.Invoke(this, driveItem);
+            }
+            else
+            {
+                context.DriveItems.Update(driveItem);
+                ItemModified?.Invoke(this, driveItem);
+            }
         } 
     }
 }

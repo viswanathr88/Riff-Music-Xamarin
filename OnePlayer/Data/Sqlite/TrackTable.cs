@@ -1,8 +1,7 @@
-﻿using OnePlayer.Data;
-using SQLite;
+﻿using SQLite;
 using System.Collections.Generic;
 
-namespace OnePlayer.Database
+namespace OnePlayer.Data.Sqlite
 {
     sealed class TrackTable : ITrackAccessor
     {
@@ -17,6 +16,11 @@ namespace OnePlayer.Database
         {
             this.connection.Insert(track);
             return track;
+        }
+
+        public void EnsureCreated()
+        {
+            connection.CreateTable<Track>();
         }
 
         public Track Get(int id)

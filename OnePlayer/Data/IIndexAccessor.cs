@@ -1,0 +1,28 @@
+﻿using System.Collections.Generic;
+
+namespace OnePlayer.Data
+{
+    public interface IIndexAccessor
+    {
+        void EnsureCreated();
+
+        IndexedTrack Get(int id);
+
+        IndexedTrack Add(IndexedTrack track);
+
+        IndexedTrack Update(IndexedTrack track);
+
+        IList<IndexedTrackWithOffset> Search(string term);
+
+        IList<AlbumQueryItem> FindMatchingAlbums(string term, int? maxCount);
+
+        IList<ArtistQueryItem> FindMatchingArtists(string term, int? maxCount);
+
+        IList<GenreQueryItem> FindMatchingGenres(string term, int? maxCount);
+        
+        IList<TrackQueryItem> FindMatchingTracks(string term, int? maxCount);
+
+        IList<TrackQueryItem> FindMatchingTracksWithArtists(string term, int? maxCount);
+
+    }
+}
