@@ -3,12 +3,12 @@ using System;
 
 namespace OnePlayer.Data.Sqlite
 {
-    sealed class MusicDatabaseContext : IMusicDataContext
+    sealed class MusicDb : IMusicDataAccessor
     {
         private readonly SQLiteConnection connection;
         private readonly string dbPath;
 
-        public MusicDatabaseContext(string dbPath)
+        public MusicDb(string dbPath)
         {
             if (string.IsNullOrEmpty(dbPath))
             {

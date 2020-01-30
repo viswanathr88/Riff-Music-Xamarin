@@ -2,7 +2,8 @@
 using OnePlayer.Authentication;
 using OnePlayer.Data;
 using OnePlayer.Data.Json;
-using System.Collections.Generic;
+using System;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -76,7 +77,7 @@ namespace OnePlayer.Sync
                         }
                     }
 
-                    editor.AddRange(deltaQueryResponse.value);
+                    editor.Add(deltaQueryResponse.value);
 
                     if (!string.IsNullOrEmpty(deltaQueryResponse.nextLink))
                     {
@@ -89,6 +90,9 @@ namespace OnePlayer.Sync
                     }
 
                     preferences.DeltaUrl = deltaUrl;
+
+                    // Download thumbnails
+                    await editor.DownloadThumbnailsAsync();
                 }
                 else
                 {
@@ -112,18 +116,14 @@ namespace OnePlayer.Sync
 
         private void Library_ItemModified(object sender, Data.DriveItem e)
         {
-            throw new System.NotImplementedException();
         }
 
         private void Library_ItemRemoved(object sender, Data.DriveItem e)
         {
-            // TODO: Delete existing art file
-            throw new System.NotImplementedException();
         }
 
         private void Library_ItemAdded(object sender, Data.DriveItem e)
         {
-            throw new System.NotImplementedException();
         }
 
         public bool IsSyncing => state == SyncJobState.Running;

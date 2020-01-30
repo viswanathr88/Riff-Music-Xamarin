@@ -34,7 +34,7 @@ namespace OnePlayer.Data.Sqlite
             return this.connection.Table<ThumbnailInfo>().ToList();
         }
 
-        public IList<ThumbnailInfo> GetUncached(int? limit)
+        public IList<ThumbnailInfo> GetUncached()
         {
             return this.connection.Table<ThumbnailInfo>().Where(info => !info.Cached).ToList();
         }

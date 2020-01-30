@@ -1,5 +1,4 @@
-﻿using OnePlayer.Data;
-using SQLite;
+﻿using SQLite;
 using System.Collections.Generic;
 
 namespace OnePlayer.Data.Sqlite

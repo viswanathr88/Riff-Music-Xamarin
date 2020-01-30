@@ -2,7 +2,7 @@
 
 namespace OnePlayer.Data
 {
-    public interface IMusicDataContext : IDisposable
+    public interface IMusicDataAccessor : IDisposable
     {
         IAlbumAccessor Albums { get; }
 

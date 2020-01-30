@@ -39,7 +39,7 @@ namespace OnePlayer.Data.Json
         public Audio audio { get; set; }
         public File file { get; set; }
         public Deleted deleted { get; set; }
-        public Thumbnails Thumbnails { get; set; }
+        public Thumbnails[] Thumbnails { get; set; }
     }
 
     internal class Createdby

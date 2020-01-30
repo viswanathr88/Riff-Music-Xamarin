@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace OnePlayer.Data
 {
     public sealed class MusicLibrary : IDisposable
     {
-        private readonly IMusicDataContext dataContext;
+        private readonly IMusicDataAccessor dataContext;
         private readonly MusicLibraryWriter writer;
 
-        public MusicLibrary() : this(new Sqlite.MusicDatabaseContextFactory())
+        public MusicLibrary(HttpClient httpClient) : this(new MusicDataStore(), httpClient)
         {
         }
 
-        public MusicLibrary(IMusicDataContextFactory dataContextFactory)
+        public MusicLibrary(IMusicDataStore dataContextFactory, HttpClient httpClient)
         {
             _ = dataContextFactory ?? throw new ArgumentNullException(nameof(dataContextFactory));
             
-            writer = new MusicLibraryWriter(dataContextFactory);
+            writer = new MusicLibraryWriter(dataContextFactory, httpClient);
             dataContext = dataContextFactory.Create();
             dataContext.Migrate();
         }

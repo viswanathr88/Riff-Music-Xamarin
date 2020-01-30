@@ -9,8 +9,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Database\" />
-    <Folder Include="Data\Json\" />
+    <Folder Include="Data\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnePlayer\OnePlayer.csproj" />
   </ItemGroup>
 
 </Project>

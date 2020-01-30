@@ -1,51 +1,106 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace OnePlayer.Data
 {
-    internal sealed class MusicLibraryWriter
+    internal sealed class MusicLibraryWriter : IDisposable
     {
-        private readonly IMusicDataContextFactory dataContextFactory;
+        private readonly IMusicDataAccessor dataContext;
+        private readonly IThumbnailCache thumbnailCache;
+        private readonly HttpClient webClient;
 
-        public MusicLibraryWriter(IMusicDataContextFactory dataContextFactory)
+        public MusicLibraryWriter(IMusicDataStore musicDataStore, HttpClient webClient)
         {
-            this.dataContextFactory = dataContextFactory;
+            dataContext = musicDataStore.Create();
+            this.webClient = webClient ?? throw new ArgumentNullException(nameof(webClient));
+            thumbnailCache = musicDataStore.Thumbnails ?? throw new ArgumentNullException(nameof(thumbnailCache));
         }
 
         public event EventHandler<DriveItem> ItemAdded;
         public event EventHandler<DriveItem> ItemRemoved;
         public event EventHandler<DriveItem> ItemModified;
 
-        public void AddRange(IEnumerable<Json.DriveItem> items)
+        public void Add(IEnumerable<Data.Json.DriveItem> items)
         {
-            using (var context = dataContextFactory.Create())
+            try
             {
-                try
+                foreach (var item in items)
                 {
-                    bool isEmpty = true;
-                    foreach (var item in items)
+                    if (item.audio != null)
                     {
-                        isEmpty = false;
-                        if (item.audio != null)
-                        {
-                            ProcessAndSaveItem(item, context);
-                        }
+                        ProcessAndSaveItem(item, dataContext);
                     }
+                }
 
-                    if (!isEmpty)
-                    {
-                        context.RemoveOrphans();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    context.Rollback();
-                    throw;
-                }
+                dataContext.RemoveOrphans();
+                dataContext.Save();
+            }
+            catch (Exception)
+            {
+                dataContext.Rollback();
+                throw;
             }
         }
 
-        private void ProcessAndSaveItem(Json.DriveItem item, IMusicDataContext context)
+        public async Task DownloadThumbnailsAsync()
+        {
+            // Get all thumbnails that have not been cached
+            var thumbnails = dataContext.Thumbnails.GetUncached();
+
+            // Download and save the thumbnails
+            await thumbnails.ForEachAsync(DownloadAndCacheThumbnailAsync);
+        }
+
+        public void Dispose()
+        {
+            dataContext?.Dispose();
+        }
+
+        private async Task DownloadAndCacheThumbnailAsync(ThumbnailInfo info)
+        {
+            try
+            {
+                // Download the small thumbnail
+                if (!string.IsNullOrEmpty(info.SmallUrl))
+                {
+                    using (HttpResponseMessage message = await webClient.GetAsync(info.SmallUrl, HttpCompletionOption.ResponseHeadersRead))
+                    {
+                        using (var stream = await message.Content.ReadAsStreamAsync())
+                        {
+                            await thumbnailCache.SaveAsync(info.Id, stream, ThumbnailSize.Small);
+                        }
+                    }
+                }
+
+                // Download the medium thumbnail
+                if (!string.IsNullOrEmpty(info.MediumUrl))
+                {
+                    using (HttpResponseMessage message = await webClient.GetAsync(info.MediumUrl, HttpCompletionOption.ResponseHeadersRead))
+                    {
+                        using (var stream = await message.Content.ReadAsStreamAsync())
+                        {
+                            await thumbnailCache.SaveAsync(info.Id, stream, ThumbnailSize.Medium);
+                        }
+                    }
+                }
+
+                info.Cached = true;
+            }
+            catch (Exception)
+            {
+                info.AttemptCount++;
+            }
+            finally
+            {
+                dataContext.Thumbnails.Update(info);
+                dataContext.Save();
+            }
+        }
+
+        private void ProcessAndSaveItem(Data.Json.DriveItem item, IMusicDataAccessor context)
         {
             DriveItem driveItem = context.DriveItems.Get(item.id);
 
@@ -123,10 +178,10 @@ namespace OnePlayer.Data
             thumbnailInfo.Id = track.Id;
             thumbnailInfo.DriveItemId = item.id;
             thumbnailInfo.AttemptCount = 0;
-            thumbnailInfo.Cached = false;
-            thumbnailInfo.SmallUrl = item.Thumbnails?.Small?.Url;
-            thumbnailInfo.MediumUrl = item.Thumbnails?.Medium?.Url;
-            thumbnailInfo.LargeUrl = item.Thumbnails?.Large?.Url;
+            thumbnailInfo.SmallUrl = item.Thumbnails?.FirstOrDefault()?.Small?.Url;
+            thumbnailInfo.MediumUrl = item.Thumbnails?.FirstOrDefault()?.Medium?.Url;
+            thumbnailInfo.LargeUrl = item.Thumbnails?.FirstOrDefault()?.Large?.Url;
+            thumbnailInfo.Cached = string.IsNullOrEmpty(thumbnailInfo.SmallUrl) && string.IsNullOrEmpty(thumbnailInfo.MediumUrl) ? true : false;
             _ = isThumbnailInfoNew ? context.Thumbnails.Add(thumbnailInfo) : context.Thumbnails.Update(thumbnailInfo);
 
             // If we have a driveItem already, update its properties. If not create a new one

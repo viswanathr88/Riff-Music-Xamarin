@@ -14,6 +14,6 @@ namespace OnePlayer.Data
 
         IList<ThumbnailInfo> GetAll();
 
-        IList<ThumbnailInfo> GetUncached(int? limit);
+        IList<ThumbnailInfo> GetUncached();
     }
 }

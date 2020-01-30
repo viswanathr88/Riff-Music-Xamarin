@@ -76,7 +76,7 @@ namespace OnePlayer.Droid
             {
                 if (musicLibrary == null)
                 {
-                    musicLibrary = new MusicLibrary();
+                    musicLibrary = new MusicLibrary(WebClient);
                 }
 
                 return musicLibrary;
