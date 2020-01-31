@@ -84,6 +84,8 @@ namespace OnePlayer.Data
         public int Id { get; set; }
         [Indexed]
         public string DriveItemId { get; set; }
+        [Indexed]
+        public int AlbumId { get; set; }
         public string SmallUrl { get; set; }
         public string MediumUrl { get; set; }
         public string LargeUrl { get; set; }
@@ -98,9 +100,41 @@ namespace OnePlayer.Data
         public int Id { get; set; }
         public string ArtistName { get; set; }
         public string AlbumName { get; set; }
+        public string ArtistId { get; set; }
+        public string AlbumId { get; set; }
         public string GenreName { get; set; }
+        public string GenreId { get; set; }
         public string TrackName { get; set; }
         public string TrackArtist { get; set; }
+
+        public int GetAlbumId()
+        {
+            return Convert.ToInt32(AlbumId);
+        }
+
+        public void SetAlbumId(int id)
+        {
+            AlbumId = id.ToString();
+        }
+
+        public int GetArtistId()
+        {
+            return Convert.ToInt32(ArtistId);
+        }
+
+        public void SetArtistId(int id)
+        {
+            ArtistId = id.ToString();
+        }
+        public int GetGenreId()
+        {
+            return Convert.ToInt32(GenreId);
+        }
+        
+        public void SetGenreId(int id)
+        {
+            GenreId = id.ToString();
+        }
     }
 
     public class IndexedTrackWithOffset : IndexedTrack
@@ -112,28 +146,25 @@ namespace OnePlayer.Data
 
     public class AlbumQueryItem
     {
+        public int Id { get; set; }
         public string AlbumName { get; set; }
-
         public string ArtistName { get; set; }
-
         public int Rank { get; set; }
     }
 
     public class ArtistQueryItem
     {
+        public int Id { get; set; }
         public string ArtistName { get; set; }
-
         public int TrackCount { get; set; }
-
         public int Rank { get; set; }
     }
 
     public class GenreQueryItem
     {
+        public int Id { get; set; }
         public string GenreName { get; set; }
-
         public int TrackCount { get; set; }
-
         public int Rank { get; set; }
     }
 

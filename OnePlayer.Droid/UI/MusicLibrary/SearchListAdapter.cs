@@ -30,15 +30,27 @@ namespace OnePlayer.Droid.UI.MusicLibrary
 
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
-            View view = LayoutInflater.From(activity).Inflate(itemLayoutId, null);
+            var app = activity.ApplicationContext as IOnePlayerApp;
+            bool artAvailable = false;
+
+            View view = convertView ?? LayoutInflater.From(activity).Inflate(itemLayoutId, null);
             var name = view.FindViewById<TextView>(Resource.Id.search_item_name);
             name.Text = searchItems[position].Name;
-
+            
+            var image = view.FindViewById<ImageView>(Resource.Id.search_item_art);
             var description = view.FindViewById<TextView>(Resource.Id.search_item_description);
             
             if (searchItems[position].Type == SearchItemType.Album)
             {
                 description.Text = activity.Resources.GetString(Resource.String.search_album_description, searchItems[position].Description);
+                if (app.MusicLibrary.AlbumArts.Exists(searchItems[position].Id, ThumbnailSize.Small))
+                {
+                    using (var stream = app.MusicLibrary.AlbumArts.Get(searchItems[position].Id, ThumbnailSize.Small))
+                    {
+                        image.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
+                        artAvailable = true;
+                    }
+                }
             }
             else if (searchItems[position].Type == SearchItemType.Artist)
             {
@@ -51,6 +63,20 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             else if (searchItems[position].Type == SearchItemType.Track || searchItems[position].Type == SearchItemType.TrackArtist)
             {
                 description.Text = activity.Resources.GetString(Resource.String.search_track_description, searchItems[position].Description);
+
+                if (app.MusicLibrary.TrackArts.Exists(searchItems[position].Id, ThumbnailSize.Small))
+                {
+                    using (var stream = app.MusicLibrary.TrackArts.Get(searchItems[position].Id, ThumbnailSize.Small))
+                    {
+                        image.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
+                        artAvailable = true;
+                    }
+                }
+            }
+
+            if (!artAvailable)
+            {
+                image.SetImageDrawable(null);
             }
 
             return view;

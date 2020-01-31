@@ -8,15 +8,15 @@ namespace OnePlayer.Data
 {
     internal sealed class MusicLibraryWriter : IDisposable
     {
+        private readonly IMusicDataStore store;
         private readonly IMusicDataAccessor dataContext;
-        private readonly IThumbnailCache thumbnailCache;
         private readonly HttpClient webClient;
 
         public MusicLibraryWriter(IMusicDataStore musicDataStore, HttpClient webClient)
         {
+            store = musicDataStore ?? throw new ArgumentNullException(nameof(musicDataStore));
             dataContext = musicDataStore.Create();
             this.webClient = webClient ?? throw new ArgumentNullException(nameof(webClient));
-            thumbnailCache = musicDataStore.Thumbnails ?? throw new ArgumentNullException(nameof(thumbnailCache));
         }
 
         public event EventHandler<DriveItem> ItemAdded;
@@ -70,7 +70,12 @@ namespace OnePlayer.Data
                     {
                         using (var stream = await message.Content.ReadAsStreamAsync())
                         {
-                            await thumbnailCache.SaveAsync(info.Id, stream, ThumbnailSize.Small);
+                            await store.TrackThumbnails.SaveAsync(info.Id, stream, ThumbnailSize.Small);
+
+                            using (var trackThumbnailStream = store.TrackThumbnails.Get(info.Id, ThumbnailSize.Small))
+                            {
+                                await store.AlbumThumbnails.SaveAsync(info.AlbumId, trackThumbnailStream, ThumbnailSize.Small);
+                            }
                         }
                     }
                 }
@@ -82,7 +87,12 @@ namespace OnePlayer.Data
                     {
                         using (var stream = await message.Content.ReadAsStreamAsync())
                         {
-                            await thumbnailCache.SaveAsync(info.Id, stream, ThumbnailSize.Medium);
+                            await store.TrackThumbnails.SaveAsync(info.Id, stream, ThumbnailSize.Medium);
+
+                            using (var trackThumbnailStream = store.TrackThumbnails.Get(info.Id, ThumbnailSize.Medium))
+                            {
+                                await store.AlbumThumbnails.SaveAsync(info.AlbumId, trackThumbnailStream, ThumbnailSize.Medium);
+                            }
                         }
                     }
                 }
@@ -92,6 +102,7 @@ namespace OnePlayer.Data
             catch (Exception)
             {
                 info.AttemptCount++;
+                info.Cached = false;
             }
             finally
             {
@@ -166,8 +177,11 @@ namespace OnePlayer.Data
             indexedTrack = indexedTrack ?? new IndexedTrack();
             indexedTrack.Id = track.Id;
             indexedTrack.AlbumName = album.Name;
+            indexedTrack.SetAlbumId(album.Id);
             indexedTrack.ArtistName = artist.Name;
+            indexedTrack.SetArtistId(artist.Id);
             indexedTrack.GenreName = genre.Name;
+            indexedTrack.SetGenreId(genre.Id);
             indexedTrack.TrackArtist = track.Artist;
             indexedTrack.TrackName = track.Title;
             _ = isIndexedTrackNew ? context.Index.Add(indexedTrack) : context.Index.Update(indexedTrack);
@@ -177,6 +191,7 @@ namespace OnePlayer.Data
             thumbnailInfo = thumbnailInfo ?? new ThumbnailInfo();
             thumbnailInfo.Id = track.Id;
             thumbnailInfo.DriveItemId = item.id;
+            thumbnailInfo.AlbumId = album.Id;
             thumbnailInfo.AttemptCount = 0;
             thumbnailInfo.SmallUrl = item.Thumbnails?.FirstOrDefault()?.Small?.Url;
             thumbnailInfo.MediumUrl = item.Thumbnails?.FirstOrDefault()?.Medium?.Url;

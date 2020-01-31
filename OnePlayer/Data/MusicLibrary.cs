@@ -6,6 +6,7 @@ namespace OnePlayer.Data
 {
     public sealed class MusicLibrary : IDisposable
     {
+        private readonly IMusicDataStore store;
         private readonly IMusicDataAccessor dataContext;
         private readonly MusicLibraryWriter writer;
 
@@ -13,14 +14,18 @@ namespace OnePlayer.Data
         {
         }
 
-        public MusicLibrary(IMusicDataStore dataContextFactory, HttpClient httpClient)
+        public MusicLibrary(IMusicDataStore dataStore, HttpClient httpClient)
         {
-            _ = dataContextFactory ?? throw new ArgumentNullException(nameof(dataContextFactory));
+            store = dataStore ?? throw new ArgumentNullException(nameof(dataStore));
             
-            writer = new MusicLibraryWriter(dataContextFactory, httpClient);
-            dataContext = dataContextFactory.Create();
+            writer = new MusicLibraryWriter(dataStore, httpClient);
+            dataContext = dataStore.Create();
             dataContext.Migrate();
         }
+
+        public IThumbnailCache AlbumArts => store.AlbumThumbnails;
+
+        public IThumbnailCache TrackArts => store.TrackThumbnails;
 
         public event EventHandler<DriveItem> ItemAdded
         {
@@ -44,23 +49,23 @@ namespace OnePlayer.Data
         {
             foreach (var artist in dataContext.Index.FindMatchingArtists(query.Term, query.MaxArtistCount))
             {
-                results.Add(new SearchItem { Type = SearchItemType.Artist, Name = artist.ArtistName, Description = artist.TrackCount.ToString(), Rank = artist.Rank });
+                results.Add(new SearchItem { Id = artist.Id, Type = SearchItemType.Artist, Name = artist.ArtistName, Description = artist.TrackCount.ToString(), Rank = artist.Rank });
             }
 
             foreach (var genre in dataContext.Index.FindMatchingGenres(query.Term, query.MaxGenreCount))
             {
-                results.Add(new SearchItem { Type = SearchItemType.Genre, Name = genre.GenreName, Description = genre.TrackCount.ToString(), Rank = genre.Rank });
+                results.Add(new SearchItem { Id = genre.Id, Type = SearchItemType.Genre, Name = genre.GenreName, Description = genre.TrackCount.ToString(), Rank = genre.Rank });
             }
 
             foreach (var album in dataContext.Index.FindMatchingAlbums(query.Term, query.MaxAlbumCount))
             {
-                results.Add(new SearchItem() { Type = SearchItemType.Album, Name = album.AlbumName, Description = album.ArtistName, Rank = album.Rank });
+                results.Add(new SearchItem() { Id = album.Id, Type = SearchItemType.Album, Name = album.AlbumName, Description = album.ArtistName, Rank = album.Rank });
             }
 
             var tracks = dataContext.Index.FindMatchingTracks(query.Term, query.MaxTrackCount);
             foreach (var track in dataContext.Index.FindMatchingTracks(query.Term, query.MaxTrackCount))
             {
-                results.Add(new SearchItem() { Type = SearchItemType.Track, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank });
+                results.Add(new SearchItem() { Id = track.Id, Type = SearchItemType.Track, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank });
             }
 
             if (query.MaxTrackCount > tracks.Count)
@@ -68,7 +73,7 @@ namespace OnePlayer.Data
                 int diff = query.MaxTrackCount - tracks.Count;
                 foreach (var track in dataContext.Index.FindMatchingTracksWithArtists(query.Term, diff))
                 {
-                    results.Add(new SearchItem() { Type = SearchItemType.TrackArtist, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank });
+                    results.Add(new SearchItem() { Id = track.Id, Type = SearchItemType.TrackArtist, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank });
                 }
             }
 

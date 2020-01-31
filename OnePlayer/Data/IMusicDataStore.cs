@@ -4,6 +4,8 @@
     {
         IMusicDataAccessor Create();
 
-        IThumbnailCache Thumbnails { get; }
+        IThumbnailCache TrackThumbnails { get; }
+
+        IThumbnailCache AlbumThumbnails { get; }
     }
 }

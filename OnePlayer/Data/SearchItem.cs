@@ -11,6 +11,7 @@
 
     public class SearchItem
     {
+        public int Id { get; set; }
         public SearchItemType Type { get; set; }
 
         public string Name { get; set; }

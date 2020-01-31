@@ -31,13 +31,16 @@ namespace OnePlayer.Data
             dbPath = Path.Combine(this.rootPath, "oneplayer.db");
             thumbnailPath = Path.Combine(this.rootPath, "Thumbnails");
 
-            Thumbnails = new ThumbnailCache(thumbnailPath);
+            TrackThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Tracks"));
+            AlbumThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Albums"));
         }
         public IMusicDataAccessor Create()
         {
             return new Sqlite.MusicDb(dbPath);
         }
 
-        public IThumbnailCache Thumbnails { get; }
+        public IThumbnailCache TrackThumbnails { get; }
+
+        public IThumbnailCache AlbumThumbnails { get; }
     }
 }

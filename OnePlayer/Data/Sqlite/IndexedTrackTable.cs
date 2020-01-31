@@ -59,11 +59,11 @@ namespace OnePlayer.Data.Sqlite
             if (!string.IsNullOrEmpty(term))
             {
                 string limit = maxCount.HasValue ? $"LIMIT {maxCount.Value}" : string.Empty;
-                string query = $"SELECT AlbumName, ArtistName, Rank FROM " +
-                    $"(SELECT AlbumName, ArtistName, CAST(substr(offsets({nameof(IndexedTrack)}), 5, 2) AS INTEGER) AS Rank " +
+                string query = $"SELECT Id, AlbumName, ArtistName, Rank FROM " +
+                    $"(SELECT CAST(AlbumId AS INTEGER) AS Id, AlbumName, ArtistName, CAST(substr(offsets({nameof(IndexedTrack)}), 5, 2) AS INTEGER) AS Rank " +
                     $"FROM {nameof(IndexedTrack)} " +
                     $"WHERE AlbumName MATCH \"{term}*\" ORDER BY RANK ASC) " +
-                    $"GROUP BY AlbumName, ArtistName, Rank " +
+                    $"GROUP BY Id, AlbumName, ArtistName, Rank " +
                     $"ORDER BY Rank ASC, AlbumName ASC {limit}";
                 albums = connection.Query<AlbumQueryItem>(query);
             }
@@ -78,10 +78,10 @@ namespace OnePlayer.Data.Sqlite
             if (!string.IsNullOrEmpty(term))
             {
                 string limit = maxCount.HasValue ? $"LIMIT {maxCount.Value}" : string.Empty;
-                string query = $"SELECT ArtistName, COUNT(ArtistName) AS TrackCount, Rank FROM " +
-                    $"(SELECT ArtistName, CAST(substr(offsets({nameof(IndexedTrack)}), 5, 2) AS INTEGER) AS Rank FROM {nameof(IndexedTrack)} " +
+                string query = $"SELECT Id, ArtistName, COUNT(ArtistName) AS TrackCount, Rank FROM " +
+                    $"(SELECT CAST(ArtistId AS INTEGER) AS Id, ArtistName, CAST(substr(offsets({nameof(IndexedTrack)}), 5, 2) AS INTEGER) AS Rank FROM {nameof(IndexedTrack)} " +
                     $"WHERE ArtistName MATCH \"{term}*\" ORDER BY RANK ASC) " +
-                    $"GROUP BY ArtistName, Rank " +
+                    $"GROUP BY Id, ArtistName, Rank " +
                     $"ORDER BY Rank ASC, ArtistName ASC {limit}";
                 artists = connection.Query<ArtistQueryItem>(query);
             }
@@ -96,10 +96,10 @@ namespace OnePlayer.Data.Sqlite
             if (!string.IsNullOrEmpty(term))
             {
                 string limit = maxCount.HasValue ? $"LIMIT {maxCount.Value}" : string.Empty;
-                string query = $"SELECT GenreName, COUNT(GenreName) AS TrackCount, Rank FROM " +
-                    $"(SELECT GenreName, CAST(substr(offsets({nameof(IndexedTrack)}), 5, 2) AS INTEGER) AS Rank FROM {nameof(IndexedTrack)} " +
+                string query = $"SELECT Id, GenreName, COUNT(GenreName) AS TrackCount, Rank FROM " +
+                    $"(SELECT CAST(GenreId AS INTEGER) AS Id, GenreName, CAST(substr(offsets({nameof(IndexedTrack)}), 5, 2) AS INTEGER) AS Rank FROM {nameof(IndexedTrack)} " +
                     $"WHERE GenreName MATCH \"{term}*\" ORDER BY RANK ASC) " +
-                    $"GROUP BY GenreName, Rank " +
+                    $"GROUP BY Id, GenreName, Rank " +
                     $"ORDER BY Rank ASC, GenreName ASC {limit}";
                 genres = connection.Query<GenreQueryItem>(query);
             }
@@ -151,7 +151,10 @@ namespace OnePlayer.Data.Sqlite
                 nameof(IndexedTrack.AlbumName), 
                 nameof(IndexedTrack.TrackName), 
                 nameof(IndexedTrack.TrackArtist), 
-                nameof(IndexedTrack.GenreName) 
+                nameof(IndexedTrack.GenreName),
+                nameof(IndexedTrack.AlbumId),
+                nameof(IndexedTrack.ArtistId),
+                nameof(IndexedTrack.GenreId)
             };
         }
 
@@ -164,19 +167,26 @@ namespace OnePlayer.Data.Sqlite
                 nameof(IndexedTrack.AlbumName),
                 nameof(IndexedTrack.TrackName),
                 nameof(IndexedTrack.TrackArtist),
-                nameof(IndexedTrack.GenreName)
+                nameof(IndexedTrack.GenreName),
+                nameof(IndexedTrack.AlbumId),
+                nameof(IndexedTrack.ArtistId),
+                nameof(IndexedTrack.GenreId)
             };
         }
 
         private string[] GetValues(IndexedTrack track)
         {
-            var values = new string[6];
+            var values = new string[9];
             values[0] = track.Id.ToString();
             values[1] = $"\"{track.ArtistName}\"";
             values[2] = $"\"{track.AlbumName}\"";
             values[3] = $"\"{track.TrackName}\"";
             values[4] = $"\"{track.TrackArtist}\"";
             values[5] = $"\"{track.GenreName}\"";
+            values[6] = $"\"{track.AlbumId}\"";
+            values[7] = $"\"{track.ArtistId}\"";
+            values[8] = $"\"{track.GenreId}\"";
+
             return values;
         }
     }
