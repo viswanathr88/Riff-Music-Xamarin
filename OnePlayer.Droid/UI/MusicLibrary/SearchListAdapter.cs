@@ -31,7 +31,7 @@ namespace OnePlayer.Droid.UI.MusicLibrary
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             var app = activity.ApplicationContext as IOnePlayerApp;
-            bool artAvailable = false;
+            bool artAvailable = true;
 
             View view = convertView ?? LayoutInflater.From(activity).Inflate(itemLayoutId, null);
             var name = view.FindViewById<TextView>(Resource.Id.search_item_name);
@@ -45,20 +45,23 @@ namespace OnePlayer.Droid.UI.MusicLibrary
                 description.Text = activity.Resources.GetString(Resource.String.search_album_description, searchItems[position].Description);
                 if (app.MusicLibrary.AlbumArts.Exists(searchItems[position].Id, ThumbnailSize.Small))
                 {
-                    using (var stream = app.MusicLibrary.AlbumArts.Get(searchItems[position].Id, ThumbnailSize.Small))
-                    {
-                        image.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
-                        artAvailable = true;
-                    }
+                    using var stream = app.MusicLibrary.AlbumArts.Get(searchItems[position].Id, ThumbnailSize.Small);
+                    image.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
+                }
+                else
+                {
+                    artAvailable = false;
                 }
             }
             else if (searchItems[position].Type == SearchItemType.Artist)
             {
                 description.Text = activity.Resources.GetString(Resource.String.search_artist_description);
+                image.SetImageResource(Resource.Drawable.ic_search_artist);
             }
-            else if (searchItems[position].Type == SearchItemType.Genre)
+            else if (searchItems[position].Type == SearchItemType.Genre) 
             {
                 description.Text = activity.Resources.GetString(Resource.String.search_genre_description);
+                image.SetImageResource(Resource.Drawable.ic_search_genre);
             }
             else if (searchItems[position].Type == SearchItemType.Track || searchItems[position].Type == SearchItemType.TrackArtist)
             {
@@ -66,11 +69,12 @@ namespace OnePlayer.Droid.UI.MusicLibrary
 
                 if (app.MusicLibrary.TrackArts.Exists(searchItems[position].Id, ThumbnailSize.Small))
                 {
-                    using (var stream = app.MusicLibrary.TrackArts.Get(searchItems[position].Id, ThumbnailSize.Small))
-                    {
-                        image.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
-                        artAvailable = true;
-                    }
+                    using var stream = app.MusicLibrary.TrackArts.Get(searchItems[position].Id, ThumbnailSize.Small);
+                    image.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
+                }
+                else
+                {
+                    artAvailable = false;
                 }
             }
 
