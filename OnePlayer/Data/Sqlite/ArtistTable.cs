@@ -36,7 +36,7 @@ namespace OnePlayer.Data.Sqlite
 
         public IList<Artist> GetAll()
         {
-            return connection.Table<Artist>().ToList();
+            return connection.Table<Artist>().OrderBy(artist => artist.Name).ToList();
         }
 
         public Artist Update(Artist artist)

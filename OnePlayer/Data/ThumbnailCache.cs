@@ -25,13 +25,13 @@ namespace OnePlayer.Data
 
         public bool Exists(int id, ThumbnailSize size)
         {
-            string thumbnailPath = Path.Combine(rootPath, id.ToString(), $"{size.ToString()}.jpg");
+            string thumbnailPath = Path.Combine(rootPath, id.ToString(), $"{size}.jpg");
             return File.Exists(thumbnailPath);
         }
 
         public Stream Get(int id, ThumbnailSize size)
         {
-            string thumbnailPath = Path.Combine(rootPath, id.ToString(), $"{size.ToString()}.jpg");
+            string thumbnailPath = Path.Combine(rootPath, id.ToString(), $"{size}.jpg");
             return new FileStream(thumbnailPath, FileMode.Open, FileAccess.Read);
         }
 
@@ -44,7 +44,7 @@ namespace OnePlayer.Data
                 Directory.CreateDirectory(thumbnailFolderPath);
             }
 
-            string fullPath = Path.Combine(thumbnailFolderPath, $"{size.ToString()}.jpg");
+            string fullPath = Path.Combine(thumbnailFolderPath, $"{size}.jpg");
             using (FileStream fstream = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 await stream.CopyToAsync(fstream);

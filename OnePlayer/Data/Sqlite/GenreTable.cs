@@ -37,7 +37,7 @@ namespace OnePlayer.Data.Sqlite
 
         public IList<Genre> GetAll()
         {
-            return connection.Table<Genre>().ToList();
+            return connection.Table<Genre>().OrderBy(genre => genre.Name).ToList();
         }
 
         public Genre Update(Genre genre)

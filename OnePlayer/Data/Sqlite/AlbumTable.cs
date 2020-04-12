@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using System;
 using System.Collections.Generic;
 
 namespace OnePlayer.Data.Sqlite
@@ -36,12 +37,37 @@ namespace OnePlayer.Data.Sqlite
 
         public IList<Album> GetAll()
         {
-            return connection.Table<Album>().ToList();
+            return GetAll(AlbumSortType.ReleaseYear, SortOrder.Descending);
+        }
+
+        public IList<Album> GetAll(AlbumSortType type, SortOrder order)
+        {
+            var query = connection.Table<Album>();
+            if (type == AlbumSortType.ReleaseYear)
+            {
+                query = (order == SortOrder.Ascending) ? query.OrderBy(album => album.ReleaseYear) : query.OrderByDescending(album => album.ReleaseYear);
+            }
+            else if (type == AlbumSortType.Title)
+            {
+                query = (order == SortOrder.Ascending) ? query.OrderBy(album => album.Name) : query.OrderByDescending(album => album.Name);
+            }
+
+            return query.ToList();
+        }
+
+        public IList<Album> GetAll(AlbumSortType type, SortOrder order, int startPosition, int count)
+        {
+            throw new NotImplementedException();
         }
 
         public IList<Album> GetAllByArtist(int artistId)
         {
             return connection.Table<Album>().Where(album => album.ArtistId == artistId).ToList();
+        }
+
+        public int GetCount()
+        {
+            return connection.Table<Album>().Count();
         }
 
         public Album Update(Album album)

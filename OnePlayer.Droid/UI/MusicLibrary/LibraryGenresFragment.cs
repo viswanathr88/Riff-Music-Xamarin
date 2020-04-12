@@ -1,21 +1,31 @@
-﻿using Android.OS;
-using Android.Views;
+﻿using Android.Support.V7.Widget;
 
 namespace OnePlayer.Droid.UI.MusicLibrary
 {
-    public class LibraryGenresFragment : Android.Support.V4.App.Fragment
+    public class LibraryGenresFragment : Controls.LazyLoadedFragment
     {
-        public override void OnCreate(Bundle savedInstanceState)
+        private readonly Data.MusicLibrary library;
+        public LibraryGenresFragment(Data.MusicLibrary library) : base(Resource.Layout.fragment_musiclibrary_genres)
         {
-            base.OnCreate(savedInstanceState);
-
-            // Create your fragment here
+            this.library = library;
         }
 
-        public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+        protected override void Load(Android.Views.View view)
         {
-            base.OnCreateView(inflater, container, savedInstanceState);
-            return inflater.Inflate(Resource.Layout.fragment_musiclibrary_genres, container, false);
+            var recyclerView = (RecyclerView)view.FindViewById(Resource.Id.genres_recycler_view);
+
+            // use this setting to improve performance if you know that changes
+            // in content do not change the layout size of the RecyclerView
+            recyclerView.HasFixedSize = true;
+
+            // use a linear layout manager
+            var layoutManager = new Android.Support.V7.Widget.LinearLayoutManager(Activity);
+            recyclerView.SetLayoutManager(layoutManager);
+            recyclerView.AddItemDecoration(new Controls.VerticalSpaceItemDecoration(25));
+
+            // specify an adapter (see also next example)
+            var adapter = new GenreListAdapter(this.library);
+            recyclerView.SetAdapter(adapter);
         }
     }
 }

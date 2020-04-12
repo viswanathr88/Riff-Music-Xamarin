@@ -9,10 +9,11 @@ namespace OnePlayer.Data
         private readonly string rootPath;
         private readonly string dbPath;
         private readonly string thumbnailPath;
+        private readonly IMusicDataAccessor musicDataAccessor;
 
         public MusicDataStore() : this(DefaultPath)
         {
-
+            this.musicDataAccessor = new Sqlite.MusicDb(dbPath);
         }
 
         public MusicDataStore(string path)
@@ -34,9 +35,9 @@ namespace OnePlayer.Data
             TrackThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Tracks"));
             AlbumThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Albums"));
         }
-        public IMusicDataAccessor Create()
+        public IMusicDataAccessor Access()
         {
-            return new Sqlite.MusicDb(dbPath);
+            return this.musicDataAccessor;
         }
 
         public IThumbnailCache TrackThumbnails { get; }

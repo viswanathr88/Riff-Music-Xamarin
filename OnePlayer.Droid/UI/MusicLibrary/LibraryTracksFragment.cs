@@ -4,13 +4,15 @@ namespace OnePlayer.Droid.UI.MusicLibrary
 {
     public class LibraryTracksFragment : Controls.LazyLoadedFragment
     {
-        public LibraryTracksFragment() : base(Resource.Layout.fragment_musiclibrary_tracks)
+        private readonly Data.MusicLibrary library;
+        public LibraryTracksFragment(Data.MusicLibrary library) : base(Resource.Layout.fragment_musiclibrary_tracks)
         {
+            this.library = library;
         }
 
-        protected override void Load()
+        protected override void Load(Android.Views.View view)
         {
-            var recyclerView = (Android.Support.V7.Widget.RecyclerView)View.FindViewById(Resource.Id.tracks_recycler_view);
+            var recyclerView = (Android.Support.V7.Widget.RecyclerView)view.FindViewById(Resource.Id.tracks_recycler_view);
 
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
@@ -22,7 +24,7 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             recyclerView.AddItemDecoration(new Controls.VerticalSpaceItemDecoration(25));
 
             // specify an adapter (see also next example)
-            var adapter = new TrackListAdapter();
+            var adapter = new TrackListAdapter(this.library);
             recyclerView.SetAdapter(adapter);
         }
     }

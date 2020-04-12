@@ -1,4 +1,5 @@
-﻿using Android.Content;
+﻿using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Support.Design.Widget;
 using Android.Support.V4.View;
@@ -17,10 +18,12 @@ namespace OnePlayer.Droid.UI.MusicLibrary
         {
             this.context = context;
 
-            tabFragments.Add(new LibraryArtistsFragment() { Arguments = bundle });
-            tabFragments.Add(new LibraryAlbumsFragment() { Arguments = bundle });
-            tabFragments.Add(new LibraryTracksFragment() { Arguments = bundle });
-            tabFragments.Add(new LibraryGenresFragment() { Arguments = bundle });
+            var app = Application.Context as IOnePlayerApp;
+
+            tabFragments.Add(new LibraryArtistsFragment(app.MusicLibrary) { Arguments = bundle });
+            tabFragments.Add(new LibraryAlbumsFragment(app.MusicLibrary) { Arguments = bundle });
+            tabFragments.Add(new LibraryTracksFragment(app.MusicLibrary) { Arguments = bundle });
+            tabFragments.Add(new LibraryGenresFragment(app.MusicLibrary) { Arguments = bundle });
         }
 
         public override Android.Support.V4.App.Fragment GetItem(int position)

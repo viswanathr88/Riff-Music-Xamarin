@@ -7,7 +7,7 @@ namespace OnePlayer.Data
     public sealed class MusicLibrary : IDisposable
     {
         private readonly IMusicDataStore store;
-        private readonly IMusicDataAccessor dataContext;
+        private readonly IMusicDataAccessor data;
         private readonly MusicLibraryWriter writer;
 
         public MusicLibrary(HttpClient httpClient) : this(new MusicDataStore(), httpClient)
@@ -17,10 +17,11 @@ namespace OnePlayer.Data
         public MusicLibrary(IMusicDataStore dataStore, HttpClient httpClient)
         {
             store = dataStore ?? throw new ArgumentNullException(nameof(dataStore));
-            
+
+            data = dataStore.Access();
+            data.Migrate();
+
             writer = new MusicLibraryWriter(dataStore, httpClient);
-            dataContext = dataStore.Create();
-            dataContext.Migrate();
         }
 
         public IThumbnailCache AlbumArts => store.AlbumThumbnails;
@@ -45,25 +46,45 @@ namespace OnePlayer.Data
             remove { writer.ItemModified -= value; }
         }
 
+        public IList<Artist> GetArtists()
+        {
+            return data.Artists.GetAll();
+        }
+
+        public IList<Album> GetAlbums()
+        {
+            return data.Albums.GetAll();
+        }
+
+        public IList<Track> GetTracks()
+        {
+            return data.Tracks.GetAll();
+        }
+
+        public IList<Genre> GetGenres()
+        {
+            return data.Genres.GetAll();
+        }
+
         public void Search(SearchQuery query, List<SearchItem> results)
         {
-            foreach (var artist in dataContext.Index.FindMatchingArtists(query.Term, query.MaxArtistCount))
+            foreach (var artist in data.Index.FindMatchingArtists(query.Term, query.MaxArtistCount))
             {
                 results.Add(new SearchItem { Id = artist.Id, Type = SearchItemType.Artist, Name = artist.ArtistName, Description = artist.TrackCount.ToString(), Rank = artist.Rank });
             }
 
-            foreach (var genre in dataContext.Index.FindMatchingGenres(query.Term, query.MaxGenreCount))
+            foreach (var genre in data.Index.FindMatchingGenres(query.Term, query.MaxGenreCount))
             {
                 results.Add(new SearchItem { Id = genre.Id, Type = SearchItemType.Genre, Name = genre.GenreName, Description = genre.TrackCount.ToString(), Rank = genre.Rank });
             }
 
-            foreach (var album in dataContext.Index.FindMatchingAlbums(query.Term, query.MaxAlbumCount))
+            foreach (var album in data.Index.FindMatchingAlbums(query.Term, query.MaxAlbumCount))
             {
                 results.Add(new SearchItem() { Id = album.Id, Type = SearchItemType.Album, Name = album.AlbumName, Description = album.ArtistName, Rank = album.Rank });
             }
 
-            var tracks = dataContext.Index.FindMatchingTracks(query.Term, query.MaxTrackCount);
-            foreach (var track in dataContext.Index.FindMatchingTracks(query.Term, query.MaxTrackCount))
+            var tracks = data.Index.FindMatchingTracks(query.Term, query.MaxTrackCount);
+            foreach (var track in data.Index.FindMatchingTracks(query.Term, query.MaxTrackCount))
             {
                 results.Add(new SearchItem() { Id = track.Id, Type = SearchItemType.Track, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank });
             }
@@ -71,7 +92,7 @@ namespace OnePlayer.Data
             if (query.MaxTrackCount > tracks.Count)
             {
                 int diff = query.MaxTrackCount - tracks.Count;
-                foreach (var track in dataContext.Index.FindMatchingTracksWithArtists(query.Term, diff))
+                foreach (var track in data.Index.FindMatchingTracksWithArtists(query.Term, diff))
                 {
                     results.Add(new SearchItem() { Id = track.Id, Type = SearchItemType.TrackArtist, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank });
                 }
@@ -87,7 +108,7 @@ namespace OnePlayer.Data
 
         public void Dispose()
         {
-            dataContext?.Dispose();
+            data?.Dispose();
         }
     }
 }

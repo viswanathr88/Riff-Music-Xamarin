@@ -9,13 +9,13 @@ namespace OnePlayer.Data
     internal sealed class MusicLibraryWriter : IDisposable
     {
         private readonly IMusicDataStore store;
-        private readonly IMusicDataAccessor dataContext;
+        private readonly IMusicDataAccessor accessor;
         private readonly HttpClient webClient;
 
         public MusicLibraryWriter(IMusicDataStore musicDataStore, HttpClient webClient)
         {
             store = musicDataStore ?? throw new ArgumentNullException(nameof(musicDataStore));
-            dataContext = musicDataStore.Create();
+            this.accessor = musicDataStore.Access();
             this.webClient = webClient ?? throw new ArgumentNullException(nameof(webClient));
         }
 
@@ -31,16 +31,16 @@ namespace OnePlayer.Data
                 {
                     if (item.audio != null)
                     {
-                        ProcessAndSaveItem(item, dataContext);
+                        ProcessAndSaveItem(item, accessor);
                     }
                 }
 
-                dataContext.RemoveOrphans();
-                dataContext.Save();
+                accessor.RemoveOrphans();
+                accessor.Save();
             }
             catch (Exception)
             {
-                dataContext.Rollback();
+                accessor.Rollback();
                 throw;
             }
         }
@@ -48,7 +48,7 @@ namespace OnePlayer.Data
         public async Task DownloadThumbnailsAsync()
         {
             // Get all thumbnails that have not been cached
-            var thumbnails = dataContext.Thumbnails.GetUncached();
+            var thumbnails = accessor.Thumbnails.GetUncached();
 
             // Download and save the thumbnails
             await thumbnails.ForEachAsync(DownloadAndCacheThumbnailAsync);
@@ -56,7 +56,7 @@ namespace OnePlayer.Data
 
         public void Dispose()
         {
-            dataContext?.Dispose();
+            accessor?.Dispose();
         }
 
         private async Task DownloadAndCacheThumbnailAsync(ThumbnailInfo info)
@@ -106,8 +106,8 @@ namespace OnePlayer.Data
             }
             finally
             {
-                dataContext.Thumbnails.Update(info);
-                dataContext.Save();
+                accessor.Thumbnails.Update(info);
+                accessor.Save();
             }
         }
 

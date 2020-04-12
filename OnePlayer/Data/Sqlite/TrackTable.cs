@@ -30,7 +30,7 @@ namespace OnePlayer.Data.Sqlite
 
         public IList<Track> GetAll()
         {
-            return connection.Table<Track>().ToList();
+            return connection.Table<Track>().OrderBy(track => track.Title).ToList();
         }
 
         public Track Update(Track track)

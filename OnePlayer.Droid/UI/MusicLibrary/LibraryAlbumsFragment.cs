@@ -5,13 +5,15 @@ namespace OnePlayer.Droid.UI.MusicLibrary
 {
     public class LibraryAlbumsFragment : Controls.LazyLoadedFragment
     {
-        public LibraryAlbumsFragment() : base(Resource.Layout.fragment_musiclibrary_albums)
+        private readonly OnePlayer.Data.MusicLibrary library;
+        public LibraryAlbumsFragment(OnePlayer.Data.MusicLibrary library) : base(Resource.Layout.fragment_musiclibrary_albums)
         {
+            this.library = library;
         }
 
-        protected override void Load()
+        protected override void Load(Android.Views.View view)
         {
-            var recyclerView = (RecyclerView)View.FindViewById(Resource.Id.albums_recycler_view);
+            var recyclerView = (RecyclerView)view.FindViewById(Resource.Id.albums_recycler_view);
 
             // use this setting to improve performance if you know that changes
             // in content do not change the layout size of the RecyclerView
@@ -23,7 +25,7 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             recyclerView.AddItemDecoration(new Controls.ItemOffsetDecoration(20));
 
             // specify an adapter (see also next example)
-            var adapter = new AlbumListAdapter();
+            var adapter = new AlbumListAdapter(library);
             recyclerView.SetAdapter(adapter);
         }
     }

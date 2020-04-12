@@ -23,16 +23,16 @@ namespace OnePlayer.Droid.UI.Controls
             IsViewCreated = true;
 
             // Load the remaining view & data
-            LoadBase();
+            LoadBase(view);
 
             return view;
         }
 
-        private void LoadBase()
+        private void LoadBase(Android.Views.View view)
         {
             if (IsViewCreated && IsViewVisible && !IsViewLoaded)
             {
-                Load();
+                Load(view);
                 IsViewLoaded = true;
             }
         }
@@ -43,11 +43,11 @@ namespace OnePlayer.Droid.UI.Controls
             set
             {
                 IsViewVisible = value;
-                LoadBase();
+                LoadBase(View);
                 base.UserVisibleHint = value;
             }
         }
 
-        protected abstract void Load();
+        protected abstract void Load(Android.Views.View view);
     }
 }

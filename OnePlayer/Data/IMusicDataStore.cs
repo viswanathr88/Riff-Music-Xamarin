@@ -2,7 +2,7 @@
 {
     public interface IMusicDataStore
     {
-        IMusicDataAccessor Create();
+        IMusicDataAccessor Access();
 
         IThumbnailCache TrackThumbnails { get; }
 

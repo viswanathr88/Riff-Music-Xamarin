@@ -79,6 +79,8 @@
     <Compile Include="UI\Home\HomeFragment.cs" />
     <Compile Include="UI\Controls\ItemOffsetDecoration.cs" />
     <Compile Include="UI\Controls\LazyLoadedFragment.cs" />
+    <Compile Include="UI\MusicLibrary\GenreItemViewHolder.cs" />
+    <Compile Include="UI\MusicLibrary\GenreListAdapter.cs" />
     <Compile Include="UI\MusicLibrary\LibraryAlbumsFragment.cs" />
     <Compile Include="UI\MusicLibrary\LibraryArtistsFragment.cs" />
     <Compile Include="UI\MusicLibrary\LibraryGenresFragment.cs" />
@@ -91,6 +93,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\MusicLibrary\SearchActivity.cs" />
     <Compile Include="UI\MusicLibrary\SearchListAdapter.cs" />
+    <Compile Include="UI\MusicLibrary\ArtistListAdapter.cs" />
+    <Compile Include="UI\MusicLibrary\ArtistItemViewHolder.cs" />
     <Compile Include="UI\Settings\SettingsActivity.cs" />
     <Compile Include="UI\Settings\SettingsFragment.cs" />
     <Compile Include="UI\Auth\SignInAcitivity.cs" />
@@ -241,6 +245,18 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-v21\ic_search_artist.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\widget_artist_item.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\widget_genre_item.xml">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
