@@ -16,9 +16,13 @@ namespace OnePlayer.Droid.UI
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
         private OnePlayer.Droid.Sync.OneDriveSyncServiceConnection syncServiceConnection = null;
+        private IMenu menu = null;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+
+            // Register notification channel
+            CreateNotificationChannel();
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
@@ -45,21 +49,51 @@ namespace OnePlayer.Droid.UI
                 this.syncServiceConnection = new Sync.OneDriveSyncServiceConnection();
             }
 
-            var appContext = ApplicationContext as IOnePlayerApp;
-            bool loginExists = await appContext.LoginManager.LoginExistsAsync();
+            var app = ApplicationContext as IOnePlayerApp;
+            app.SyncEngine.StateChanged += SyncEngine_StateChanged;
+            UpdateSyncStateIcon(this.menu, app.SyncEngine.State);
+            
+            bool loginExists = await app.LoginManager.LoginExistsAsync();
 
-            if (!this.syncServiceConnection.IsConnected)
+            if (!this.syncServiceConnection.IsConnected && !app.Preferences.IsSyncPaused)
             {
                 if (loginExists)
                 {
+                    app.SyncEngine.Start();
                     Intent serviceIntent = new Intent(this, typeof(OnePlayer.Droid.Sync.OneDriveSyncService));
                     BindService(serviceIntent, this.syncServiceConnection, Bind.AutoCreate);
                 }
             }
-            else if (!loginExists)
+            else if (!loginExists || app.Preferences.IsSyncPaused)
             {
-                UnbindService(this.syncServiceConnection);
+                if (this.syncServiceConnection.IsConnected)
+                {
+                    Intent serviceIntent = new Intent(this, typeof(OnePlayer.Droid.Sync.OneDriveSyncService));
+                    UnbindService(this.syncServiceConnection);
+                    StopService(serviceIntent);
+                }
+                app.SyncEngine.Stop();
             }
+        }
+
+        private void SyncEngine_StateChanged(object sender, OnePlayer.Sync.SyncState e)
+        {
+            RunOnUiThread(() =>
+            {
+                // Ensure menu is created
+                if (this.menu != null)
+                {
+                    UpdateSyncStateIcon(this.menu, e);
+                }
+            });
+        }
+
+        protected override void OnStop()
+        {
+            base.OnStop();
+
+            var app = ApplicationContext as IOnePlayerApp;
+            app.SyncEngine.StateChanged -= SyncEngine_StateChanged;
         }
 
         public override void OnBackPressed()
@@ -78,8 +112,13 @@ namespace OnePlayer.Droid.UI
         public override bool OnCreateOptionsMenu(IMenu menu)
         {
             MenuInflater.Inflate(Resource.Menu.menu_main, menu);
+            base.OnCreateOptionsMenu(menu);
+            this.menu = menu;
 
-            return base.OnCreateOptionsMenu(menu);
+            var app = ApplicationContext as IOnePlayerApp;
+            UpdateSyncStateIcon(menu, app.SyncEngine.State);
+
+            return true;
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -138,6 +177,71 @@ namespace OnePlayer.Droid.UI
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        private void CreateNotificationChannel()
+        {
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+            {
+                string channelName = GetString(Resource.String.channel_name);
+                string channelDescription = GetString(Resource.String.channel_descrioption);
+                var importance = Android.App.NotificationImportance.Default;
+
+                var notificationChannel = new NotificationChannel("sync_notification_channel_id", channelName, importance)
+                {
+                    Description = channelDescription
+                };
+
+                NotificationManager manager = (NotificationManager)GetSystemService(NotificationService);
+                manager.CreateNotificationChannel(notificationChannel);
+            }
+        }
+
+        private void UpdateSyncStateIcon(IMenu menu, OnePlayer.Sync.SyncState state)
+        {
+            if (menu == null)
+            {
+                return;
+            }
+
+            var menuItem = this.menu.FindItem(Resource.Id.menu_action_sync_status);
+            if (menuItem.ActionView != null)
+            {
+                menuItem.ActionView.ClearAnimation();
+                menuItem.SetActionView(null);
+            }
+
+            if (state == OnePlayer.Sync.SyncState.Uptodate)
+            {
+                menuItem.SetIcon(Resource.Drawable.ic_sync_uptodate);
+            }
+            else if (state == OnePlayer.Sync.SyncState.Syncing)
+            {
+                // Get the sync image view
+                var imageView = LayoutInflater.Inflate(Resource.Layout.sync_icon_image_view, null);
+
+                // Create a rotating animation
+                Android.Views.Animations.Animation anim = Android.Views.Animations.AnimationUtils.LoadAnimation(this, Resource.Animation.rotation);
+                anim.RepeatCount = Android.Views.Animations.Animation.Infinite;
+                anim.RepeatMode = Android.Views.Animations.RepeatMode.Restart;
+                anim.Duration = 1500;
+
+                // Start the animation
+                imageView.StartAnimation(anim);
+                menuItem.SetActionView(imageView);
+            }
+            else if (state == OnePlayer.Sync.SyncState.Stopped)
+            {
+                menuItem.SetIcon(Resource.Drawable.ic_sync_disabled);
+            }
+            else if (state == OnePlayer.Sync.SyncState.NotSyncing)
+            {
+                menuItem.SetIcon(Resource.Drawable.ic_sync_problem);
+            }
+            else
+            {
+                menuItem.SetIcon(Resource.Drawable.ic_sync_started);
+            }
         }
     }
 }

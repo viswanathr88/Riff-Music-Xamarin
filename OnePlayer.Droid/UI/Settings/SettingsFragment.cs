@@ -6,6 +6,7 @@ namespace OnePlayer.Droid.UI.Settings
     {
         public override void OnCreatePreferences(Bundle savedInstanceState, string rootKey)
         {
+            PreferenceManager.SharedPreferencesName = "com.oneplayer.droid.app.preferences";
             SetPreferencesFromResource(Resource.Xml.fragment_settings, rootKey);
         }
     }

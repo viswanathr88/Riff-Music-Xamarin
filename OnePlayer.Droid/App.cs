@@ -3,6 +3,7 @@ using Android.Content;
 using OnePlayer.Authentication;
 using OnePlayer.Data;
 using OnePlayer.Droid.Storage;
+using OnePlayer.Sync;
 using System;
 using System.Net.Http;
 
@@ -15,6 +16,7 @@ namespace OnePlayer.Droid
         private ITokenCache tokenCache;
         private IPreferences appPreferences;
         private MusicLibrary musicLibrary;
+        private SyncEngine syncEngine;
         private const string tokenCachePreferenceFile = "com.oneplayer.droid.tokencache.preferences";
         private const string appPreferenceFile = "com.oneplayer.droid.app.preferences";
         private readonly static HttpClient httpClient = new HttpClient();
@@ -80,6 +82,19 @@ namespace OnePlayer.Droid
                 }
 
                 return musicLibrary;
+            }
+        }
+
+        public SyncEngine SyncEngine
+        {
+            get
+            {
+                if (syncEngine == null)
+                {
+                    syncEngine = new SyncEngine(Preferences, LoginManager, WebClient, MusicLibrary);
+                }
+
+                return syncEngine;
             }
         }
     }

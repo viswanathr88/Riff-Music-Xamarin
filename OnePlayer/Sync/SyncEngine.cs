@@ -3,47 +3,159 @@ using OnePlayer.Authentication;
 using OnePlayer.Data;
 using OnePlayer.Data.Json;
 using System;
-using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace OnePlayer.Sync
 {
-    public enum SyncJobState
+    public enum SyncState
     {
-        Running,
-        NotRunning
+        NotStarted,
+        Started,
+        Syncing,
+        NotSyncing,
+        Uptodate,
+        Stopped
     }
-    public sealed class OneDriveMusicSyncJob
+
+    public sealed class SyncStatus
     {
+        public DateTime SuccessfulSyncTime
+        {
+            get;
+            set;
+        }
+
+        public DateTime SyncTime
+        {
+            get;
+            set;
+        }
+
+        public Exception Error
+        {
+            get;
+            set;
+        }
+
+        public SyncState State
+        {
+            get;
+            set;
+        }
+
+        public int ItemsAdded
+        {
+            get;
+            set;
+        } = 0;
+    }
+
+    public sealed class SyncEngine
+    {
+        public event EventHandler<SyncState> StateChanged;
+        public event EventHandler<SyncStatus> Checkpoint;
+        private SyncState state = SyncState.NotStarted;
         private readonly string baseUrl = "https://graph.microsoft.com/v1.0/drive/special/music/delta?$expand=thumbnails";
-        private SyncJobState state = SyncJobState.NotRunning;
         private readonly IPreferences preferences;
         private readonly LoginManager loginManager;
         private readonly HttpClient webClient;
         private readonly MusicLibrary library;
 
-        public OneDriveMusicSyncJob(IPreferences preferences, LoginManager loginManager, HttpClient webClient, MusicLibrary library)
+        public SyncEngine(IPreferences preferences, LoginManager loginManager, HttpClient webClient, MusicLibrary library)
         {
             this.preferences = preferences;
             this.loginManager = loginManager;
             this.webClient = webClient;
             this.library = library;
+            this.library.ItemAdded += Library_ItemAdded;
+
+            Status.SuccessfulSyncTime = DateTime.Parse(preferences.LastSyncTime);
+
+            Start();
         }
+
+        private void Library_ItemAdded(object sender, Data.DriveItem e)
+        {
+            Status.ItemsAdded++;
+        }
+
+        public SyncState State
+        {
+            get
+            {
+                return this.state;
+            }
+            private set
+            {
+                if (this.state != value)
+                {
+                    this.state = value;
+                    Status.State = this.state;
+                    StateChanged?.Invoke(this, this.state);
+                }
+            }
+        }
+
+        public SyncStatus Status
+        {
+            get;
+            private set;
+        } = new SyncStatus();
+
+        public void Stop()
+        {
+            if (State != SyncState.Stopped)
+            {
+                // TODO: Kill any sync sessions
+
+                State = SyncState.Stopped;
+                preferences.IsSyncPaused = true;
+            }
+        }
+
+        public void Start()
+        {
+            if (preferences.IsSyncPaused)
+            {
+                State = SyncState.Stopped;
+            } 
+            else if (State == SyncState.NotStarted || State == SyncState.Stopped)
+            {
+                State = SyncState.Started;
+            }
+        }
+
         public async Task RunAsync()
         {
-            library.ItemAdded += Library_ItemAdded;
-            library.ItemRemoved += Library_ItemRemoved;
-            library.ItemModified += Library_ItemModified;
+            try
+            {
+                Status.SyncTime = DateTime.Now;
+                Status.ItemsAdded = 0;
+                Status.Error = null;
 
-            if (IsSyncing)
+                await RunInternalAsync();
+            }
+            catch (Exception ex)
+            {
+                Status.Error = ex;
+                State = SyncState.NotSyncing;
+            }
+        }
+
+        private async Task RunInternalAsync()
+        {
+            if (State == SyncState.Syncing || State == SyncState.Stopped)
             {
                 // We are already syncing.
                 return;
             }
 
-            state = SyncJobState.Running;
+            State = SyncState.Syncing;
+
+            // Fire a checkpoint event
+            Checkpoint?.Invoke(this, Status);
 
             string deltaUrl = string.Empty;
             var token = await loginManager.AcquireTokenSilentAsync();
@@ -93,6 +205,17 @@ namespace OnePlayer.Sync
 
                     // Download thumbnails
                     await editor.DownloadThumbnailsAsync();
+
+                    if (completed)
+                    {
+                        DateTime successTime = DateTime.Now;
+                        Status.SuccessfulSyncTime = successTime;
+                        preferences.LastSyncTime = successTime.ToString();
+                        State = SyncState.Uptodate;
+                    }
+
+                    // Fire a checkpoint event
+                    Checkpoint?.Invoke(this, Status);
                 }
                 else
                 {
@@ -106,27 +229,6 @@ namespace OnePlayer.Sync
                 }
             }
             while (!completed);
-
-            state = SyncJobState.NotRunning;
-
-            library.ItemAdded -= Library_ItemAdded;
-            library.ItemRemoved -= Library_ItemRemoved;
-            library.ItemModified -= Library_ItemModified;
         }
-
-        private void Library_ItemModified(object sender, Data.DriveItem e)
-        {
-        }
-
-        private void Library_ItemRemoved(object sender, Data.DriveItem e)
-        {
-        }
-
-        private void Library_ItemAdded(object sender, Data.DriveItem e)
-        {
-        }
-
-        public bool IsSyncing => state == SyncJobState.Running;
-
     }
 }

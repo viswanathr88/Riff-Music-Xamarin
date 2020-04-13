@@ -95,6 +95,7 @@
     <Compile Include="UI\MusicLibrary\SearchListAdapter.cs" />
     <Compile Include="UI\MusicLibrary\ArtistListAdapter.cs" />
     <Compile Include="UI\MusicLibrary\ArtistItemViewHolder.cs" />
+    <Compile Include="UI\NotificationType.cs" />
     <Compile Include="UI\Settings\SettingsActivity.cs" />
     <Compile Include="UI\Settings\SettingsFragment.cs" />
     <Compile Include="UI\Auth\SignInAcitivity.cs" />
@@ -258,6 +259,24 @@
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\anim\rotation.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\sync_icon_image_view.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-v21\ic_sync_uptodate.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-v21\ic_sync_problem.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-v21\ic_sync_disabled.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-v21\ic_sync_started.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

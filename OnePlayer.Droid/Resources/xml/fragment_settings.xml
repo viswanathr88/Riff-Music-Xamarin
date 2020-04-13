@@ -13,6 +13,12 @@
         android:targetPackage="com.oneplayer.droid"
         android:targetClass="com.oneplayer.droid.SignInActivity" />
     </Preference>
+
+    <SwitchPreferenceCompat
+      android:id="@+id/preference_is_sync_paused"
+      app:key="IsSyncPaused"
+      app:title="@string/setting_pause_sync"
+      app:summary="@string/setting_pause_sync_summary" />
     
   </android.support.v7.preference.PreferenceCategory>
   

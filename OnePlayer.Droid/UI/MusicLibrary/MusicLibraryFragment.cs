@@ -73,6 +73,8 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             var adapter = new MusicLibraryPagerAdapter(ChildFragmentManager, savedInstanceState, this.context);
             viewPager.Adapter = adapter;
 
+            
+
             //TabLayout 
             TabLayout tabLayout = view.FindViewById<TabLayout>(Resource.Id.sliding_tabs);
             tabLayout.SetupWithViewPager(viewPager);

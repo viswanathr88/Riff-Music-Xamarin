@@ -1,5 +1,6 @@
 ﻿using OnePlayer.Authentication;
 using OnePlayer.Data;
+using OnePlayer.Sync;
 using System.Net.Http;
 
 namespace OnePlayer.Droid
@@ -13,6 +14,8 @@ namespace OnePlayer.Droid
         MusicLibrary MusicLibrary { get; }
 
         Data.IPreferences Preferences { get; }
+
+        SyncEngine SyncEngine { get; }
 
     }
 }
