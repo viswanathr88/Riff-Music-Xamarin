@@ -32,6 +32,11 @@ namespace OnePlayer.Droid.UI.MusicLibrary
                 using var stream = library.AlbumArts.Get(albums[position].Id, ThumbnailSize.Medium);
                 albumItemViewHolder.AlbumArt.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
             }
+            else
+            {
+                albumItemViewHolder.AlbumArt.SetImageResource(Resource.Drawable.ic_menu_album);
+                // albumItemViewHolder.AlbumArt.SetImageDrawable(null);
+            }
         }
 
         public override int ItemCount => albums.Count;

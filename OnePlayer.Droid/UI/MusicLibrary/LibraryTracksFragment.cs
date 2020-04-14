@@ -1,4 +1,4 @@
-﻿using Android.Views;
+﻿using OnePlayer.Data;
 
 namespace OnePlayer.Droid.UI.MusicLibrary
 {
@@ -24,8 +24,13 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             recyclerView.AddItemDecoration(new Controls.VerticalSpaceItemDecoration(25));
 
             // specify an adapter (see also next example)
-            var adapter = new TrackListAdapter(this.library);
+            var adapter = new TrackListAdapter(this.library, OnTrackSelected);
             recyclerView.SetAdapter(adapter);
+        }
+
+        private void OnTrackSelected(Track track)
+        {
+
         }
     }
 }

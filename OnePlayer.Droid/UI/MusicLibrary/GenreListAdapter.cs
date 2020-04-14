@@ -13,10 +13,12 @@ namespace OnePlayer.Droid.UI.MusicLibrary
         private readonly IList<Genre> genres = new List<Genre>();
         private readonly Random rnd = new Random(Guid.NewGuid().GetHashCode());
         private static readonly string[] separators = new string[] { " ", ".", "&", "-" };
+        private readonly Action<Genre> selectionHandler;
 
-        public GenreListAdapter(Data.MusicLibrary library)
+        public GenreListAdapter(Data.MusicLibrary library, Action<Genre> selectionHandler)
         {
             this.library = library;
+            this.selectionHandler = selectionHandler;
             this.genres = this.library.GetGenres();
         }
         public override int ItemCount => genres.Count;
@@ -34,7 +36,7 @@ namespace OnePlayer.Droid.UI.MusicLibrary
         {
             // Create a new view for the album item
             var view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.widget_genre_item, parent, false);
-            return new GenreItemViewHolder(view);
+            return new GenreItemViewHolder(view, OnItemClicked);
         }
 
         private string GetInitials(string name)
@@ -51,6 +53,11 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             }
 
             return initials;
+        }
+
+        private void OnItemClicked(int index)
+        {
+            selectionHandler(genres[index]);
         }
     }
 }

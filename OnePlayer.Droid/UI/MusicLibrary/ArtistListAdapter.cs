@@ -13,11 +13,13 @@ namespace OnePlayer.Droid.UI.MusicLibrary
         private readonly IList<Artist> artists = new List<Artist>();
         private readonly Random rnd = new Random(Guid.NewGuid().GetHashCode());
         private static readonly string[] separators = new string[] { " ", ".", "&", "-" };
+        private readonly Action<Artist> selectionCallback;
 
-        public ArtistListAdapter(Data.MusicLibrary library)
+        public ArtistListAdapter(Data.MusicLibrary library, Action<Artist> selectionCallback)
         {
             this.library = library;
             this.artists = this.library.GetArtists();
+            this.selectionCallback = selectionCallback;
         }
         public override int ItemCount => artists.Count;
 
@@ -34,7 +36,7 @@ namespace OnePlayer.Droid.UI.MusicLibrary
         {
             // Create a new view for the album item
             var view = LayoutInflater.From(parent.Context).Inflate(Resource.Layout.widget_artist_item, parent, false);
-            return new ArtistItemViewHolder(view);
+            return new ArtistItemViewHolder(view, OnItemSelected);
         }
 
         private string GetInitials(string name)
@@ -51,6 +53,11 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             }
 
             return initials;
+        }
+
+        private void OnItemSelected(int index)
+        {
+            this.selectionCallback(artists[index]);
         }
     }
 }

@@ -76,18 +76,6 @@ namespace OnePlayer.Droid.UI
             }
         }
 
-        private void SyncEngine_StateChanged(object sender, OnePlayer.Sync.SyncState e)
-        {
-            RunOnUiThread(() =>
-            {
-                // Ensure menu is created
-                if (this.menu != null)
-                {
-                    UpdateSyncStateIcon(this.menu, e);
-                }
-            });
-        }
-
         protected override void OnStop()
         {
             base.OnStop();
@@ -195,6 +183,18 @@ namespace OnePlayer.Droid.UI
                 NotificationManager manager = (NotificationManager)GetSystemService(NotificationService);
                 manager.CreateNotificationChannel(notificationChannel);
             }
+        }
+
+        private void SyncEngine_StateChanged(object sender, OnePlayer.Sync.SyncState e)
+        {
+            RunOnUiThread(() =>
+            {
+                // Ensure menu is created
+                if (this.menu != null)
+                {
+                    UpdateSyncStateIcon(this.menu, e);
+                }
+            });
         }
 
         private void UpdateSyncStateIcon(IMenu menu, OnePlayer.Sync.SyncState state)

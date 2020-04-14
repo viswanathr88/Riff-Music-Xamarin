@@ -1,4 +1,5 @@
 ﻿using Android.Support.V7.Widget;
+using OnePlayer.Data;
 
 namespace OnePlayer.Droid.UI.MusicLibrary
 {
@@ -21,11 +22,16 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             // use a linear layout manager
             var layoutManager = new Android.Support.V7.Widget.LinearLayoutManager(Activity);
             recyclerView.SetLayoutManager(layoutManager);
-            recyclerView.AddItemDecoration(new Controls.VerticalSpaceItemDecoration(25));
+            //recyclerView.AddItemDecoration(new Controls.VerticalSpaceItemDecoration(25));
 
             // specify an adapter (see also next example)
-            var adapter = new ArtistListAdapter(this.library);
+            var adapter = new ArtistListAdapter(this.library, OnArtistSelected);
             recyclerView.SetAdapter(adapter);
+        }
+
+        private void OnArtistSelected(Artist artist)
+        {
+            // TODO: Launch Artist activity
         }
     }
 }

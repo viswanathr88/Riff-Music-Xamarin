@@ -1,40 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="48dp">
-  <TextView
-    android:id="@+id/artist_initials"
-    android:layout_width="48dp"
-    android:layout_height="48dp"
-    android:textAlignment="center"
-    android:gravity="center"
-    android:background="#adad"
-    android:textSize="18dp"
-    android:textColor="#ffffff"/>
-  <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
-    android:layout_toRightOf="@+id/artist_initials">
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+    android:gravity="center">
     <TextView
-      android:id="@+id/artist_name"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="Loading..."
-      android:gravity="center_vertical"
-      android:textSize="16dp"
-      android:layout_marginLeft="10dp"
-      android:layout_marginRight="10dp"
-      android:textStyle="bold"
-      android:maxLines="1"
-      android:ellipsize="end"
+        android:id="@+id/artist_initials"
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:textAlignment="center"
+        android:layout_centerVertical="true"
+        android:background="#adad"
+        android:textSize="18dp"
+        android:textStyle="normal"
+        android:text="AR"
+        android:gravity="center"
+        android:textColor="#ffffff"/>
+    <TextView
+        android:id="@+id/artist_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:text="Loading..."
+        android:textSize="16dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_toRightOf="@id/artist_initials"
     />
-
-  </RelativeLayout>
 </RelativeLayout>
