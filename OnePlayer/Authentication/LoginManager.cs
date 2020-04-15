@@ -2,6 +2,7 @@
 using OnePlayer.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -11,19 +12,23 @@ namespace OnePlayer.Authentication
     public sealed class LoginManager
     {
         private const string appId = "19b11b92-7fc8-44c9-b794-8ae1d41cebed";
-        private static readonly string[] scopes = new string[] { "files.read", "offline_access"};
+        private static readonly string[] scopes = new string[] { "User.Read", "files.read", "offline_access" };
         private const string authorizeUri = @"https://login.microsoftonline.com/common/oauth2/v2.0/authorize";
         private const string accessTokenUri = @"https://login.microsoftonline.com/common/oauth2/v2.0/token";
+        private const string profileUri = @"https://graph.microsoft.com/V1.0/me/";
+        private const string profilePhotoUri = @"https://graph.microsoft.com/beta/me/photo/$value";
         private const string redirectUri = "app://com.oneplayer.droid/oauth2redirect";
 
         private readonly HttpClient httpClient;
         private readonly ITokenCache tokenCache;
+        private readonly IProfileCache profileCache;
         private Token inMemoryToken = null;
 
-        public LoginManager(HttpClient client, ITokenCache tokenCache)
+        public LoginManager(HttpClient client, ITokenCache tokenCache, IProfileCache profileCache)
         {
             this.httpClient = client;
             this.tokenCache = tokenCache;
+            this.profileCache = profileCache;
         }
 
         public async Task<bool> LoginExistsAsync()
@@ -61,12 +66,13 @@ namespace OnePlayer.Authentication
 
                 HttpContent content = new StringContent(body);
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-                
+
                 var response = await this.httpClient.PostAsync(accessTokenUri, content);
                 response.EnsureSuccessStatusCode();
-                
+
                 string jsonToken = await response.Content.ReadAsStringAsync();
                 result = JsonConvert.DeserializeObject<Token>(jsonToken);
+                await this.tokenCache.SetAsync(result);
             }
 
             inMemoryToken = result;
@@ -75,7 +81,7 @@ namespace OnePlayer.Authentication
 
         public string GetAuthorizeUrl()
         {
-            return  $"{authorizeUri}?client_id={appId}&scope={string.Join(" ", scopes)}&response_type=code&redirect_uri={redirectUri}";
+            return $"{authorizeUri}?client_id={appId}&scope={string.Join(" ", scopes)}&response_type=code&redirect_uri={redirectUri}";
         }
 
         public string GetRedirectUrl()
@@ -89,7 +95,6 @@ namespace OnePlayer.Authentication
             {
                 new KeyValuePair<string, string>("client_id", appId),
                 new KeyValuePair<string, string>("redirect_uri", redirectUri),
-                //parameters.Add(new KeyValuePair<string, string>("client_secret", appSecret));
                 new KeyValuePair<string, string>("code", code),
                 new KeyValuePair<string, string>("grant_type", "authorization_code")
             };
@@ -103,24 +108,59 @@ namespace OnePlayer.Authentication
 
             string jsonToken = await response.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<Token>(jsonToken);
+            
             await this.tokenCache.SetAsync(token);
             this.inMemoryToken = token;
+            
             return token;
         }
 
         public async Task<UserProfile> GetUserAsync()
         {
-            var token = await AcquireTokenSilentAsync();
-            
-            string url = "https://graph.microsoft.com/v1.0/me";
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            UserProfile profile = await this.profileCache.GetProfileAsync();
 
-            var response = await this.httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-            
-            string body = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<UserProfile>(body);
+            if (profile == null)
+            {
+                var token = await AcquireTokenSilentAsync();
+
+                var request = new HttpRequestMessage(HttpMethod.Get, profileUri);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+
+                var response = await this.httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+
+                string body = await response.Content.ReadAsStringAsync();
+                profile = JsonConvert.DeserializeObject<UserProfile>(body);
+
+                await this.profileCache.SetProfileAsync(profile);
+            }
+
+            return profile;
+        }
+
+        public async Task<Stream> GetUserPhotoAsync()
+        {
+            var stream = await this.profileCache.GetPhotoAsync();
+
+            if (stream == null)
+            {
+                var token = await AcquireTokenSilentAsync();
+
+                var request = new HttpRequestMessage(HttpMethod.Get, profilePhotoUri);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+
+                var response = await this.httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+                response.EnsureSuccessStatusCode();
+
+                using (var photoStream = await response.Content.ReadAsStreamAsync())
+                {
+                    await this.profileCache.SetPhotoAsync(stream);
+                }
+
+                stream = await this.profileCache.GetPhotoAsync();
+            }
+
+            return stream;
         }
 
         private async Task<Token> GetCachedTokenAsync()

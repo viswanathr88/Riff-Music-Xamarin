@@ -7,16 +7,22 @@ using Android.Support.V4.View;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 using Android.Views;
+using Android.Widget;
 using OnePlayer.Droid.UI.MusicLibrary;
+using System.Threading.Tasks;
 
 namespace OnePlayer.Droid.UI
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
-    //[MetaData("android.app.searchable", Resource = "@xml/searchable")]
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
         private OnePlayer.Droid.Sync.OneDriveSyncServiceConnection syncServiceConnection = null;
         private IMenu menu = null;
+        private ImageView profilePictureImageView = null;
+        private TextView userNameTextView = null;
+        private TextView userEmailTextView = null;
+        private bool profileSet = false;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -38,6 +44,11 @@ namespace OnePlayer.Droid.UI
             navigationView.SetNavigationItemSelectedListener(this);
             navigationView.SetCheckedItem(Resource.Id.nav_library);
             navigationView.Menu.PerformIdentifierAction(Resource.Id.nav_library, 0);
+
+            profilePictureImageView = navigationView.GetHeaderView(0).FindViewById<ImageView>(Resource.Id.profilePicture);
+            userNameTextView = navigationView.GetHeaderView(0).FindViewById<TextView>(Resource.Id.userName);
+            userEmailTextView = navigationView.GetHeaderView(0).FindViewById<TextView>(Resource.Id.userEmail);
+
         }
 
         protected async override void OnStart()
@@ -52,11 +63,23 @@ namespace OnePlayer.Droid.UI
             var app = ApplicationContext as IOnePlayerApp;
             app.SyncEngine.StateChanged += SyncEngine_StateChanged;
             UpdateSyncStateIcon(this.menu, app.SyncEngine.State);
-            
+
             bool loginExists = await app.LoginManager.LoginExistsAsync();
+            if (loginExists && !profileSet)
+            {
+                var profile = await Task.Run(async () => await app.LoginManager.GetUserAsync());
+                userNameTextView.Text = profile.DisplayName;
+                userEmailTextView.Text = profile.Email;
+
+                using var stream = await Task.Run(async () => await app.LoginManager.GetUserPhotoAsync());
+                profilePictureImageView.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
+
+                profileSet = true;
+            }
 
             if (!this.syncServiceConnection.IsConnected && !app.Preferences.IsSyncPaused)
             {
+
                 if (loginExists)
                 {
                     app.SyncEngine.Start();

@@ -94,10 +94,10 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="Storage\AppPreferences.cs" />
+    <Compile Include="Storage\ProfileCache.cs" />
     <Compile Include="Storage\TokenCache.cs" />
     <Compile Include="IOnePlayerApp.cs" />
     <Compile Include="Sync\IOneDriveSyncService.cs" />
-    <Compile Include="Sync\MusicSyncService.cs" />
     <Compile Include="Sync\OneDriveSyncServiceBinder.cs" />
     <Compile Include="Sync\OneDriveSyncService.cs" />
     <Compile Include="Sync\OneDriveSyncServiceConnection.cs" />
@@ -310,6 +310,9 @@
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
       <SubType>Designer</SubType>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable-v21\circle.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

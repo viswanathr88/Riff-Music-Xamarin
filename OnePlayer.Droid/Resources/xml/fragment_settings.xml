@@ -1,55 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.preference.PreferenceScreen 
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
-  <android.support.v7.preference.PreferenceCategory 
-    android:title="@string/preference_category_account">
-    <Preference
-      app:key="signIn"
-      app:title="@string/settings_sign_in_to_onedrive"
-      app:isPreferenceVisible="true">
-      <intent
-        android:action="android.intent.action.VIEW"
-        android:targetPackage="com.oneplayer.droid"
-        android:targetClass="com.oneplayer.droid.SignInActivity" />
-    </Preference>
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/preference_category_account">
+        <Preference
+            app:key="signIn"
+            app:title="@string/settings_sign_in_to_onedrive"
+            app:summary="@string/settings_sign_in_to_onedrive_summary"
+            app:isPreferenceVisible="false">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.oneplayer.droid"
+                android:targetClass="com.oneplayer.droid.SignInActivity" />
+        </Preference>
+        <Preference
+            app:key="signOut"
+            app:title="@string/settings_sign_out_of_onedrive"
+            app:isPreferenceVisible="false" />
 
-    <SwitchPreferenceCompat
-      android:id="@+id/preference_is_sync_paused"
-      app:key="IsSyncPaused"
-      app:title="@string/setting_pause_sync"
-      app:summary="@string/setting_pause_sync_summary" />
-    
-  </android.support.v7.preference.PreferenceCategory>
-  
-  <android.support.v7.preference.PreferenceCategory 
-    android:title="@string/preference_category_general">
-    <ListPreference
-      app:key="theme"
-      app:title="@string/setting_theme"
-      app:defaultValue="0"
-      app:entries="@array/setting_theme_entries"
-      app:entryValues="@array/setting_theme_entry_values"
-      app:summary="%s"/>
-  </android.support.v7.preference.PreferenceCategory>
-  <android.support.v7.preference.PreferenceCategory android:title="@string/preference_category_playback">
-    <SwitchPreferenceCompat
-      app:key="streamOnlyOverWifi"
-      app:title="@string/setting_stream_over_wifi"
-      app:summary="@string/setting_stream_over_wifi_summary" />
-  </android.support.v7.preference.PreferenceCategory>
+        <SwitchPreferenceCompat
+            android:id="@+id/preference_is_sync_paused"
+            app:key="IsSyncPaused"
+            app:title="@string/setting_pause_sync"
+            app:summary="@string/setting_pause_sync_summary" />
 
-  <android.support.v7.preference.PreferenceCategory android:title="@string/preference_category_downloading">
-    <SwitchPreferenceCompat
-      app:key="downloadOnlyOverWifi"
-      app:title="@string/setting_download_over_wifi"
-      app:summary="@string/setting_download_over_wifi_summary" />
-    <Preference
-      app:key="clearDownloadedMusic"
-      app:title="@string/setting_clear_downloaded_music"
-      app:summary="@string/setting_clear_downloaded_music_summary" />
-    <Preference
-      app:key="manageDownloadedMusic"
-      app:title="@string/setting_manage_downloaded_music" />
-  </android.support.v7.preference.PreferenceCategory>
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="@string/preference_category_general">
+        <ListPreference
+            app:key="theme"
+            app:title="@string/setting_theme"
+            app:defaultValue="0"
+            app:entries="@array/setting_theme_entries"
+            app:entryValues="@array/setting_theme_entry_values"
+            app:summary="%s"/>
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory android:title="@string/preference_category_playback">
+        <SwitchPreferenceCompat
+            app:key="streamOnlyOverWifi"
+            app:title="@string/setting_stream_over_wifi"
+            app:summary="@string/setting_stream_over_wifi_summary" />
+    </android.support.v7.preference.PreferenceCategory>
+
+    <android.support.v7.preference.PreferenceCategory android:title="@string/preference_category_downloading">
+        <SwitchPreferenceCompat
+            app:key="downloadOnlyOverWifi"
+            app:title="@string/setting_download_over_wifi"
+            app:summary="@string/setting_download_over_wifi_summary" />
+        <Preference
+            app:key="clearDownloadedMusic"
+            app:title="@string/setting_clear_downloaded_music"
+            app:summary="@string/setting_clear_downloaded_music_summary" />
+        <Preference
+            app:key="manageDownloadedMusic"
+            app:title="@string/setting_manage_downloaded_music" />
+    </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

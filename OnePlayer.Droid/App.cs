@@ -5,6 +5,7 @@ using OnePlayer.Data;
 using OnePlayer.Droid.Storage;
 using OnePlayer.Sync;
 using System;
+using System.IO;
 using System.Net.Http;
 
 namespace OnePlayer.Droid
@@ -14,12 +15,14 @@ namespace OnePlayer.Droid
     {
         private LoginManager loginManager;
         private ITokenCache tokenCache;
+        private IProfileCache profileCache;
         private IPreferences appPreferences;
         private MusicLibrary musicLibrary;
         private SyncEngine syncEngine;
         private const string tokenCachePreferenceFile = "com.oneplayer.droid.tokencache.preferences";
         private const string appPreferenceFile = "com.oneplayer.droid.app.preferences";
         private readonly static HttpClient httpClient = new HttpClient();
+        private static readonly string DefaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
 
         public App(IntPtr javaReference, Android.Runtime.JniHandleOwnership transfer) : base(javaReference, transfer)
         {
@@ -37,7 +40,7 @@ namespace OnePlayer.Droid
             {
                 if (this.loginManager == null)
                 {
-                    this.loginManager = new LoginManager(httpClient, TokenCache);
+                    this.loginManager = new LoginManager(httpClient, TokenCache, ProfileCache);
                 }
 
                 return this.loginManager;
@@ -56,6 +59,19 @@ namespace OnePlayer.Droid
                 }
 
                 return this.tokenCache;
+            }
+        }
+
+        private IProfileCache ProfileCache
+        {
+            get
+            {
+                if (profileCache == null)
+                {
+                    profileCache = new ProfileCache(DefaultPath);
+                }
+
+                return profileCache;
             }
         }
 

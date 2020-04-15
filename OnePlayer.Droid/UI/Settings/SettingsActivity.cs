@@ -18,7 +18,7 @@ namespace OnePlayer.Droid.UI.Settings
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
 
             SupportFragmentManager.BeginTransaction()
-                .Replace(Resource.Id.settings_container, new SettingsFragment())
+                .Replace(Resource.Id.settings_container, new SettingsFragment((ApplicationContext as IOnePlayerApp).LoginManager))
                 .Commit();
 
             GetSharedPreferences("com.oneplayer.droid.app.preferences", Android.Content.FileCreationMode.Private).RegisterOnSharedPreferenceChangeListener(this);

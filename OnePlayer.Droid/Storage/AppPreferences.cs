@@ -32,21 +32,5 @@ namespace OnePlayer.Droid.Storage
             get => sharedPreferences.GetBoolean(isSyncPausedKey, false);
             set => sharedPreferences.Edit().PutBoolean(isSyncPausedKey, value).Apply();
         }
-
-        public IntPtr Handle => throw new NotImplementedException();
-
-        public int JniIdentityHashCode => throw new NotImplementedException();
-
-        public JniObjectReference PeerReference => throw new NotImplementedException();
-
-        public JniPeerMembers JniPeerMembers => throw new NotImplementedException();
-
-        public JniManagedPeerStates JniManagedPeerState => throw new NotImplementedException();
-
-        public void OnSharedPreferenceChanged(ISharedPreferences sharedPreferences, string key)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
