@@ -59,11 +59,11 @@ namespace OnePlayer.Sync
         private SyncState state = SyncState.NotStarted;
         private readonly string baseUrl = "https://graph.microsoft.com/v1.0/drive/special/music/delta?$expand=thumbnails";
         private readonly IPreferences preferences;
-        private readonly LoginManager loginManager;
+        private readonly ILoginManager loginManager;
         private readonly HttpClient webClient;
         private readonly MusicLibrary library;
 
-        public SyncEngine(IPreferences preferences, LoginManager loginManager, HttpClient webClient, MusicLibrary library)
+        public SyncEngine(IPreferences preferences, ILoginManager loginManager, HttpClient webClient, MusicLibrary library)
         {
             this.preferences = preferences;
             this.loginManager = loginManager;

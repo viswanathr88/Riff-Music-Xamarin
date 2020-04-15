@@ -8,9 +8,9 @@ namespace OnePlayer.Droid.UI.Settings
 {
     public class SettingsFragment : Android.Support.V7.Preferences.PreferenceFragmentCompat
     {
-        private LoginManager loginManager;
+        private ILoginManager loginManager;
 
-        public SettingsFragment(LoginManager loginManager)
+        public SettingsFragment(ILoginManager loginManager)
         {
             this.loginManager = loginManager;
         }
@@ -44,7 +44,7 @@ namespace OnePlayer.Droid.UI.Settings
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

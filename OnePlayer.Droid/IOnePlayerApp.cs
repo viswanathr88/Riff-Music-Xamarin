@@ -7,7 +7,7 @@ namespace OnePlayer.Droid
 {
     public interface IOnePlayerApp
     {
-        LoginManager LoginManager { get; }
+        ILoginManager LoginManager { get; }
 
         HttpClient WebClient { get; }
 

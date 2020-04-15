@@ -13,7 +13,7 @@ namespace OnePlayer.Droid
     [Application]
     public class App : Android.App.Application, IOnePlayerApp
     {
-        private LoginManager loginManager;
+        private ILoginManager loginManager;
         private ITokenCache tokenCache;
         private IProfileCache profileCache;
         private IPreferences appPreferences;
@@ -34,13 +34,13 @@ namespace OnePlayer.Droid
         }
 
 
-        public LoginManager LoginManager
+        public ILoginManager LoginManager
         {
             get
             {
                 if (this.loginManager == null)
                 {
-                    this.loginManager = new LoginManager(httpClient, TokenCache, ProfileCache);
+                    this.loginManager = new CacheReadyLoginManager(httpClient, TokenCache, ProfileCache);
                 }
 
                 return this.loginManager;

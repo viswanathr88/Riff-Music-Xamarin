@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OnePlayer.Authentication
 {
-    public sealed class LoginManager
+    public sealed class LoginManager : ILoginManager
     {
         private const string appId = "19b11b92-7fc8-44c9-b794-8ae1d41cebed";
         private static readonly string[] scopes = new string[] { "User.Read", "files.read", "offline_access" };
@@ -21,14 +21,12 @@ namespace OnePlayer.Authentication
 
         private readonly HttpClient httpClient;
         private readonly ITokenCache tokenCache;
-        private readonly IProfileCache profileCache;
         private Token inMemoryToken = null;
 
-        public LoginManager(HttpClient client, ITokenCache tokenCache, IProfileCache profileCache)
+        public LoginManager(HttpClient client, ITokenCache tokenCache)
         {
             this.httpClient = client;
             this.tokenCache = tokenCache;
-            this.profileCache = profileCache;
         }
 
         public async Task<bool> LoginExistsAsync()
@@ -117,50 +115,29 @@ namespace OnePlayer.Authentication
 
         public async Task<UserProfile> GetUserAsync()
         {
-            UserProfile profile = await this.profileCache.GetProfileAsync();
+            var token = await AcquireTokenSilentAsync();
 
-            if (profile == null)
-            {
-                var token = await AcquireTokenSilentAsync();
+            var request = new HttpRequestMessage(HttpMethod.Get, profileUri);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-                var request = new HttpRequestMessage(HttpMethod.Get, profileUri);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            var response = await this.httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
 
-                var response = await this.httpClient.SendAsync(request);
-                response.EnsureSuccessStatusCode();
-
-                string body = await response.Content.ReadAsStringAsync();
-                profile = JsonConvert.DeserializeObject<UserProfile>(body);
-
-                await this.profileCache.SetProfileAsync(profile);
-            }
-
-            return profile;
+            string body = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UserProfile>(body);
         }
 
         public async Task<Stream> GetUserPhotoAsync()
         {
-            var stream = await this.profileCache.GetPhotoAsync();
+            var token = await AcquireTokenSilentAsync();
 
-            if (stream == null)
-            {
-                var token = await AcquireTokenSilentAsync();
+            var request = new HttpRequestMessage(HttpMethod.Get, profilePhotoUri);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
-                var request = new HttpRequestMessage(HttpMethod.Get, profilePhotoUri);
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            var response = await this.httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
 
-                var response = await this.httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-                response.EnsureSuccessStatusCode();
-
-                using (var photoStream = await response.Content.ReadAsStreamAsync())
-                {
-                    await this.profileCache.SetPhotoAsync(stream);
-                }
-
-                stream = await this.profileCache.GetPhotoAsync();
-            }
-
-            return stream;
+            return await response.Content.ReadAsStreamAsync();
         }
 
         private async Task<Token> GetCachedTokenAsync()
