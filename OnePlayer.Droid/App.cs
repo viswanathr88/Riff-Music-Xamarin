@@ -31,6 +31,7 @@ namespace OnePlayer.Droid
         public override void OnCreate()
         {
             base.OnCreate();
+
         }
 
 

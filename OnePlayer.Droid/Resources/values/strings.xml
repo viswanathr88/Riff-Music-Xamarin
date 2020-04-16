@@ -2,6 +2,9 @@
     <string name="app_name">OnePlayer</string>
     <string name="channel_name">OnePlayer.Sync.Channel</string>
     <string name="channel_descrioption">Notification channel for OnePlayer Sync</string>
+    <string name="fre_login_button_text">LOG IN TO ONEDRIVE</string>
+    <string name="fre_login_description_text">In order to access your music stored on OneDrive, please login using your Microsoft Account</string>
+    <string name="fre_next_button_text">LET\'S GO</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>

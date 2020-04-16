@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace OnePlayer.Droid.UI
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar")]
     public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
         private OnePlayer.Droid.Sync.OneDriveSyncServiceConnection syncServiceConnection = null;
@@ -27,10 +27,11 @@ namespace OnePlayer.Droid.UI
         {
             base.OnCreate(savedInstanceState);
 
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+
             // Register notification channel
             CreateNotificationChannel();
 
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
