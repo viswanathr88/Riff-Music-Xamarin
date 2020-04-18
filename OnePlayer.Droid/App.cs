@@ -18,6 +18,7 @@ namespace OnePlayer.Droid
         private IProfileCache profileCache;
         private IPreferences appPreferences;
         private MusicLibrary musicLibrary;
+        private IMusicDataStore store;
         private SyncEngine syncEngine;
         private const string tokenCachePreferenceFile = "com.oneplayer.droid.tokencache.preferences";
         private const string appPreferenceFile = "com.oneplayer.droid.app.preferences";
@@ -32,6 +33,19 @@ namespace OnePlayer.Droid
         {
             base.OnCreate();
 
+        }
+
+        public IMusicDataStore DataStore
+        {
+            get
+            {
+                if (this.store == null)
+                {
+                    this.store = new MusicDataStore(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
+                }
+
+                return this.store;
+            }
         }
 
 
@@ -95,7 +109,7 @@ namespace OnePlayer.Droid
             {
                 if (musicLibrary == null)
                 {
-                    musicLibrary = new MusicLibrary(WebClient);
+                    musicLibrary = new MusicLibrary(DataStore, WebClient);
                 }
 
                 return musicLibrary;

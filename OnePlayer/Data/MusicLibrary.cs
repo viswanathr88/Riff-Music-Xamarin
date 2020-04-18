@@ -10,10 +10,6 @@ namespace OnePlayer.Data
         private readonly IMusicDataAccessor data;
         private readonly MusicLibraryWriter writer;
 
-        public MusicLibrary(HttpClient httpClient) : this(new MusicDataStore(), httpClient)
-        {
-        }
-
         public MusicLibrary(IMusicDataStore dataStore, HttpClient httpClient)
         {
             store = dataStore ?? throw new ArgumentNullException(nameof(dataStore));

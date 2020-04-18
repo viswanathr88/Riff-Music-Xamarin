@@ -1,7 +1,7 @@
 ﻿ <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard1.4</TargetFramework>
     <RootNamespace>OnePlayer</RootNamespace>
     <UserSecretsId>e4b4e46a-623b-4729-ac04-ab2fcb768617</UserSecretsId>
     <AssemblyName>OnePlayer</AssemblyName>

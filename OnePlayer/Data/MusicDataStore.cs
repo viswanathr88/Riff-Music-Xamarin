@@ -1,20 +1,15 @@
-﻿using System;
+﻿using OnePlayer.Data.Sqlite;
+using System;
 using System.IO;
 
 namespace OnePlayer.Data
 {
-    sealed class MusicDataStore : IMusicDataStore
+    public sealed class MusicDataStore : IMusicDataStore
     {
-        private static readonly string DefaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
         private readonly string rootPath;
         private readonly string dbPath;
         private readonly string thumbnailPath;
         private readonly IMusicDataAccessor musicDataAccessor;
-
-        public MusicDataStore() : this(DefaultPath)
-        {
-            this.musicDataAccessor = new Sqlite.MusicDb(dbPath);
-        }
 
         public MusicDataStore(string path)
         {
@@ -31,6 +26,7 @@ namespace OnePlayer.Data
             rootPath = path;
             dbPath = Path.Combine(this.rootPath, "oneplayer.db");
             thumbnailPath = Path.Combine(this.rootPath, "Thumbnails");
+            musicDataAccessor = new MusicDb(dbPath);
 
             TrackThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Tracks"));
             AlbumThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Albums"));
