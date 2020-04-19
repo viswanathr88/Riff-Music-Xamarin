@@ -22,21 +22,29 @@
 
         <ui:NavigationView x:Name="NavView"
                            Grid.Row="1"
-                           PaneDisplayMode="Auto"
+                           PaneDisplayMode="LeftMinimal"
                            Loaded="NavView_Loaded"
                            ItemInvoked="NavView_ItemInvoked"
                            IsBackButtonVisible="Collapsed"
                            IsTitleBarAutoPaddingEnabled="True">
 
             <ui:NavigationView.Header>
-                <StackPanel x:Name="NavViewHeaderContainer"
-                            Orientation="Horizontal">
+                <Grid x:Name="NavViewHeaderContainer"
+                      >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <!-- Header Text -->
                     <TextBlock x:Name="NavViewHeaderText"
                                Text=""
-                               Padding="0,6,0,0"
                                VerticalAlignment="Top"
-                               Style="{StaticResource BaseTextBlockStyle}" />
-                </StackPanel>
+                               Style="{StaticResource SubtitleTextBlockStyle}" />
+                    
+                    <!-- Header Toolbar -->
+                    
+                </Grid>
             </ui:NavigationView.Header>
 
             <ui:NavigationView.MenuItems>
@@ -64,13 +72,23 @@
                                   Glyph="&#xE90B;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItemSeparator />
+                <ui:NavigationViewItemSeparator x:Name="NavViewFirstSeparator" />
                 <ui:NavigationViewItem Tag="nowplaying"
                                        x:Uid="NavViewNowPlaying"
                                        Content="">
                     <ui:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                   Glyph="&#xEA37;" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+
+                <ui:NavigationViewItem Tag="syncstatus"
+                                       x:Uid="NavViewSyncStatus"
+                                       x:Name="NavViewSyncStatus"
+                                       Content="">
+                    <ui:NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                                  Glyph="&#xE895;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
@@ -87,10 +105,10 @@
 
             <ui:NavigationView.PaneFooter>
                 <ui:NavigationViewItem Tag="syncstatus"
-                                       x:Uid="NavViewSyncStatus"
-                                       x:Name="NavViewSyncStatus"
+                                       x:Uid="NavViewSyncStatusFooter"
+                                       x:Name="NavViewSyncStatusFooter"
                                        Content=""
-                                       IsSelected="True">
+                                       Visibility="Collapsed">
                     <ui:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                   Glyph="&#xE895;" />
@@ -112,7 +130,7 @@
             <VisualStateGroup>
                 <VisualState>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{x:Bind NavView.CompactModeThresholdWidth}" />
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind NavView.ExpandedModeThresholdWidth}" />
                     </VisualState.StateTriggers>
 
                     <VisualState.Setters>
@@ -122,8 +140,34 @@
                                 Value="250" />
                         <Setter Target="NavView.AlwaysShowHeader"
                                 Value="False" />
-                        <Setter Target="NavViewSyncStatus.Content"
-                                Value="" />
+                        <Setter Target="NavViewSyncStatusFooter.Visibility"
+                                Value="Visible" />
+                        <Setter Target="NavViewSyncStatus.Visibility"
+                                Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <!--<VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind NavView.ExpandedModeThresholdWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="NavView.PaneDisplayMode"
+                                Value="Left" />
+                    </VisualState.Setters>
+                </VisualState>-->
+
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{x:Bind NavView.CompactModeThresholdWidth}" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="NavView.PaneDisplayMode"
+                                Value="LeftCompact" />
+                        <Setter Target="NavViewFirstSeparator.Visibility"
+                                Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

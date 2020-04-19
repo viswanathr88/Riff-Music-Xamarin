@@ -30,7 +30,7 @@
                 Windows10version1809:CornerRadius="0"
                 Visibility="Collapsed"
                 Background="Transparent"
-                Width="48"
+                Width="40"
                 Click="TitlebarBackButton_Click">
             <Button.Content>
                 <FontIcon FontFamily="Segoe MDL2 Assets"

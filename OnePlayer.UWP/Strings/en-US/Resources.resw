@@ -120,6 +120,12 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>OnePlayer</value>
   </data>
+  <data name="LoginButton.Content" xml:space="preserve">
+    <value>LOG IN TO ONEDRIVE</value>
+  </data>
+  <data name="LoginDescription.Text" xml:space="preserve">
+    <value>In order to access your music stored on OneDrive, please login using your Microsoft Account</value>
+  </data>
   <data name="NavViewHome.Content" xml:space="preserve">
     <value>Home</value>
   </data>
@@ -141,10 +147,55 @@
   <data name="NavViewSyncStatus.Content" xml:space="preserve">
     <value>Sync Status</value>
   </data>
+  <data name="NavViewToolbarDisplayMode.Label" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="NavViewToolbarFilter.Label" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="NavViewToolbarSort.Label" xml:space="preserve">
+    <value>Sort</value>
+  </data>
   <data name="NavViewTracks.Content" xml:space="preserve">
     <value>Tracks</value>
   </data>
   <data name="Titlebar.AppName" xml:space="preserve">
     <value>OnePlayer</value>
+  </data>
+  <data name="ToolbarDisplayMode.Label" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="ToolbarDisplayModeGrid.Text" xml:space="preserve">
+    <value>Grid</value>
+  </data>
+  <data name="ToolbarDisplayModeList.Text" xml:space="preserve">
+    <value>List</value>
+  </data>
+  <data name="ToolbarFilterAlbums.Text" xml:space="preserve">
+    <value>Albums</value>
+  </data>
+  <data name="ToolbarFilterArtists.Text" xml:space="preserve">
+    <value>Artists</value>
+  </data>
+  <data name="ToolbarFilterGenres.Text" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="ToolbarFilterTracks.Text" xml:space="preserve">
+    <value>Tracks</value>
+  </data>
+  <data name="ToolbarSortAlphabetical.Text" xml:space="preserve">
+    <value>A to Z</value>
+  </data>
+  <data name="ToolbarSortDateAdded.Text" xml:space="preserve">
+    <value>Date Added</value>
+  </data>
+  <data name="ToolbarSortOrderDecreasing.Text" xml:space="preserve">
+    <value>Decreasing</value>
+  </data>
+  <data name="ToolbarSortOrderIncreasing.Text" xml:space="preserve">
+    <value>Increasing</value>
+  </data>
+  <data name="ToolbarSortReleaseDate.Text" xml:space="preserve">
+    <value>Release Date</value>
   </data>
 </root>
