@@ -40,6 +40,9 @@ namespace OnePlayer.UWP.Authentication
         private const string authorizeUri = @"https://login.microsoft.com";
         private const string profileUri = @"https://graph.microsoft.com/V1.0/me/";
         private const string profilePhotoUri = @"https://graph.microsoft.com/beta/me/photo/$value";
+        private const string currentProviderIdKey = "CurrentUserProviderId";
+        private const string currentUserIdKey = "CurrentUserId";
+
 
         private readonly HttpClient webClient;
 
@@ -80,7 +83,7 @@ namespace OnePlayer.UWP.Authentication
                 return new Token() { AccessToken = result.ResponseData[0].Token };
             }
 
-            throw new Exception($"Login failed with status {result.ResponseStatus.ToString()}, Error Code: {result.ResponseError?.ErrorCode}, ErrorMessage: {result.ResponseError?.ErrorMessage}");
+            throw new Exception($"Login failed with status {result.ResponseStatus}, Error Code: {result.ResponseError?.ErrorCode}, ErrorMessage: {result.ResponseError?.ErrorMessage}");
         }
 
         public string GetAuthorizeUrl()
@@ -130,7 +133,6 @@ namespace OnePlayer.UWP.Authentication
             }
             catch (Exception)
             {
-                loginExists = false;
             }
 
             return loginExists;
@@ -153,8 +155,18 @@ namespace OnePlayer.UWP.Authentication
 
         private void StoreLoginProfileAsync(LoginProfile profile)
         {
-            ApplicationData.Current.LocalSettings.Values["CurrentUserProviderId"] = profile.Provider.Id;
-            ApplicationData.Current.LocalSettings.Values["CurrentUserId"] = profile.Account.Id;
+            ApplicationData.Current.LocalSettings.Values[currentProviderIdKey] = profile.Provider.Id;
+            ApplicationData.Current.LocalSettings.Values[currentUserIdKey] = profile.Account.Id;
+        }
+
+        public async Task SignOutAsync()
+        {
+            var profile = await GetLoginProfileAsync();
+
+            await profile.Account.SignOutAsync();
+
+            ApplicationData.Current.LocalSettings.Values.Remove(currentProviderIdKey);
+            ApplicationData.Current.LocalSettings.Values.Remove(currentUserIdKey);
         }
     }
 }

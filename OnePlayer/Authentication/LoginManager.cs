@@ -144,5 +144,10 @@ namespace OnePlayer.Authentication
         {
             return inMemoryToken ?? await this.tokenCache.GetAsync();
         }
+
+        public Task SignOutAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

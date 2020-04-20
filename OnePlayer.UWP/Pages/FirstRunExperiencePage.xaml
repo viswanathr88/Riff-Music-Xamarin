@@ -22,7 +22,8 @@
                    Style="{StaticResource BaseTextBlockStyle}"
                    RelativePanel.Below="SplashImage"
                    RelativePanel.AlignHorizontalCenterWithPanel="True"
-                   Margin="0,0,0,20"/>
+                   Margin="0,0,0,20"
+                   Visibility="{x:Bind ViewModel.LoginRequired, FallbackValue=Collapsed}"/>
 
         <Button x:Uid="LoginButton"
                 x:Name="LoginButton"
@@ -30,7 +31,8 @@
                 RelativePanel.Below="LoginDescription"
                 Foreground="White"
                 RelativePanel.AlignHorizontalCenterWithPanel="True"
-                Click="LoginButton_Click"/>
+                Click="LoginButton_Click"
+                Visibility="{x:Bind ViewModel.LoginRequired, FallbackValue=Collapsed}"/>
 
 
     </RelativePanel>

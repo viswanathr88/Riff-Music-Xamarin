@@ -26,5 +26,10 @@ namespace OnePlayer.UWP.Pages
         {
             this.InitializeComponent();
         }
+
+        private void SignOutButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

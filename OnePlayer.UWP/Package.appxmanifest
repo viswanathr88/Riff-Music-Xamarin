@@ -7,15 +7,15 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="c25eb173-c343-456c-b373-872ce7e602c2"
-    Publisher="CN=viswanr"
+    Name="18719ViswanathRamanan.Gimmix"
+    Publisher="CN=F13159E3-8501-4753-9208-FDD795A7A68F"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="c25eb173-c343-456c-b373-872ce7e602c2" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="28150e3d-dd72-4047-a4d2-e78055f3f65f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>OnePlayer.UWP</DisplayName>
-    <PublisherDisplayName>viswanr</PublisherDisplayName>
+    <DisplayName>Gimmix</DisplayName>
+    <PublisherDisplayName>Viswanath Ramanan</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 

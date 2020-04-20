@@ -1,10 +1,9 @@
 ﻿using OnePlayer.UWP.ViewModel;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.ApplicationSettings;
 using System;
 using Windows.Security.Authentication.Web.Core;
+using Windows.UI.ApplicationSettings;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -13,8 +12,10 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class FirstRunExperiencePage : Page
+    public sealed partial class FirstRunExperiencePage : Page, ISupportViewModel<FirstRunExperienceViewModel>
     {
+        public FirstRunExperienceViewModel ViewModel => DataContext as FirstRunExperienceViewModel;
+
         public FirstRunExperiencePage()
         {
             this.InitializeComponent();
@@ -32,7 +33,7 @@ namespace OnePlayer.UWP.Pages
             if (!vm.LoginRequired)
             {
                 // Navigate to Main Page
-                Frame.Navigate(typeof(MainPage), VoidType.Empty, new EntranceNavigationTransitionInfo());
+                // Frame.Navigate(typeof(MainPage), null , new EntranceNavigationTransitionInfo());
             }
         }
 

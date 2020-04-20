@@ -9,6 +9,18 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <TextBlock Text="Settings" />
+
+        <Button Grid.Row="1"
+                x:Uid="SignOutButton"
+                x:Name="SignOutButton"
+                Content="Sign Out"
+                Click="SignOutButton_Click" />
+
     </Grid>
 </Page>

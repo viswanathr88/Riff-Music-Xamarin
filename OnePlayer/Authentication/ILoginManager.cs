@@ -13,5 +13,7 @@ namespace OnePlayer.Authentication
         Task<UserProfile> GetUserAsync();
         Task<Stream> GetUserPhotoAsync();
         Task<bool> LoginExistsAsync();
+
+        Task SignOutAsync();
     }
 }

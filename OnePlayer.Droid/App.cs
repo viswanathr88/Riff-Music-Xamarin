@@ -41,7 +41,7 @@ namespace OnePlayer.Droid
             {
                 if (this.store == null)
                 {
-                    this.store = new MusicDataStore(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
+                    this.store = new MusicDataStore(DefaultPath);
                 }
 
                 return this.store;

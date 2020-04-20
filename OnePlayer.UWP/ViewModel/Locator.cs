@@ -1,23 +1,25 @@
 ﻿using OnePlayer.Authentication;
-using OnePlayer.Data;
 using System;
 using System.Net.Http;
+using Windows.Storage;
 
 namespace OnePlayer.UWP.ViewModel
 {
     public sealed class Locator
     {
-        private Lazy<MusicLibraryViewModel> musicLibraryVM;
-        private Lazy<FirstRunExperienceViewModel> firstRunExperienceVM;
+        private readonly Lazy<MusicLibraryViewModel> musicLibraryVM;
+        private readonly Lazy<FirstRunExperienceViewModel> firstRunExperienceVM;
         
-        private Lazy<ILoginManager> loginManager;
-        private Lazy<HttpClient> httpClient;
+        private readonly Lazy<ILoginManager> loginManager;
+        private readonly Lazy<HttpClient> httpClient;
+
+        private readonly string DefaultPath = ApplicationData.Current.LocalCacheFolder.Path;
 
         public Locator()
         {
             httpClient = new Lazy<HttpClient>(() => new HttpClient());
             musicLibraryVM = new Lazy<MusicLibraryViewModel>();
-            loginManager = new Lazy<ILoginManager>(() => new OnePlayer.UWP.Authentication.LoginManager(WebClient));
+            loginManager = new Lazy<ILoginManager>(() => new CacheReadyLoginManager(new OnePlayer.UWP.Authentication.LoginManager(WebClient), DefaultPath));
             firstRunExperienceVM = new Lazy<FirstRunExperienceViewModel>(() => new FirstRunExperienceViewModel(loginManager.Value));
         }
         
@@ -26,5 +28,7 @@ namespace OnePlayer.UWP.ViewModel
         public FirstRunExperienceViewModel FirstRunExperience => firstRunExperienceVM.Value;
 
         private HttpClient WebClient => httpClient.Value;
+
+        public ILoginManager LoginManager => loginManager.Value;
     }
 }

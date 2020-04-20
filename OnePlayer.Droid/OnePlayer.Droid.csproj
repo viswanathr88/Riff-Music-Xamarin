@@ -97,7 +97,6 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="Storage\AppPreferences.cs" />
-    <Compile Include="Storage\ProfileCache.cs" />
     <Compile Include="Storage\TokenCache.cs" />
     <Compile Include="IOnePlayerApp.cs" />
     <Compile Include="Sync\IOneDriveSyncService.cs" />

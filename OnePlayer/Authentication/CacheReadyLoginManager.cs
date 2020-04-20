@@ -11,6 +11,11 @@ namespace OnePlayer.Authentication
         private readonly IProfileCache profileCache;
         private UserProfile inMemoryProfile = null;
 
+        public CacheReadyLoginManager(ILoginManager loginManager, string path)
+            : this(loginManager, new ProfileCache(path))
+        {
+        }
+
         public CacheReadyLoginManager(HttpClient client, ITokenCache tokenCache, IProfileCache profileCache)
             : this(new LoginManager(client, tokenCache), profileCache)
         { }
@@ -79,6 +84,11 @@ namespace OnePlayer.Authentication
         private async Task<UserProfile> GetCachedProfileAsync()
         {
             return inMemoryProfile ?? await this.profileCache.GetProfileAsync();
+        }
+
+        public Task SignOutAsync()
+        {
+            return loginManagerImpl.SignOutAsync();
         }
     }
 }

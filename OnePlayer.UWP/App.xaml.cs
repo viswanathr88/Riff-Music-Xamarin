@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using OnePlayer.UWP.Pages;
+using OnePlayer.UWP.ViewModel;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace OnePlayer.UWP
@@ -39,13 +32,11 @@ namespace OnePlayer.UWP
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
@@ -68,7 +59,18 @@ namespace OnePlayer.UWP
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(Pages.FirstRunExperiencePage), e.Arguments);
+                    var locator = Resources["VMLocator"] as Locator;
+
+                    if (!await locator.LoginManager.LoginExistsAsync())
+                    {
+                        rootFrame.Navigate(typeof(FirstRunExperiencePage), e.Arguments, null);
+
+                    }
+                    else
+                    {
+                        rootFrame.Navigate(typeof(MainPage), null, new EntranceNavigationTransitionInfo());
+                    }
+
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
@@ -84,7 +86,7 @@ namespace OnePlayer.UWP
             var titlebar = ApplicationView.GetForCurrentView().TitleBar;
             titlebar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
             titlebar.ButtonInactiveBackgroundColor = Windows.UI.Colors.Transparent;
-            // titlebar.ButtonForegroundColor = (Windows.UI.Color)Resources["SystemBaseHighColor"];
+            titlebar.ButtonForegroundColor = (Windows.UI.Color)Resources["SystemBaseHighColor"];
         }
 
         /// <summary>
