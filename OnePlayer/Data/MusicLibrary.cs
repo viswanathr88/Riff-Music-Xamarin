@@ -97,6 +97,13 @@ namespace OnePlayer.Data
             results.Sort(new SearchItemComparer());
         }
 
+        public IList<SearchItem> Search(SearchQuery query)
+        {
+            List<SearchItem> searchItems = new List<SearchItem>();
+            Search(query, searchItems);
+            return searchItems;
+        }
+
         internal MusicLibraryWriter Edit()
         {
             return writer;

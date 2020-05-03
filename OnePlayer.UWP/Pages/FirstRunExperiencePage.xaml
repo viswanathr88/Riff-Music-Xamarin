@@ -4,9 +4,14 @@
       xmlns:local="using:OnePlayer.UWP.Pages"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:conv="using:OnePlayer.UWP.Converters"
       mc:Ignorable="d"
       Background="#506658"
       DataContext="{Binding Source={StaticResource VMLocator}, Path=FirstRunExperience}">
+
+    <Page.Resources>
+        <conv:BoolNegationConverter x:Key="BoolNegationConv" />
+    </Page.Resources>
 
     <RelativePanel>
         <Image x:Name="SplashImage"
@@ -23,7 +28,7 @@
                    RelativePanel.Below="SplashImage"
                    RelativePanel.AlignHorizontalCenterWithPanel="True"
                    Margin="0,0,0,20"
-                   Visibility="{x:Bind ViewModel.LoginRequired, FallbackValue=Collapsed}"/>
+                   Visibility="{x:Bind ViewModel.LoginRequired, Mode=OneWay, FallbackValue=Collapsed}"/>
 
         <Button x:Uid="LoginButton"
                 x:Name="LoginButton"
@@ -32,8 +37,16 @@
                 Foreground="White"
                 RelativePanel.AlignHorizontalCenterWithPanel="True"
                 Click="LoginButton_Click"
-                Visibility="{x:Bind ViewModel.LoginRequired, FallbackValue=Collapsed}"/>
+                Margin="0,0,0,20"
+                IsEnabled="{x:Bind ViewModel.IsLoading, Converter={StaticResource BoolNegationConv}}"
+                Visibility="{x:Bind ViewModel.LoginRequired, Mode=OneWay, FallbackValue=Collapsed}"/>
 
+        <ProgressRing x:Name="LoginProgress"
+                      Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, FallbackValue=Collapsed}"
+                      RelativePanel.Below="LoginButton"
+                      Margin="0,0,0,20"
+                      IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                      RelativePanel.AlignHorizontalCenterWithPanel="True"/>
 
     </RelativePanel>
 </Page>

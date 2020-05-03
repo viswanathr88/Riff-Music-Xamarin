@@ -17,7 +17,7 @@ namespace OnePlayer.Authentication
         }
 
         public CacheReadyLoginManager(HttpClient client, ITokenCache tokenCache, IProfileCache profileCache)
-            : this(new LoginManager(client, tokenCache), profileCache)
+            : this(new OAuthLoginManager(client, tokenCache), profileCache)
         { }
 
         public CacheReadyLoginManager(ILoginManager loginManager, IProfileCache profileCache)
@@ -36,7 +36,7 @@ namespace OnePlayer.Authentication
             return await this.loginManagerImpl.AcquireTokenSilentAsync();
         }
 
-        public async Task<Token> EndLoginAsync(string code)
+        public async Task<Token> EndLoginAsync(object code)
         {
             return await this.loginManagerImpl.EndLoginAsync(code);
         }

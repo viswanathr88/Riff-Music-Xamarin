@@ -6,10 +6,20 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:ui="using:Microsoft.UI.Xaml.Controls"
       xmlns:oc="using:OnePlayer.UWP.Controls"
+      xmlns:vm="using:OnePlayer.UWP.ViewModel"
+      xmlns:pages="using:OnePlayer.UWP.Pages"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <Storyboard x:Name="SyncStatusCommandBarIconRotation" 
+                    AutoReverse="False"
+                    RepeatBehavior="Forever">
+            <DoubleAnimation Duration="0:0:3" To="360" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="SyncStatusCommandBarIcon" />
+        </Storyboard>
+    </Page.Resources>
 
-    <Grid>
+    <Grid x:Name="RootGrid"
+          Opacity="0">
         <!-- Add custom titlebar that floats on top -->
         <oc:Titlebar x:Name="Titlebar"
                      x:Uid="Titlebar"
@@ -18,11 +28,10 @@
                      VerticalContentAlignment="Center"
                      VerticalAlignment="Top"
                      Canvas.ZIndex="1000"
-                     BackRequested="Titlebar_BackRequested"/>
+                     BackRequested="Titlebar_BackRequested" />
 
         <ui:NavigationView x:Name="NavView"
                            Grid.Row="1"
-                           PaneDisplayMode="LeftMinimal"
                            Loaded="NavView_Loaded"
                            ItemInvoked="NavView_ItemInvoked"
                            IsBackButtonVisible="Collapsed"
@@ -35,15 +44,15 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    
+
                     <!-- Header Text -->
                     <TextBlock x:Name="NavViewHeaderText"
                                Text=""
                                VerticalAlignment="Top"
                                Style="{StaticResource SubtitleTextBlockStyle}" />
-                    
+
                     <!-- Header Toolbar -->
-                    
+
                 </Grid>
             </ui:NavigationView.Header>
 
@@ -82,16 +91,6 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Tag="syncstatus"
-                                       x:Uid="NavViewSyncStatus"
-                                       x:Name="NavViewSyncStatus"
-                                       Content="">
-                    <ui:NavigationViewItem.Icon>
-                        <FontIcon FontFamily="Segoe MDL2 Assets"
-                                  Glyph="&#xE895;" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-
             </ui:NavigationView.MenuItems>
 
             <ui:NavigationView.AutoSuggestBox>
@@ -100,18 +99,72 @@
                 <AutoSuggestBox x:Name="NavViewSearchBox"
                                 x:Uid="NavViewSearchBox"
                                 PlaceholderText=""
-                                QueryIcon="Find" />
+                                QueryIcon="Find"
+                                ItemsSource="{x:Bind ViewModel.SearchSuggestions.Items, Mode=OneWay}"
+                                TextChanged="NavViewSearchBox_TextChanged"
+                                QuerySubmitted="NavViewSearchBox_QuerySubmitted"
+                                SuggestionChosen="NavViewSearchBox_SuggestionChosen">
+                    <AutoSuggestBox.Transitions>
+                        <TransitionCollection />
+                    </AutoSuggestBox.Transitions>
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:SearchItemViewModel">
+                            <RelativePanel Padding="0,10,0,0">
+                                <FontIcon Height="32"
+                                          Width="32"
+                                          FontFamily="Segoe MDL2 Assets"
+                                          Glyph="{x:Bind pages:MainPage.FormatSearchItemIcon(Type)}"
+                                          RelativePanel.AlignLeftWithPanel="True"
+                                          RelativePanel.AlignTopWithPanel="True"
+                                          FontSize="32"
+                                          Visibility="{x:Bind HasNoArt}"/>
+                                <Image Source="{x:Bind Art, FallbackValue=''}"
+                                       x:Name="ImageArt"
+                                       Width="32"
+                                       Height="32"
+                                       RelativePanel.AlignLeftWithPanel="True"
+                                       RelativePanel.AlignTopWithPanel="True"
+                                       ImageFailed="ImageArt_ImageFailed" />
+                                <TextBlock Text="{x:Bind Name}"
+                                           x:Name="SearchItemName"
+                                           Style="{StaticResource BodyTextBlockStyle}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           MaxLines="1"
+                                           Padding="20,0,0,0"
+                                           RelativePanel.RightOf="ImageArt"
+                                           RelativePanel.AlignTopWith="ImageArt"
+                                           TextLineBounds="TrimToCapHeight"/>
+                                <TextBlock Text="{x:Bind pages:MainPage.FormatSearchItemDescription(Description, Type)}"
+                                           x:Name="SearchItemDescription"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           MaxLines="1"
+                                           Padding="20,0,0,0"
+                                           RelativePanel.RightOf="ImageArt"
+                                           RelativePanel.Below="SearchItemName"
+                                           RelativePanel.AlignBottomWith="ImageArt"
+                                           TextLineBounds="TrimToBaseline"/>
+                            </RelativePanel>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
             </ui:NavigationView.AutoSuggestBox>
 
             <ui:NavigationView.PaneFooter>
                 <ui:NavigationViewItem Tag="syncstatus"
                                        x:Uid="NavViewSyncStatusFooter"
                                        x:Name="NavViewSyncStatusFooter"
-                                       Content=""
-                                       Visibility="Collapsed">
+                                       Content="">
                     <ui:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets"
-                                  Glyph="&#xE895;" />
+                                  x:Name="SyncStatusCommandBarIcon"
+                                  RenderTransformOrigin="0.5,0.5">
+                            <FontIcon.RenderTransform>
+                                <CompositeTransform />
+                            </FontIcon.RenderTransform>
+                        </FontIcon>
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
             </ui:NavigationView.PaneFooter>
@@ -140,10 +193,8 @@
                                 Value="250" />
                         <Setter Target="NavView.AlwaysShowHeader"
                                 Value="False" />
-                        <Setter Target="NavViewSyncStatusFooter.Visibility"
-                                Value="Visible" />
-                        <Setter Target="NavViewSyncStatus.Visibility"
-                                Value="Collapsed" />
+                        <Setter Target="NavViewSyncStatusFooter.Content"
+                                Value="" />
                     </VisualState.Setters>
                 </VisualState>
 
@@ -158,7 +209,7 @@
                     </VisualState.Setters>
                 </VisualState>-->
 
-                <VisualState>
+                <!--<VisualState>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="{x:Bind NavView.CompactModeThresholdWidth}" />
                     </VisualState.StateTriggers>
@@ -169,7 +220,7 @@
                         <Setter Target="NavViewFirstSeparator.Visibility"
                                 Value="Collapsed" />
                     </VisualState.Setters>
-                </VisualState>
+                </VisualState>-->
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 

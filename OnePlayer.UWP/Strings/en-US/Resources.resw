@@ -147,6 +147,9 @@
   <data name="NavViewSyncStatus.Content" xml:space="preserve">
     <value>Sync Status</value>
   </data>
+  <data name="NavViewSyncStatusFooter.Content" xml:space="preserve">
+    <value>Sync Status</value>
+  </data>
   <data name="NavViewToolbarDisplayMode.Label" xml:space="preserve">
     <value>Layout</value>
   </data>
@@ -158,6 +161,18 @@
   </data>
   <data name="NavViewTracks.Content" xml:space="preserve">
     <value>Tracks</value>
+  </data>
+  <data name="SearchItemAlbumDescriptionFormat" xml:space="preserve">
+    <value>Album by {0}</value>
+  </data>
+  <data name="SearchItemArtistDescriptionFormat" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="SearchItemGenreDescriptionFormat" xml:space="preserve">
+    <value>Genre</value>
+  </data>
+  <data name="SearchItemTrackDescriptionFormat" xml:space="preserve">
+    <value>Track by {0}</value>
   </data>
   <data name="Titlebar.AppName" xml:space="preserve">
     <value>OnePlayer</value>

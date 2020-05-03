@@ -148,4 +148,9 @@ namespace OnePlayer.UWP.ViewModel
             }
         }
     }
+
+    public abstract class DataViewModel : DataViewModel<VoidType>
+    {
+
+    }
 }

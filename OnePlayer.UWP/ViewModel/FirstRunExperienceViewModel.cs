@@ -1,5 +1,7 @@
 ﻿using OnePlayer.Authentication;
+using OnePlayer.Data;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace OnePlayer.UWP.ViewModel
@@ -9,6 +11,9 @@ namespace OnePlayer.UWP.ViewModel
         private readonly ILoginManager loginManager;
         private bool loginRequired = false;
         private string providerUrl;
+        private bool profileAndPhotoFetched = false;
+        private UserProfile profile = null;
+        private Stream photo = null;
 
         public FirstRunExperienceViewModel(ILoginManager loginManager)
         {
@@ -42,9 +47,51 @@ namespace OnePlayer.UWP.ViewModel
             }
         }
 
-        public async Task CompleteLoginAsync(string providerId)
+        public bool ProfileAndPhotoFetched
         {
-            await this.loginManager.EndLoginAsync(providerId);
+            get
+            {
+                return this.profileAndPhotoFetched;
+            }
+            private set
+            {
+                SetProperty(ref this.profileAndPhotoFetched, value);
+            }
+        }
+
+        public UserProfile Profile
+        {
+            get
+            {
+                return this.profile;
+            }
+            private set
+            {
+                SetProperty(ref this.profile, value);
+            }
+        }
+
+        public Stream Photo
+        {
+            get
+            {
+                return this.photo;
+            }
+            private set
+            {
+                SetProperty(ref this.photo, value);
+            }
+        }
+
+        public async Task CompleteLoginAsync(object providerCommand)
+        {
+            IsLoading = true;
+            await this.loginManager.EndLoginAsync(providerCommand);
+            LoginRequired = false;
+            Profile = await this.loginManager.GetUserAsync();
+            Photo = await this.loginManager.GetUserPhotoAsync();
+            ProfileAndPhotoFetched = true;
+            IsLoading = false;
         }
     }
 }

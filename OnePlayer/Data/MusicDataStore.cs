@@ -28,8 +28,8 @@ namespace OnePlayer.Data
             thumbnailPath = Path.Combine(this.rootPath, "Thumbnails");
             musicDataAccessor = new MusicDb(dbPath);
 
-            TrackThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Tracks"));
-            AlbumThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Albums"));
+            TrackThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Tracks"), Path.Combine("Thumbnails", "Tracks"));
+            AlbumThumbnails = new ThumbnailCache(Path.Combine(thumbnailPath, "Albums"), Path.Combine("Thumbnails", "Albums"));
         }
         public IMusicDataAccessor Access()
         {

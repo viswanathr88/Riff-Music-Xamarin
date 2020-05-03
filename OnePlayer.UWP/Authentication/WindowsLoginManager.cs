@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Windows.Security.Authentication.Web.Core;
 using Windows.Security.Credentials;
 using Windows.Storage;
+using Windows.UI.ApplicationSettings;
 
 namespace OnePlayer.UWP.Authentication
 {
@@ -33,7 +34,7 @@ namespace OnePlayer.UWP.Authentication
         }
     }
 
-    public sealed class LoginManager : ILoginManager
+    public sealed class WindowsLoginManager : ILoginManager
     {
         private const string appId = "19b11b92-7fc8-44c9-b794-8ae1d41cebed";
         private static readonly string[] scopes = new string[] { "User.Read", "files.read", "offline_access" };
@@ -46,7 +47,7 @@ namespace OnePlayer.UWP.Authentication
 
         private readonly HttpClient webClient;
 
-        public LoginManager(HttpClient client)
+        public WindowsLoginManager(HttpClient client)
         {
             this.webClient = client ?? throw new ArgumentNullException(nameof(client));
         }
@@ -56,7 +57,7 @@ namespace OnePlayer.UWP.Authentication
             var profile = await GetLoginProfileAsync();
 
             var request = new WebTokenRequest(profile.Provider, string.Join(" ", scopes));
-            var result = await WebAuthenticationCoreManager.GetTokenSilentlyAsync(request);
+            var result = await WebAuthenticationCoreManager.GetTokenSilentlyAsync(request, profile.Account);
 
             if (result.ResponseStatus == WebTokenRequestStatus.Success)
             {
@@ -68,18 +69,22 @@ namespace OnePlayer.UWP.Authentication
             }
         }
 
-        public async Task<Token> EndLoginAsync(string data)
+        public async Task<Token> EndLoginAsync(object data)
         {
-            var providerId = data;
-            var provider = await WebAuthenticationCoreManager.FindAccountProviderAsync(providerId);
+            if (!(data is WebAccountProviderCommand))
+            {
+                throw new Exception($"Data provided to {nameof(EndLoginAsync)} is not {nameof(WebAccountProviderCommand)}");
+            }
 
-            WebTokenRequest request = new WebTokenRequest(provider, string.Join(" ", scopes), appId);
+            var providerCommand = data as WebAccountProviderCommand;
+
+            WebTokenRequest request = new WebTokenRequest(providerCommand.WebAccountProvider, string.Join(" ", scopes), appId);
             request.Properties.Add("resource", "https://graph.microsoft.com");
             WebTokenRequestResult result = await WebAuthenticationCoreManager.RequestTokenAsync(request);
 
             if (result.ResponseStatus == WebTokenRequestStatus.Success)
             {
-                StoreLoginProfileAsync(new LoginProfile(provider, result.ResponseData[0].WebAccount));
+                StoreLoginProfile(new LoginProfile(providerCommand.WebAccountProvider, result.ResponseData[0].WebAccount));
                 return new Token() { AccessToken = result.ResponseData[0].Token };
             }
 
@@ -153,7 +158,7 @@ namespace OnePlayer.UWP.Authentication
             return new LoginProfile(provider, account);
         }
 
-        private void StoreLoginProfileAsync(LoginProfile profile)
+        private void StoreLoginProfile(LoginProfile profile)
         {
             ApplicationData.Current.LocalSettings.Values[currentProviderIdKey] = profile.Provider.Id;
             ApplicationData.Current.LocalSettings.Values[currentUserIdKey] = profile.Account.Id;

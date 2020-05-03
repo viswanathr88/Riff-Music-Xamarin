@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OnePlayer.Authentication
 {
-    public sealed class LoginManager : ILoginManager
+    public sealed class OAuthLoginManager : ILoginManager
     {
         private const string appId = "19b11b92-7fc8-44c9-b794-8ae1d41cebed";
         private static readonly string[] scopes = new string[] { "User.Read", "files.read", "offline_access" };
@@ -23,7 +23,7 @@ namespace OnePlayer.Authentication
         private readonly ITokenCache tokenCache;
         private Token inMemoryToken = null;
 
-        public LoginManager(HttpClient client, ITokenCache tokenCache)
+        public OAuthLoginManager(HttpClient client, ITokenCache tokenCache)
         {
             this.httpClient = client;
             this.tokenCache = tokenCache;
@@ -87,13 +87,18 @@ namespace OnePlayer.Authentication
             return redirectUri;
         }
 
-        public async Task<Token> EndLoginAsync(string code)
+        public async Task<Token> EndLoginAsync(object data)
         {
+            if (!(data is string))
+            {
+                throw new Exception($"Data provided to {nameof(EndLoginAsync)} is not a string code");
+            }
+
             IList<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("client_id", appId),
                 new KeyValuePair<string, string>("redirect_uri", redirectUri),
-                new KeyValuePair<string, string>("code", code),
+                new KeyValuePair<string, string>("code", (string)data),
                 new KeyValuePair<string, string>("grant_type", "authorization_code")
             };
 

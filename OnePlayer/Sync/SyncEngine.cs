@@ -71,7 +71,10 @@ namespace OnePlayer.Sync
             this.library = library;
             this.library.ItemAdded += Library_ItemAdded;
 
-            Status.SuccessfulSyncTime = DateTime.Parse(preferences.LastSyncTime);
+            if (!string.IsNullOrEmpty(preferences.LastSyncTime))
+            {
+                Status.SuccessfulSyncTime = DateTime.Parse(preferences.LastSyncTime);
+            }
 
             Start();
         }
