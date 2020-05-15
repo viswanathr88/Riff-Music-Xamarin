@@ -146,7 +146,7 @@ namespace OnePlayer.Data.Sqlite
                         builder.AppendLine("ArtistName,");
                         builder.AppendLine($"CAST(substr(offsets({Name}),5,2) AS INTEGER) AS Rank");
                         builder.AppendLine($"FROM {Name}");
-                        builder.AppendLine("WHERE AlbumName MATCH \"@term*\" ORDER BY RANK ASC)");
+                        builder.AppendLine($"WHERE AlbumName MATCH \"{term}*\" ORDER BY RANK ASC)");
                     }
                     builder.AppendLine("GROUP BY Id, AlbumName, ArtistName, Rank");
                     builder.AppendLine("ORDER BY Rank ASC, AlbumName ASC");
@@ -309,7 +309,6 @@ namespace OnePlayer.Data.Sqlite
                     }
 
                     command.CommandText = builder.ToString();
-                    command.Parameters.AddWithValue("@term", term);
 
                     using (var reader = command.ExecuteReader())
                     {
