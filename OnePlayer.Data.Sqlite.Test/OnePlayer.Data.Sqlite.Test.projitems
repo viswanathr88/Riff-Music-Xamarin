@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c2a204c0-6cd2-4cc8-98b1-58984deda48b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>OnePlayer.Data.Sqlite.Test</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AlbumTableTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DriveItemTableTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenreTableTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ArtistTableTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MusicDataTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TrackTableTest.cs" />
+  </ItemGroup>
+</Project>

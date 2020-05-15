@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace OnePlayer.Data
 {
@@ -79,31 +78,31 @@ namespace OnePlayer.Data
         public string TrackName { get; set; }
         public string TrackArtist { get; set; }
 
-        public long GetAlbumId()
+        public int GetAlbumId()
         {
-            return Convert.ToInt64(AlbumId);
+            return Convert.ToInt32(AlbumId);
         }
 
-        public void SetAlbumId(long id)
+        public void SetAlbumId(int id)
         {
             AlbumId = id.ToString();
         }
 
-        public long GetArtistId()
+        public int GetArtistId()
         {
-            return Convert.ToInt64(ArtistId);
+            return Convert.ToInt32(ArtistId);
         }
 
-        public void SetArtistId(long id)
+        public void SetArtistId(int id)
         {
             ArtistId = id.ToString();
         }
-        public long GetGenreId()
+        public int GetGenreId()
         {
-            return Convert.ToInt64(GenreId);
+            return Convert.ToInt32(GenreId);
         }
 
-        public void SetGenreId(long id)
+        public void SetGenreId(int id)
         {
             GenreId = id.ToString();
         }
@@ -145,65 +144,6 @@ namespace OnePlayer.Data
         public string TrackName { get; set; }
         public string TrackArtist { get; set; }
         public int Rank { get; set; }
-    }
-
-    public enum SearchItemType
-    {
-        Artist,
-        Album,
-        Genre,
-        Track,
-        TrackArtist
-    };
-
-    public class SearchItem
-    {
-        public long Id { get; set; }
-        public SearchItemType Type { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public int Rank { get; set; }
-    }
-
-    public sealed class SearchQuery
-    {
-        public SearchQuery()
-        {
-            // Defaults
-            MaxArtistCount = 3;
-            MaxGenreCount = 2;
-            MaxAlbumCount = 5;
-            MaxTrackCount = 15;
-        }
-
-        public string Term { get; set; }
-
-        public int MaxArtistCount { get; set; }
-
-        public int MaxGenreCount { get; set; }
-
-        public int MaxAlbumCount { get; set; }
-
-        public int MaxTrackCount { get; set; }
-    }
-
-    public sealed class SearchResult
-    {
-        private readonly List<SearchItem> artists = new List<SearchItem>();
-        private readonly List<SearchItem> albums = new List<SearchItem>();
-        private readonly List<SearchItem> genres = new List<SearchItem>();
-        private readonly List<SearchItem> tracks = new List<SearchItem>();
-
-        public IList<SearchItem> Artists => artists;
-
-        public IList<SearchItem> Albums => albums;
-
-        public IList<SearchItem> Genres => genres;
-
-        public IList<SearchItem> Tracks => tracks;
     }
 
 

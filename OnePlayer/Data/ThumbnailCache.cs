@@ -7,9 +7,8 @@ namespace OnePlayer.Data
     sealed class ThumbnailCache : IThumbnailCache
     {
         private readonly string rootPath;
-        private readonly string relativePath;
 
-        public ThumbnailCache(string path, string relativePath)
+        public ThumbnailCache(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -17,7 +16,6 @@ namespace OnePlayer.Data
             }
 
             rootPath = path;
-            this.relativePath = relativePath;
             
             if (!Directory.Exists(rootPath))
             {
@@ -25,27 +23,22 @@ namespace OnePlayer.Data
             }
         }
 
-        public bool Exists(int id, ThumbnailSize size)
+        public bool Exists(long id, ThumbnailSize size)
         {
             return File.Exists(GetPath(id, size));
         }
 
-        public Stream Get(int id, ThumbnailSize size)
+        public Stream Get(long id, ThumbnailSize size)
         {
             return new FileStream(GetPath(id, size), FileMode.Open, FileAccess.Read);
         }
 
-        public string GetPath(int id, ThumbnailSize size)
+        public string GetPath(long id, ThumbnailSize size)
         {
             return Path.Combine(rootPath, id.ToString(), $"{size}.jpg");
         }
 
-        public string GetRelativePath(int id, ThumbnailSize size)
-        {
-            return Path.Combine(relativePath, id.ToString(), $"{size}.jpg");
-        }
-
-        public async Task SaveAsync(int id, Stream stream, ThumbnailSize size)
+        public async Task SaveAsync(long id, Stream stream, ThumbnailSize size)
         {
             string thumbnailFolderPath = Path.Combine(rootPath, id.ToString());
 

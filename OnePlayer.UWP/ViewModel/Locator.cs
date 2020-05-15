@@ -1,8 +1,11 @@
 ﻿using OnePlayer.Authentication;
 using OnePlayer.Data;
+using OnePlayer.Data.Sqlite;
 using OnePlayer.Sync;
+using OnePlayer.UWP.Authentication;
 using OnePlayer.UWP.Storage;
 using System;
+using System.IO;
 using System.Net.Http;
 using Windows.Storage;
 
@@ -19,15 +22,17 @@ namespace OnePlayer.UWP.ViewModel
         private readonly Lazy<HttpClient> httpClient;
         private readonly Lazy<SyncEngine> syncEngine;
         private readonly Lazy<MusicLibrary> musicLibrary;
+        private readonly Lazy<IMusicMetadata> musicMetadata;
 
         private readonly string DefaultPath = ApplicationData.Current.LocalCacheFolder.Path;
 
         public Locator()
         {
             httpClient = new Lazy<HttpClient>(() => new HttpClient());
-            loginManager = new Lazy<ILoginManager>(() => new CacheReadyLoginManager(new OnePlayer.UWP.Authentication.WindowsLoginManager(WebClient), DefaultPath));
+            loginManager = new Lazy<ILoginManager>(() => new CacheReadyLoginManager(new WindowsLoginManager(WebClient), DefaultPath));
             syncEngine = new Lazy<SyncEngine>(() => new SyncEngine(new AppPreferences(), LoginManager, WebClient, Library));
-            musicLibrary = new Lazy<MusicLibrary>(() => new MusicLibrary(new MusicDataStore(DefaultPath), WebClient));
+            musicMetadata = new Lazy<IMusicMetadata>(() => new MusicMetadata(Path.Combine(DefaultPath, "OnePlayer.db")));
+            musicLibrary = new Lazy<MusicLibrary>(() => new MusicLibrary(DefaultPath, MusicMetadata, WebClient));
 
             mainVM = new Lazy<MainViewModel>(() => new MainViewModel(Library, SyncEngine));
             musicLibraryVM = new Lazy<MusicLibraryViewModel>();
@@ -43,12 +48,15 @@ namespace OnePlayer.UWP.ViewModel
 
         public SettingsViewModel Settings => settingsVM.Value;
 
+        public ILoginManager LoginManager => loginManager.Value;
+
         private HttpClient WebClient => httpClient.Value;
+
+        private IMusicMetadata MusicMetadata => musicMetadata.Value;
 
         private MusicLibrary Library => musicLibrary.Value;
 
         private SyncEngine SyncEngine => syncEngine.Value;
 
-        public ILoginManager LoginManager => loginManager.Value;
     }
 }

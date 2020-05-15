@@ -11,10 +11,9 @@ namespace OnePlayer.Data
 
     public interface IThumbnailCache
     {
-        bool Exists(int id, ThumbnailSize size);
-        Stream Get(int id, ThumbnailSize size);
-        string GetPath(int id, ThumbnailSize size);
-        string GetRelativePath(int id, ThumbnailSize size);
-        Task SaveAsync(int id, Stream stream, ThumbnailSize size);
+        bool Exists(long id, ThumbnailSize size);
+        Stream Get(long id, ThumbnailSize size);
+        string GetPath(long id, ThumbnailSize size);
+        Task SaveAsync(long id, Stream stream, ThumbnailSize size);
     }
 }

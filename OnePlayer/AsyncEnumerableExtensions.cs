@@ -8,7 +8,7 @@ namespace OnePlayer
     static class AsyncEnumerableExtensions
     {
         public const int DefaultConcurrencyDegree = 4;
-        public static async Task ForEachAsync<T>(this IEnumerable<T> enumerable, Func<T, Task> fn, int concurrencyDegree = DefaultConcurrencyDegree)
+        public static async Task ForEachAsync<T1, T2>(this IEnumerable<T1> enumerable, T2 item2, Func<T1, T2, Task> fn, int concurrencyDegree = DefaultConcurrencyDegree)
         {
             using (SemaphoreSlim throttler = new SemaphoreSlim(concurrencyDegree, concurrencyDegree))
             {
@@ -17,7 +17,7 @@ namespace OnePlayer
                 {
                     await throttler.WaitAsync();
 
-                    var task = fn.Invoke(item).ContinueWith(t => throttler.Release());
+                    var task = fn.Invoke(item, item2).ContinueWith(t => throttler.Release());
                     tasks.Add(task);
                 }
 

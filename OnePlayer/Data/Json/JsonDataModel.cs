@@ -152,14 +152,14 @@ namespace OnePlayer.Data.Json
     }
 
 
-    public class ThumbnailResponse
+    internal class ThumbnailResponse
     {
         [JsonProperty("@odata.context")]
         public string DataContext { get; set; }
         public Thumbnails[] Value { get; set; }
     }
 
-    public class Thumbnails
+    internal class Thumbnails
     {
         public string Id { get; set; }
         public Thumbnail Large { get; set; }
@@ -167,7 +167,7 @@ namespace OnePlayer.Data.Json
         public Thumbnail Small { get; set; }
     }
 
-    public class Thumbnail
+    internal class Thumbnail
     {
         public int Height { get; set; }
         public string Url { get; set; }
