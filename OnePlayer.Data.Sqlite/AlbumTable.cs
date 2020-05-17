@@ -2,6 +2,7 @@
 using OnePlayer.Data.Access;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -36,6 +37,19 @@ namespace OnePlayer.Data.Sqlite
                     builder.AppendLine("FOREIGN KEY(ArtistId) REFERENCES Artist(Id),");
                     builder.AppendLine("FOREIGN KEY(GenreId) REFERENCES Genre(Id)");
                     builder.AppendLine(")");
+
+                    command.CommandText = builder.ToString();
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            if (version == Version.AddIndexes)
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    var builder = new StringBuilder();
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_Name ON {Name}(Name);");
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_ReleaseYear ON {Name}(ReleaseYear)");
 
                     command.CommandText = builder.ToString();
                     command.ExecuteNonQuery();
@@ -111,6 +125,7 @@ namespace OnePlayer.Data.Sqlite
 
         public IList<Album> Get(AlbumAccessOptions options)
         {
+            Debug.WriteLine($"Get Albums request ({options.StartPosition},{options.StartPosition + options.Count})");
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));

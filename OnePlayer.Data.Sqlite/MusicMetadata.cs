@@ -7,7 +7,7 @@ namespace OnePlayer.Data.Sqlite
 {
     public sealed class MusicMetadata : IMusicMetadata
     {
-        private static readonly Version LatestVersion = Version.Initial;
+        private static readonly Version LatestVersion = Version.AddIndexes;
         private readonly SqliteConnection connection;
 
         private readonly ArtistTable artistTable;

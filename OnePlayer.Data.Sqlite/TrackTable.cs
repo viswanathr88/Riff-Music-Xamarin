@@ -46,6 +46,21 @@ namespace OnePlayer.Data.Sqlite
                     command.ExecuteNonQuery();
                 }
             }
+
+            if (version == Version.AddIndexes)
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    var builder = new StringBuilder();
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_Title ON {Name}(Title);");
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_ReleaseYear ON {Name}(ReleaseYear);");
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_Duration ON {Name}(Duration);");
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_Artist ON {Name}(Artist)");
+
+                    command.CommandText = builder.ToString();
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public Track Add(Track track)

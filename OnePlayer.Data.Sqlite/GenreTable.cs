@@ -26,6 +26,15 @@ namespace OnePlayer.Data.Sqlite
                     command.ExecuteNonQuery();
                 }
             }
+
+            if (version == Version.AddIndexes)
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = $"CREATE INDEX Idx_{Name}_Name ON {Name}(Name)";
+                    command.ExecuteNonQuery();
+                }
+            }
         }
 
         public Genre Add(Genre genre)
