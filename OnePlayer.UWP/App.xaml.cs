@@ -72,6 +72,9 @@ namespace OnePlayer.UWP
                     }
 
                 }
+
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(350, 300));
+
                 // Ensure the current window is active
                 Window.Current.Activate();
 

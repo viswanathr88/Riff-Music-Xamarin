@@ -117,14 +117,35 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AlbumPageHeader" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="AlbumToolbarAddToButton.Label" xml:space="preserve">
+    <value>Add To</value>
+  </data>
+  <data name="AlbumToolbarBrowseArtistButton.Label" xml:space="preserve">
+    <value>Browse Artist</value>
+  </data>
+  <data name="AlbumToolbarPinToStartButton.Label" xml:space="preserve">
+    <value>Pin To Start</value>
+  </data>
+  <data name="AlbumToolbarPlayButton.Label" xml:space="preserve">
+    <value>Play Album</value>
+  </data>
   <data name="AppDisplayName" xml:space="preserve">
     <value>OnePlayer</value>
+  </data>
+  <data name="HomePageHeader" xml:space="preserve">
+    <value>Home</value>
   </data>
   <data name="LoginButton.Content" xml:space="preserve">
     <value>LOG IN TO ONEDRIVE</value>
   </data>
   <data name="LoginDescription.Text" xml:space="preserve">
     <value>In order to access your music stored on OneDrive, please login using your Microsoft Account</value>
+  </data>
+  <data name="MusicLibraryPageHeader" xml:space="preserve">
+    <value>Music Library</value>
   </data>
   <data name="NavViewHome.Content" xml:space="preserve">
     <value>Home</value>
@@ -162,6 +183,12 @@
   <data name="NavViewTracks.Content" xml:space="preserve">
     <value>Tracks</value>
   </data>
+  <data name="NowPlayingPageHeader" xml:space="preserve">
+    <value>Now Playing</value>
+  </data>
+  <data name="PlaylistPageHeader" xml:space="preserve">
+    <value>Playlists</value>
+  </data>
   <data name="SearchItemAlbumDescriptionFormat" xml:space="preserve">
     <value>Album by {0}</value>
   </data>
@@ -173,6 +200,9 @@
   </data>
   <data name="SearchItemTrackDescriptionFormat" xml:space="preserve">
     <value>Track by {0}</value>
+  </data>
+  <data name="SettingsPageHeader" xml:space="preserve">
+    <value>Settings</value>
   </data>
   <data name="Titlebar.AppName" xml:space="preserve">
     <value>OnePlayer</value>
@@ -200,6 +230,15 @@
   </data>
   <data name="ToolbarSortAlphabetical.Text" xml:space="preserve">
     <value>A to Z</value>
+  </data>
+  <data name="ToolbarSortByAlphabetical" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ToolbarSortByReleaseYear" xml:space="preserve">
+    <value>Release Year</value>
+  </data>
+  <data name="ToolbarSortByTitle" xml:space="preserve">
+    <value>Title</value>
   </data>
   <data name="ToolbarSortDateAdded.Text" xml:space="preserve">
     <value>Date Added</value>

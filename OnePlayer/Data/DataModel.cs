@@ -36,11 +36,27 @@ namespace OnePlayer.Data
         public int Number { get; set; }
         public string Artist { get; set; }
         public int Bitrate { get; set; }
-        public int Duration { get; set; }
+        public TimeSpan Duration { get; set; }
         public string Composers { get; set; }
         public int ReleaseYear { get; set; }
         public Album Album { get; set; }
         public Genre Genre { get; set; }
+
+        public string FormatDuration(TimeSpan duration)
+        {
+            if (duration.Days > 0)
+            {
+                return duration.ToString("dd':'hh':'mm':'ss");
+            }
+            else if (duration.Hours > 0)
+            {
+                return duration.ToString("hh':'mm':'ss");
+            }
+            else
+            {
+                return duration.ToString("mm':'ss");
+            }
+        }
     }
 
     public sealed class DriveItem

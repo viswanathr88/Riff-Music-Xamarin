@@ -2,7 +2,6 @@
 using OnePlayer.Data.Access;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -125,7 +124,6 @@ namespace OnePlayer.Data.Sqlite
 
         public IList<Album> Get(AlbumAccessOptions options)
         {
-            Debug.WriteLine($"Get Albums request ({options.StartPosition},{options.StartPosition + options.Count})");
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));

@@ -1,7 +1,6 @@
 ﻿using OnePlayer.UWP.ViewModel;
 using System;
 using Windows.Security.Authentication.Web.Core;
-using Windows.Security.Credentials;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;

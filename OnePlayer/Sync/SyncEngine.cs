@@ -303,7 +303,7 @@ namespace OnePlayer.Sync
             track.Artist = item.audio.artist;
             track.Bitrate = item.audio.bitrate;
             track.Composers = item.audio.composers;
-            track.Duration = item.audio.duration;
+            track.Duration = TimeSpan.FromMilliseconds(item.audio.duration);
             track.ReleaseYear = item.audio.year;
             track.Genre = new Genre() { Id = genre.Id };
             track.Album = new Album() { Id = album.Id };

@@ -289,7 +289,7 @@ namespace OnePlayer.Data.Sqlite
             command.Parameters.AddWithValue("@Number", track.Number);
             command.Parameters.AddWithNullableValue("@Artist", track.Artist);
             command.Parameters.AddWithValue("@Bitrate", track.Bitrate);
-            command.Parameters.AddWithValue("@Duration", track.Duration);
+            command.Parameters.AddWithValue("@Duration", track.Duration.TotalMilliseconds);
             command.Parameters.AddWithNullableValue("@Composers", track.Composers);
             command.Parameters.AddWithValue("@ReleaseYear", track.ReleaseYear);
             command.Parameters.AddWithValue("@AlbumId", track.Album.Id);
@@ -306,7 +306,7 @@ namespace OnePlayer.Data.Sqlite
                 Number = reader.GetInt32(index++),
                 Artist = reader.IsDBNull(index++) ? null : reader.GetString(index-1),
                 Bitrate = reader.GetInt32(index++),
-                Duration = reader.GetInt32(index++),
+                Duration = TimeSpan.FromMilliseconds(reader.GetInt32(index++)),
                 Composers = reader.IsDBNull(index++) ? null : reader.GetString(index-1),
                 ReleaseYear = reader.GetInt32(index++),
                 Album = new Album()

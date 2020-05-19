@@ -1,41 +1,25 @@
 ﻿using OnePlayer.Data;
-using System.Collections.ObjectModel;
+using System;
 using System.Threading.Tasks;
 
 namespace OnePlayer.UWP.ViewModel
 {
     public sealed class MusicLibraryViewModel : DataViewModel<VoidType>
     {
-        private ObservableCollection<Album> albums = null;
+        private readonly MusicLibrary library;
+        private readonly Lazy<AlbumsViewModel> albums;
 
-        public MusicLibraryViewModel()
+        public MusicLibraryViewModel(MusicLibrary library)
         {
-            Albums = new ObservableCollection<Album>();
+            this.library = library ?? throw new ArgumentNullException(nameof(library));
+            albums = new Lazy<AlbumsViewModel>(() => new AlbumsViewModel(this.library));
         }
 
-        public ObservableCollection<Album> Albums
-        {
-            get
-            {
-                return this.albums;
-            }
-            private set
-            {
-                SetProperty(ref this.albums, value);
-            }
-        }
+        public AlbumsViewModel Albums => albums.Value;
 
         public override Task LoadAsync(VoidType parameter)
         {
-            for (int i = 0; i < 200; i++)
-            {
-                Albums.Add(new Album()
-                {
-                    Name = "Test Album " + (i + 1),
-                    ReleaseYear = 2000 + i,
-                });
-            }
-
+            IsLoaded = true;
             return Task.CompletedTask;
         }
     }

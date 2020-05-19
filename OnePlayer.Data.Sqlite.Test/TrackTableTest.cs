@@ -476,7 +476,7 @@ namespace OnePlayer.Data.Sqlite.Test
             var artist = artistTable.Add(new Artist() { Name = "TestArtist" });
             var genre = genreTable.Add(new Genre() { Name = "TestGenre" });
             var album = albumTable.Add(new Album() { Name = "TestAlbum", ReleaseYear = 2000, Artist = artist, Genre = genre });
-            var track = trackTable.Add(new Track() { Title = "TestTrack", Album = album, Genre = genre, Composers = "TestComposers", Duration = 50, Bitrate = 500, Number = 4, ReleaseYear = 2000, Artist = "TestTrackArtist" });
+            var track = trackTable.Add(new Track() { Title = "TestTrack", Album = album, Genre = genre, Composers = "TestComposers", Duration = TimeSpan.FromMilliseconds(42454), Bitrate = 500, Number = 4, ReleaseYear = 2000, Artist = "TestTrackArtist" });
 
             track.Title = "ModifiedTestTrack";
             track.Composers = "ModifiedTestComposers";
@@ -492,7 +492,7 @@ namespace OnePlayer.Data.Sqlite.Test
             var artist = artistTable.Add(new Artist() { Name = "TestArtist" });
             var genre = genreTable.Add(new Genre() { Name = "TestGenre" });
             var album = albumTable.Add(new Album() { Name = "TestAlbum", ReleaseYear = 2000, Artist = artist, Genre = genre });
-            var track = trackTable.Add(new Track() { Title = "TestTrack", Album = new Album() { Id = album.Id }, Genre = new Genre() { Id = genre.Id }, Composers = "TestComposers", Duration = 50, Bitrate = 500, Number = 4, ReleaseYear = 2000, Artist = "TestTrackArtist" });
+            var track = trackTable.Add(new Track() { Title = "TestTrack", Album = new Album() { Id = album.Id }, Genre = new Genre() { Id = genre.Id }, Composers = "TestComposers", Duration = TimeSpan.FromMilliseconds(42454), Bitrate = 500, Number = 4, ReleaseYear = 2000, Artist = "TestTrackArtist" });
 
             track.Title = "ModifiedTestTrack";
             track.Composers = "ModifiedTestComposers";

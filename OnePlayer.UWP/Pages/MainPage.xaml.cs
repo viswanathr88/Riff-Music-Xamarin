@@ -27,7 +27,7 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page, ISupportViewModel<MainViewModel>
+    public sealed partial class MainPage : NavViewPageBase, ISupportViewModel<MainViewModel>
     {
         private readonly List<(string Tag, Type Page)> pages = new List<(string Tag, Type Page)>
         {
@@ -188,7 +188,7 @@ namespace OnePlayer.UWP.Pages
             }
 
             var headerText = ((Microsoft.UI.Xaml.Controls.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();
-            NavViewHeaderText.Text = headerText ?? string.Empty;
+            // NavViewHeaderText.Text = headerText ?? string.Empty;
         }
 
         private void Titlebar_BackRequested(object sender, EventArgs e)

@@ -35,7 +35,7 @@ namespace OnePlayer.UWP.ViewModel
             musicLibrary = new Lazy<MusicLibrary>(() => new MusicLibrary(DefaultPath, MusicMetadata, WebClient));
 
             mainVM = new Lazy<MainViewModel>(() => new MainViewModel(Library, SyncEngine));
-            musicLibraryVM = new Lazy<MusicLibraryViewModel>();
+            musicLibraryVM = new Lazy<MusicLibraryViewModel>(() => new MusicLibraryViewModel(Library));
             settingsVM = new Lazy<SettingsViewModel>(() => new SettingsViewModel(loginManager.Value));
             firstRunExperienceVM = new Lazy<FirstRunExperienceViewModel>(() => new FirstRunExperienceViewModel(loginManager.Value));
         }
@@ -52,9 +52,9 @@ namespace OnePlayer.UWP.ViewModel
 
         private HttpClient WebClient => httpClient.Value;
 
-        private IMusicMetadata MusicMetadata => musicMetadata.Value;
+        public IMusicMetadata MusicMetadata => musicMetadata.Value;
 
-        private MusicLibrary Library => musicLibrary.Value;
+        public MusicLibrary Library => musicLibrary.Value;
 
         private SyncEngine SyncEngine => syncEngine.Value;
 
