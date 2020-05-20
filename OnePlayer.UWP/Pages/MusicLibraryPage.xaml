@@ -85,6 +85,7 @@
                     </AppBarButton.Flyout>
                 </AppBarButton>
                 <AppBarSeparator />
+                
                 <AppBarButton Label=""
                               Click="AppBarButton_Click"
                               x:Name="ToolbarSort"

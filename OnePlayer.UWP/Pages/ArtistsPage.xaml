@@ -5,10 +5,16 @@
     xmlns:local="using:OnePlayer.UWP.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:OnePlayer.Data"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-
-    </Grid>
+    <ListView x:Name="ArtistList"
+              ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="data:Artist">
+                <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
 </local:LibraryPageBase>
