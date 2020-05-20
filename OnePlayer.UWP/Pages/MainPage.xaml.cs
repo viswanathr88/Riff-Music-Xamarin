@@ -1,4 +1,5 @@
 ﻿using OnePlayer.Data;
+using OnePlayer.Data.Access;
 using OnePlayer.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,8 @@ namespace OnePlayer.UWP.Pages
             { SearchItemType.TrackArtist, "\uEC4F" }
         };
 
-        public MainViewModel ViewModel => (App.Current.Resources["VMLocator"] as Locator).Main;
+        private Locator Locator => App.Current.Resources["VMLocator"] as Locator;
+        public MainViewModel ViewModel => Locator.Main;
 
         public MainPage()
         {
@@ -226,6 +228,22 @@ namespace OnePlayer.UWP.Pages
         private void NavViewSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             sender.Text = "";
+
+            if (args.SelectedItem != null)
+            {
+                var item = args.SelectedItem as SearchItemViewModel;
+                if (item.Type == SearchItemType.Album)
+                {
+                    var options = new AlbumAccessOptions()
+                    {
+                        IncludeArtist = true,
+                        IncludeGenre = true,
+                        AlbumFilter = item.Id
+                    };
+                    var album = Locator.MusicMetadata.Albums.Get(options).First();
+                    ContentFrame.Navigate(typeof(AlbumPage), album, new EntranceNavigationTransitionInfo());
+                }
+            }
         }
     }
 }

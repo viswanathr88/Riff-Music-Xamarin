@@ -30,6 +30,7 @@ namespace OnePlayer.UWP.Pages
     /// </summary>
     public sealed partial class AlbumPage : NavViewPageBase, ISupportViewModel<AlbumViewModel>
     {
+        bool animateBack = false;
         public AlbumPage()
         {
             this.InitializeComponent();
@@ -49,6 +50,7 @@ namespace OnePlayer.UWP.Pages
             if (imageAnimation != null)
             {
                 imageAnimation.TryStart(AlbumArt);
+                animateBack = true;
             }
 
             if (!ViewModel.IsLoaded || ViewModel.AlbumInfo != e.Parameter as Album)
@@ -61,10 +63,11 @@ namespace OnePlayer.UWP.Pages
         {
             base.OnNavigatingFrom(e);
 
-            if (e.NavigationMode == NavigationMode.Back)
+            if (animateBack && e.NavigationMode == NavigationMode.Back)
             {
                 var service = ConnectedAnimationService.GetForCurrentView();
                 var animation = service.PrepareToAnimate("backAnimation", AlbumArt);
+                animateBack = false;
             }
         }
 

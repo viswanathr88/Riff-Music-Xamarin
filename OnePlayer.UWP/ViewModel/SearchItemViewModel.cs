@@ -19,6 +19,8 @@ namespace OnePlayer.UWP.ViewModel
             this.item = item;
         }
 
+        public long Id => item.Id;
+
         public string Name => item.Name;
 
         public string Description => item.Description;
