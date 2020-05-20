@@ -7,6 +7,7 @@
       xmlns:ui="using:Microsoft.UI.Xaml.Controls"
       xmlns:oc="using:OnePlayer.UWP.Controls"
       xmlns:vm="using:OnePlayer.UWP.ViewModel"
+      xmlns:sys="using:System"
       xmlns:pages="using:OnePlayer.UWP.Pages"
       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -37,7 +38,6 @@
                            ItemInvoked="NavView_ItemInvoked"
                            IsBackButtonVisible="Collapsed"
                            IsTitleBarAutoPaddingEnabled="True"
-                           AlwaysShowHeader="{x:Bind ContentFrame.Content.(local:NavViewPageBase.ShowHeader), Mode=OneWay}"
                            Background="{x:Bind ContentFrame.Content.(local:NavViewPageBase.ShellBackground), Mode=OneWay}">
 
             <ui:NavigationView.Header>
@@ -50,9 +50,11 @@
 
                     <!-- Header Text -->
                     <TextBlock x:Name="NavViewHeaderText"
-                               Text="{x:Bind ContentFrame.Content.(local:NavViewPageBase.HeaderText), Mode=OneWay}"
+                               Text="{x:Bind ContentFrame.Content.(local:NavViewPageBase.HeaderText).ToUpper(), Mode=OneWay}"
                                VerticalAlignment="Top"
-                               Style="{StaticResource SubtitleTextBlockStyle}" />
+                               Style="{StaticResource NavigationViewItemHeaderTextStyle}"
+                               Margin="0,5,0,0"
+                               FontSize="15"/>
 
                     <!-- Header Toolbar -->
 

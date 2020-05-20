@@ -1,22 +1,13 @@
-﻿using Microsoft.UI.Xaml.Controls.Primitives;
-using OnePlayer.Data;
+﻿using OnePlayer.Data;
 using OnePlayer.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -29,14 +20,14 @@ namespace OnePlayer.UWP.Pages
     /// </summary>
     public sealed partial class MainPage : NavViewPageBase, ISupportViewModel<MainViewModel>
     {
-        private readonly List<(string Tag, Type Page)> pages = new List<(string Tag, Type Page)>
+        private readonly IDictionary<string, Type> pages = new Dictionary<string, Type>()
         {
-            ("home", typeof(HomePage)),
-            ("library", typeof(MusicLibraryPage)),
-            ("nowplaying", typeof(NowPlayingPage)),
-            ("playlists", typeof(PlaylistsPage)),
-            ("settings", typeof(SettingsPage)),
-            ("syncstatus", typeof(SyncStatusPage)),
+            { "home", typeof(HomePage) },
+            { "library", typeof(MusicLibraryPage) },
+            { "nowplaying", typeof(NowPlayingPage) },
+            { "playlists", typeof(PlaylistsPage) },
+            { "settings", typeof(SettingsPage) },
+            { "syncstatus", typeof(SyncStatusPage) }
         };
 
         private static Dictionary<SearchItemType, string> searchItemDescriptionFormatMap = new Dictionary<SearchItemType, string>()
@@ -135,7 +126,7 @@ namespace OnePlayer.UWP.Pages
         private void NavView_Loaded(object sender, RoutedEventArgs e)
         {
             NavView.SelectedItem = NavView.MenuItems[1];
-            NavView_Navigate(pages[0].Tag, new EntranceNavigationTransitionInfo());
+            NavView_Navigate(pages.First().Key, new EntranceNavigationTransitionInfo());
         }
 
         private void NavView_ItemInvoked(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewItemInvokedEventArgs args)
@@ -152,8 +143,8 @@ namespace OnePlayer.UWP.Pages
                 return;
             }
 
-            var item = pages.FirstOrDefault(p => p.Tag.Equals(tag));
-            var page = item.Page;
+            var item = pages.FirstOrDefault(p => p.Key.Equals(tag));
+            var page = item.Value;
 
             // Get the page type before navigation so you can prevent duplicate
             // entries in the backstack.
@@ -171,7 +162,7 @@ namespace OnePlayer.UWP.Pages
 
         private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
         {
-            var pageItem = pages.FirstOrDefault(p => p.Page == e.SourcePageType);
+            var pageItem = pages.FirstOrDefault(p => p.Value == e.SourcePageType);
 
             if (e.SourcePageType == typeof(SettingsPage))
             {
@@ -182,9 +173,13 @@ namespace OnePlayer.UWP.Pages
             }
             else
             {
+                if (pageItem.Key == null)
+                {
+                    pageItem = new KeyValuePair<string, Type>("library", typeof(MusicLibraryPage));
+                }
                 NavView.SelectedItem = NavView.MenuItems
                     .OfType<Microsoft.UI.Xaml.Controls.NavigationViewItem>()
-                    .FirstOrDefault(n => n.Tag.Equals(pageItem.Tag));
+                    .FirstOrDefault(n => n.Tag.Equals(pageItem.Key));
             }
 
             var headerText = ((Microsoft.UI.Xaml.Controls.NavigationViewItem)NavView.SelectedItem)?.Content?.ToString();

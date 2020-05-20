@@ -1,4 +1,5 @@
-﻿using OnePlayer.Data;
+﻿using ExpressionBuilder;
+using OnePlayer.Data;
 using OnePlayer.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
@@ -90,7 +92,55 @@ namespace OnePlayer.UWP.Pages
 
         private void AlbumTrackList_ItemClick(object sender, ItemClickEventArgs e)
         {
+            // TODO: Play the track
+        }
 
+        private void AlbumTrackList_Loaded(object sender, RoutedEventArgs e)
+        {
+            /*var listScrollViewer = VisualTreeHelperExtensions.FindVisualChild<ScrollViewer>(sender as DependencyObject);
+            if (listScrollViewer == null)
+            {
+                return;
+            }
+
+            // Update the ZIndex of the header container so that the header is above the items when scrolling
+            var headerPresenter = (UIElement)VisualTreeHelper.GetParent((UIElement)AlbumHeader);
+            var headerContainer = (UIElement)VisualTreeHelper.GetParent(headerPresenter);
+            Canvas.SetZIndex((UIElement)headerContainer, 1);
+
+            var scrollerPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(listScrollViewer);
+            var scrollingProperties = scrollerPropertySet.GetSpecializedReference<ManipulationPropertySetReferenceNode>();
+            var compositor = scrollerPropertySet.Compositor;
+
+            // Create a PropertySet that has values to be referenced in the ExpressionAnimations below
+            var _props = compositor.CreatePropertySet();
+            _props.InsertScalar("progress", 0);
+            _props.InsertScalar("clampSize", 150);
+            _props.InsertScalar("scaleFactor", 0.4f);
+
+            // Access nodes
+            var props = _props.GetReference();
+            var progressNode = props.GetScalarProperty("progress");
+            var clampSizeNode = props.GetScalarProperty("clampSize");
+            var scaleFactorNode = props.GetScalarProperty("scaleFactor");
+
+            // Create and start an ExpressionAnimation to track scroll progress over the desired distance
+            ExpressionNode progressAnimation = ExpressionFunctions.Clamp(-scrollingProperties.Translation.Y / clampSizeNode, 0, 1);
+            _props.StartAnimation("progress", progressAnimation);
+
+            // Create an expression animation for clamping the header to the top while scrolling
+            var headerVisual = ElementCompositionPreview.GetElementVisual(AlbumHeader);
+            ExpressionNode headerTranslationAnimation = ExpressionFunctions.Conditional(progressNode < 1, 0, -scrollingProperties.Translation.Y - clampSizeNode);
+            headerVisual.StartAnimation("Offset.Y", headerTranslationAnimation);
+
+            // Get the backing visual for the photo in the header so that its properties can be animated
+            Windows.UI.Composition.Visual photoVisual = ElementCompositionPreview.GetElementVisual(AlbumArt);
+            ExpressionNode scaleAnimation = ExpressionFunctions.Lerp(1, scaleFactorNode, progressNode);
+            photoVisual.StartAnimation("Scale.X", scaleAnimation);
+            photoVisual.StartAnimation("Scale.Y", scaleAnimation);
+
+
+            // headerVisual.StartAnimation("Offset.Y", offsetExpression);*/
         }
     }
 }

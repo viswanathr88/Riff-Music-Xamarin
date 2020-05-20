@@ -22,16 +22,6 @@ namespace OnePlayer.UWP.Pages
         public static readonly DependencyProperty HeaderTextProperty =
             DependencyProperty.Register("HeaderText", typeof(string), typeof(NavViewPageBase), new PropertyMetadata(""));
 
-        public bool ShowHeader
-        {
-            get { return (bool)GetValue(ShowHeaderProperty); }
-            set { SetValue(ShowHeaderProperty, value); }
-        }
-
-        // Using a DependencyProperty as the backing store for ShowHeader.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty ShowHeaderProperty =
-            DependencyProperty.Register("ShowHeader", typeof(bool), typeof(NavViewPageBase), new PropertyMetadata(true));
-
         public Brush ShellBackground
         {
             get { return (Brush)GetValue(ShellBackgroundProperty); }
