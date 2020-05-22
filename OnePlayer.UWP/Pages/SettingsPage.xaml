@@ -5,23 +5,102 @@
     xmlns:local="using:OnePlayer.UWP.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="using:System"
+    xmlns:conv="using:OnePlayer.UWP.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource VMLocator}, Path=Settings}">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBlock Text="Settings" />
+    <local:NavViewPageBase.Resources>
+        <conv:BoolNegationConverter x:Key="BoolNegationConverter" />
+    </local:NavViewPageBase.Resources>
 
-        <Button Grid.Row="1"
-                x:Uid="SignOutButton"
-                x:Name="SignOutButton"
-                Content="Sign Out"
-                Click="SignOutButton_Click" />
+    <StackPanel Orientation="Vertical"
+                Margin="12">
+        
+        <!-- Group header for account settings -->
+        <TextBlock x:Name="AccountSettingsHeader"
+                   x:Uid="AccountSettingsHeader"
+                   Text="Account"
+                   Style="{StaticResource SubtitleTextBlockStyle}"
+                   Margin="0,0,0,20"/>
+        
+        <!-- Login information header-->
+        <TextBlock x:Name="AccountSettingsLoginInformationHeader"
+                   x:Uid="AccountSettingsLoginInformationHeader"
+                   Text="Logged in as:"
+                   Style="{StaticResource BaseTextBlockStyle}"
+                   Margin="0,0,0,20"/>
+        
+        <!-- Login Information -->
+        <RelativePanel
+            Margin="0,0,0,20">
+            <Image x:Name="UserPhoto" 
+                   Source="{x:Bind ViewModel.UserPhoto, Mode=OneWay}"
+                   RelativePanel.AlignLeftWithPanel="True"
+                   RelativePanel.AlignVerticalCenterWithPanel="True"
+                   Height="48"
+                   Width="48"
+                   Margin="0,0,20,0"/>
 
-    </Grid>
+            <TextBlock x:Name="UserDisplayName"
+                       Text="{x:Bind ViewModel.User.DisplayName}"
+                       Style="{StaticResource BodyTextBlockStyle}"
+                       RelativePanel.RightOf="UserPhoto"
+                       HorizontalTextAlignment="Left"
+                       VerticalAlignment="Top"
+                       RelativePanel.AlignTopWithPanel="True"
+                       RelativePanel.AlignRightWithPanel="True"/>
+
+            <TextBlock Text="{x:Bind ViewModel.User.Email}"
+                       Style="{StaticResource BodyTextBlockStyle}"
+                       RelativePanel.Below="UserDisplayName"
+                       RelativePanel.RightOf="UserPhoto"
+                       HorizontalTextAlignment="Left"
+                       VerticalAlignment="Top"
+                       RelativePanel.AlignRightWithPanel="True"
+                       RelativePanel.AlignBottomWithPanel="True" />
+        </RelativePanel>
+        
+        <!-- Sign out button -->
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,0,0,20">
+            <Button x:Uid="SignOutButton"
+                    x:Name="SignOutButton"
+                    Content="Sign Out"
+                    Click="SignOutButton_Click"
+                    Margin="0,0,20,0"/>
+
+            <Button x:Uid="PauseSyncButton"
+                    x:Name="PauseSyncButton"
+                    Content="Pause sync"
+                    Click="{x:Bind ViewModel.PauseSync}"
+                    x:Load="{x:Bind ViewModel.IsSyncPaused, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                    Margin="0,0,20,0"/>
+
+            <Button x:Uid="ResumeSyncButton"
+                    x:Name="ResumeSyncButton"
+                    Content="Resume sync"
+                    Click="{x:Bind ViewModel.UnpauseSync}"
+                    x:Load="{x:Bind ViewModel.IsSyncPaused, Mode=OneWay}"/>
+        </StackPanel>
+
+        <!-- Group header for Theme settings -->
+        <TextBlock x:Name="ThemeSettingsHeader"
+                   x:Uid="ThemeSettingsHeader"
+                   Text="Theme"
+                   Style="{StaticResource SubtitleTextBlockStyle}"
+                   Margin="0,0,0,20" />
+
+        <RadioButton x:Uid="ThemeSettingsDarkButton"
+                     GroupName="ThemeSettingsGroup"
+                     Content="Dark" />
+        <RadioButton x:Uid="ThemeSettingsLightButton"
+                     GroupName="ThemeSettingsGroup"
+                     Content="Light" />
+        <RadioButton x:Uid="ThemeSettingsWindowsDefaultButton"
+                     GroupName="ThemeSettingsGroup"
+                     Content="Windows Default"
+                     Margin="0,0,0,20"/>
+    </StackPanel>
 </local:NavViewPageBase>

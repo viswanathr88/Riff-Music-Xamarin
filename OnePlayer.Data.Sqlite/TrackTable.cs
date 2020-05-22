@@ -245,7 +245,16 @@ namespace OnePlayer.Data.Sqlite
         {
             if (options.SortType.HasValue)
             {
-                builder.AppendLine($"ORDER BY {options.SortType.Value} {(options.SortOrder == SortOrder.Ascending ? "ASC" : "DESC")}");
+                builder.Append("ORDER BY ");
+                string sortOrderStr = $"{(options.SortOrder == SortOrder.Ascending ? "ASC" : "DESC")}";
+                if (options.SortType == TrackSortType.ReleaseYear)
+                {
+                    builder.AppendLine($"AlbumReleaseYear {sortOrderStr}, AlbumName ASC, Number ASC, Title ASC");
+                }
+                else
+                {
+                    builder.Append($"{options.SortType.Value} {sortOrderStr}");
+                }
             }
         }
 

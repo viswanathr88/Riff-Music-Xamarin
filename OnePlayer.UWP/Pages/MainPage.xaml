@@ -19,8 +19,7 @@
         </Storyboard>
     </Page.Resources>
 
-    <Grid x:Name="RootGrid"
-          Opacity="0">
+    <Grid x:Name="RootGrid">
         <!-- Add custom titlebar that floats on top -->
         <oc:Titlebar x:Name="Titlebar"
                      x:Uid="Titlebar"
@@ -62,14 +61,14 @@
             </ui:NavigationView.Header>
 
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Tag="home"
+                <!--<ui:NavigationViewItem Tag="home"
                                        x:Uid="NavViewHome"
                                        Content="">
                     <ui:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                   Glyph="&#xE80F;" />
                     </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
+                </ui:NavigationViewItem>-->
                 <ui:NavigationViewItem Tag="library"
                                        x:Uid="NavViewLibrary"
                                        Content="">

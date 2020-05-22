@@ -32,6 +32,15 @@ namespace OnePlayer.UWP.Pages
 
         public SettingsViewModel ViewModel => DataContext as SettingsViewModel;
 
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (!ViewModel.IsLoaded)
+            {
+                await ViewModel.LoadAsync(VoidType.Empty);
+            }
+        }
         private async void SignOutButton_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.SignOutAsync();

@@ -9,7 +9,8 @@ namespace OnePlayer.Data.Access
         Number,
         Title,
         TrackArtist,
-        Duration
+        Duration,
+        ReleaseYear
     };
 
     public sealed class TrackAccessOptions

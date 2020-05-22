@@ -53,10 +53,7 @@ namespace OnePlayer.UWP.Pages
             item.IsChecked = true;
             if (item != null)
             {
-                var fontIcon = item.Icon as FontIcon;
-                ToolbarFilter.Icon = new FontIcon() { Glyph = fontIcon.Glyph };
-                ToolbarFilter.Label = item.Text;
-                ToolbarText.Text = item.Text;
+                ToolbarFilter.Content = item.Text;
             }
 
             Type pageType;
@@ -102,7 +99,7 @@ namespace OnePlayer.UWP.Pages
                 item.IsChecked = true;
                 var fontIcon = item.Icon as FontIcon;
                 ToolbarDisplayMode.Icon = new FontIcon() { Glyph = fontIcon.Glyph };
-                ToolbarDisplayMode.Label = item.Text;
+                // ToolbarDisplayMode.Label = item.Text;
             }
         }
     }

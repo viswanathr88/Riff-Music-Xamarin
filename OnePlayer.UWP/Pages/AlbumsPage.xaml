@@ -69,6 +69,14 @@
                   ItemClick="GridView_ItemClick"
                   x:Name="AlbumItems"
                   Loaded="AlbumItems_Loaded">
+
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal"
+                                     CacheLength="1" />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem" BasedOn="{StaticResource BorderlessGridViewItem}">
                     <Setter Property="Margin" Value="0,0,20,20" />

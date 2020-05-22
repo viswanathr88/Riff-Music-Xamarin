@@ -5,10 +5,256 @@
     xmlns:local="using:OnePlayer.UWP.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:OnePlayer.Data"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <local:LibraryPageBase.Resources>
+        <DataTemplate x:DataType="data:Track"
+                      x:Key="NarrowTrackItemTemplate">
+            <RelativePanel>
+                <!-- Track Title -->
+                <TextBlock x:Name="TrackTitle"
+                           x:Phase="0"
+                           Text="{x:Bind Title}"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           FontSize="13"
+                           RelativePanel.AlignLeftWithPanel="True"
+                           RelativePanel.AlignTopWithPanel="True"
+                           RelativePanel.AlignHorizontalCenterWithPanel="True"
+                           TextWrapping="NoWrap"
+                           MaxLines="1"
+                           TextTrimming="CharacterEllipsis"/>
+                
+                <!-- Track Artist -->
+                <TextBlock x:Name="TrackArtist" 
+                           Text="{x:Bind Artist}"
+                           x:Phase="1"
+                           HorizontalAlignment="Left"
+                           FontSize="13"
+                           RelativePanel.AlignLeftWith="TrackTitle"
+                           RelativePanel.Below="TrackTitle"
+                           MaxLines="1"
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="0,0,10,0"/>
+                
+                <!-- Track Album -->
+                <!--<TextBlock x:Name="TrackAlbum"
+                           Text="{x:Bind Album.Name}"
+                           FontSize="13"
+                           RelativePanel.Below="TrackArtist"
+                           RelativePanel.AlignLeftWith="TrackTitle"
+                           MaxLines="1"
+                           TextWrapping="NoWrap"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="0,0,10,0" />-->
 
-    </Grid>
+                <!-- Track Year -->
+                <!--<TextBlock x:Name="TrackReleaseYear" 
+                           Text="{x:Bind ReleaseYear}"
+                           FontSize="13"
+                           RelativePanel.Below="TrackTitle"
+                           RelativePanel.RightOf="TrackAlbum" />-->
+                
+                <!-- Track Genre -->
+                <!--<TextBlock x:Name="TrackGenre"
+                           Text="{x:Bind Genre.Name}"
+                           FontSize="13"
+                           RelativePanel.Below="TrackTitle"
+                           RelativePanel.RightOf="TrackReleaseYear" />-->
+                
+                <!-- Track Duration -->
+                <TextBlock x:Name="TrackDuration"
+                           Text="{x:Bind FormatDuration(Duration)}"
+                           FontSize="13"
+                           x:Phase="2"
+                           RelativePanel.AlignTopWithPanel="True"
+                           RelativePanel.AlignBottomWithPanel="True"
+                           RelativePanel.AlignRightWithPanel="True"
+                           Margin="0,0,10,0"/>
+            </RelativePanel>
+        </DataTemplate>
+
+        <DataTemplate x:DataType="data:Track"
+                      x:Key="NormalTrackItemTemplate">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Track Title -->
+                <TextBlock Text="{x:Bind Title}"
+                           MaxLines="1"
+                           x:Phase="0"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="0"
+                           Margin="0,0,20,0" />
+
+                <!-- Track Artist -->
+                <TextBlock Text="{x:Bind Artist}"
+                           MaxLines="1"
+                           x:Phase="1"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="1"
+                           Margin="0,0,20,0" />
+
+                <!-- Track Album -->
+                <TextBlock Text="{x:Bind Album.Name}"
+                           MaxLines="1"
+                           x:Phase="2"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="2"
+                           Margin="0,0,20,0" />
+
+                <!-- Track Duration -->
+                <TextBlock Text="{x:Bind FormatDuration(Duration)}"
+                           MaxLines="1"
+                           x:Phase="2"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="3"
+                           Margin="0,0,10,0" />
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:DataType="data:Track"
+                      x:Key="WideTrackItemTemplate">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Track Title -->
+                <TextBlock Text="{x:Bind Title}"
+                           MaxLines="1"
+                           x:Phase="0"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="0"
+                           Margin="0,0,20,0"/>
+
+                <!-- Track Artist -->
+                <TextBlock Text="{x:Bind Artist}"
+                           MaxLines="1"
+                           x:Phase="1"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="1"
+                           Margin="0,0,20,0"/>
+
+                <!-- Track Album -->
+                <TextBlock Text="{x:Bind Album.Name}"
+                           MaxLines="1"
+                           x:Phase="2"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="2"
+                           Margin="0,0,20,0"/>
+
+                <!-- Track Year -->
+                <TextBlock Text="{x:Bind ReleaseYear}"
+                           MaxLines="1"
+                           x:Phase="2"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="3"
+                           MinWidth="75"
+                           Margin="0,0,20,0"/>
+
+                <!-- Track Genre -->
+                <TextBlock Text="{x:Bind Genre.Name}"
+                           MaxLines="1"
+                           x:Phase="2"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="4"
+                           Margin="0,0,20,0"/>
+
+                <!-- Track Duration -->
+                <TextBlock Text="{x:Bind FormatDuration(Duration)}"
+                           MaxLines="1"
+                           x:Phase="2"
+                           TextTrimming="CharacterEllipsis"
+                           TextWrapping="NoWrap"
+                           FontSize="13"
+                           Grid.Column="5"
+                           Margin="0,0,10,0"/>
+            </Grid>
+        </DataTemplate>
+    </local:LibraryPageBase.Resources>
+
+    <ListView x:Name="TracksList"
+              SelectionMode="Single"
+              IsItemClickEnabled="True"
+              ItemClick="TracksList_ItemClick"
+              ShowsScrollingPlaceholders="False"
+              ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
+              ItemTemplate="{StaticResource NarrowTrackItemTemplate}">
+
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <ItemsStackPanel Orientation="Vertical"
+                                 CacheLength="0" />
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+        
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="Padding"
+                        Value="10" />
+            </Style>
+        </ListView.ItemContainerStyle>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="VisualStateNormal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="VisualStateNormalTrigger"
+                                         MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TracksList.(ItemsControl.ItemTemplate)"
+                                Value="{StaticResource NormalTrackItemTemplate}" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateWide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="VisualStateWideTrigger"
+                                         MinWindowWidth="1008" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TracksList.(ItemsControl.ItemTemplate)"
+                                Value="{StaticResource WideTrackItemTemplate}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+    </ListView>
 </local:LibraryPageBase>

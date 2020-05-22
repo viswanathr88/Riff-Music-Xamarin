@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnePlayer.UWP.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,11 +21,28 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class TracksPage : LibraryPageBase
+    public sealed partial class TracksPage : LibraryPageBase, ISupportViewModel<TracksViewModel>
     {
         public TracksPage()
         {
             this.InitializeComponent();
+        }
+
+        public TracksViewModel ViewModel => (Application.Current.Resources["VMLocator"] as Locator).MusicLibrary.Tracks;
+
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (!ViewModel.IsLoaded)
+            {
+                await ViewModel.LoadAsync(VoidType.Empty);
+            }
+        }
+
+        private void TracksList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
         }
     }
 }

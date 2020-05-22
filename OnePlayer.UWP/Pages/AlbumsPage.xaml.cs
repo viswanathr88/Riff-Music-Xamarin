@@ -41,7 +41,7 @@ namespace OnePlayer.UWP.Pages
 
             if (!ViewModel.IsLoaded)
             {
-                await ViewModel.LoadAsync(VoidType.Empty);
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() => await ViewModel.LoadAsync(VoidType.Empty));
             }
         }
 
@@ -62,6 +62,8 @@ namespace OnePlayer.UWP.Pages
                 {
                     await AlbumItems.TryStartConnectedAnimationAsync(animation, _storedItem, "AlbumArt");
                 }
+
+                _storedItem = null;
             }
         }
 

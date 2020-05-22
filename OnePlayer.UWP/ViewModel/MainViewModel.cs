@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace OnePlayer.UWP.ViewModel
 {
-    public sealed class MainViewModel : DataViewModel<VoidType>
+    public sealed class MainViewModel : DataViewModel
     {
         private readonly MusicLibrary library;
         private readonly SyncEngine syncEngine;
         private SyncState state;
 
-        private Lazy<SearchSuggestionsViewModel> searchSuggestionsVM;
+        private readonly Lazy<SearchSuggestionsViewModel> searchSuggestionsVM;
 
         public MainViewModel(MusicLibrary library, SyncEngine engine)
         {

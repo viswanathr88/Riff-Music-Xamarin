@@ -13,6 +13,8 @@ namespace OnePlayer.UWP.ViewModel
 {
     public sealed class Locator
     {
+        private readonly Lazy<IPreferences> preferences;
+
         private readonly Lazy<MusicLibraryViewModel> musicLibraryVM;
         private readonly Lazy<FirstRunExperienceViewModel> firstRunExperienceVM;
         private readonly Lazy<SettingsViewModel> settingsVM;
@@ -28,6 +30,7 @@ namespace OnePlayer.UWP.ViewModel
 
         public Locator()
         {
+            preferences = new Lazy<IPreferences>(() => new AppPreferences());
             httpClient = new Lazy<HttpClient>(() => new HttpClient());
             loginManager = new Lazy<ILoginManager>(() => new CacheReadyLoginManager(new WindowsLoginManager(WebClient), DefaultPath));
             syncEngine = new Lazy<SyncEngine>(() => new SyncEngine(new AppPreferences(), LoginManager, WebClient, Library));
@@ -36,7 +39,7 @@ namespace OnePlayer.UWP.ViewModel
 
             mainVM = new Lazy<MainViewModel>(() => new MainViewModel(Library, SyncEngine));
             musicLibraryVM = new Lazy<MusicLibraryViewModel>(() => new MusicLibraryViewModel(Library));
-            settingsVM = new Lazy<SettingsViewModel>(() => new SettingsViewModel(loginManager.Value));
+            settingsVM = new Lazy<SettingsViewModel>(() => new SettingsViewModel(LoginManager, Preferences, SyncEngine));
             firstRunExperienceVM = new Lazy<FirstRunExperienceViewModel>(() => new FirstRunExperienceViewModel(loginManager.Value));
         }
 
@@ -57,6 +60,8 @@ namespace OnePlayer.UWP.ViewModel
         public MusicLibrary Library => musicLibrary.Value;
 
         private SyncEngine SyncEngine => syncEngine.Value;
+
+        private IPreferences Preferences => preferences.Value;
 
     }
 }

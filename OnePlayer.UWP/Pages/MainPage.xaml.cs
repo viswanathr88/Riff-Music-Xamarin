@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -23,7 +24,6 @@ namespace OnePlayer.UWP.Pages
     {
         private readonly IDictionary<string, Type> pages = new Dictionary<string, Type>()
         {
-            { "home", typeof(HomePage) },
             { "library", typeof(MusicLibraryPage) },
             { "nowplaying", typeof(NowPlayingPage) },
             { "playlists", typeof(PlaylistsPage) },
@@ -55,21 +55,15 @@ namespace OnePlayer.UWP.Pages
         public MainPage()
         {
             this.InitializeComponent();
-            Loaded += MainPage_Loaded;
         }
 
-        private async void MainPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => RootGrid.Opacity = 1);
-        }
-
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             
             UpdateSyncStateIcon();
-            await ViewModel.LoadAsync(VoidType.Empty);
+            //await ViewModel.LoadAsync(VoidType.Empty);
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -228,6 +222,7 @@ namespace OnePlayer.UWP.Pages
         private void NavViewSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
             sender.Text = "";
+            NavView.IsPaneOpen = false;
 
             if (args.SelectedItem != null)
             {

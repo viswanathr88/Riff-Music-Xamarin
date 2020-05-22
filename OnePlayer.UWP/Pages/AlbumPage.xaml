@@ -53,9 +53,9 @@
                            x:Name="AlbumName"
                            Margin="20,10,20,10"
                            VerticalAlignment="Center"
-                           TextLineBounds="TrimToCapHeight"/>
+                           TextLineBounds="TrimToCapHeight" />
 
-                <StackPanel x:Name="AlbumDetails" 
+                <StackPanel x:Name="AlbumDetails"
                             Orientation="Horizontal"
                             Grid.Row="2"
                             HorizontalAlignment="Center"
@@ -67,27 +67,27 @@
                                Text="{x:Bind ViewModel.AlbumInfo.Artist.Name, Mode=OneWay}"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                MaxLines="1"
-                               Margin="0,0,5,0"/>
+                               Margin="0,0,5,0" />
 
-                    <FontIcon x:Name="Division1"  
+                    <FontIcon x:Name="Division1"
                               FontFamily="Segoe MDL2 Assets"
                               Glyph="&#xE7C8;"
                               FontSize="10"
                               VerticalAlignment="Center"
-                              Margin="0,0,5,0"/>
+                              Margin="0,0,5,0" />
 
                     <TextBlock Text="{x:Bind ViewModel.AlbumInfo.ReleaseYear, Mode=OneWay}"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                MaxLines="1"
                                VerticalAlignment="Center"
-                               Margin="0,0,5,0"/>
+                               Margin="0,0,5,0" />
 
-                    <FontIcon x:Name="Division2" 
+                    <FontIcon x:Name="Division2"
                               FontFamily="Segoe MDL2 Assets"
                               Glyph="&#xE7C8;"
                               FontSize="10"
                               VerticalAlignment="Center"
-                              Margin="0,0,5,0"/>
+                              Margin="0,0,5,0" />
 
                     <TextBlock Text="{x:Bind ViewModel.AlbumInfo.Genre.Name, Mode=OneWay}"
                                Style="{StaticResource CaptionTextBlockStyle}"

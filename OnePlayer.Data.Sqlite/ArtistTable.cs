@@ -108,7 +108,7 @@ namespace OnePlayer.Data.Sqlite
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {Name}";
+                command.CommandText = $"SELECT * FROM {Name} ORDER BY Name ASC";
 
                 using (var reader = command.ExecuteReader())
                 {
