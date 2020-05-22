@@ -27,6 +27,7 @@ namespace OnePlayer.UWP.Controls
             this.InitializeComponent();
             Loaded += Titlebar_Loaded;
             Unloaded += Titlebar_Unloaded;
+            Background = (Brush)Application.Current.Resources["NavigationViewTopPaneBackground"];
         }
 
         public event EventHandler<EventArgs> BackRequested;
@@ -59,7 +60,7 @@ namespace OnePlayer.UWP.Controls
 
         // Using a DependencyProperty as the backing store for CoreTitlebarHeight.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CoreTitlebarHeightProperty =
-            DependencyProperty.Register("CoreTitlebarHeight", typeof(double), typeof(Titlebar), new PropertyMetadata(0.0));
+            DependencyProperty.Register("CoreTitlebarHeight", typeof(double), typeof(Titlebar), new PropertyMetadata(32.0));
 
         public Thickness CoreTitlebarPadding
         {
@@ -92,7 +93,12 @@ namespace OnePlayer.UWP.Controls
 
         private void UpdateLayoutMetrics()
         {
-            this.CoreTitlebarHeight = coreTitlebar.Height;
+            if (coreTitlebar.Height > 0)
+            {
+                this.CoreTitlebarHeight = coreTitlebar.Height;
+                this.SetValue(Grid.RowProperty, 1);
+                Background = null;
+            }
 
             // The SystemOverlayLeftInset and SystemOverlayRightInset values are
             // in terms of physical left and right. Therefore, we need to flip

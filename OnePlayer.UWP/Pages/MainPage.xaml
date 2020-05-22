@@ -20,6 +20,10 @@
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <!-- Add custom titlebar that floats on top -->
         <oc:Titlebar x:Name="Titlebar"
                      x:Uid="Titlebar"
