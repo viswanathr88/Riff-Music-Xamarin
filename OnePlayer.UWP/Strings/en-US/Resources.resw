@@ -258,20 +258,20 @@
   <data name="ToolbarShuffleButton.Label" xml:space="preserve">
     <value>Shuffle</value>
   </data>
-  <data name="ToolbarSortAlphabetical.Text" xml:space="preserve">
-    <value>A to Z</value>
-  </data>
   <data name="ToolbarSortButton.Label" xml:space="preserve">
     <value>Sort</value>
   </data>
-  <data name="ToolbarSortByAlphabetical" xml:space="preserve">
-    <value>Name</value>
+  <data name="ToolbarSortByDuration.Text" xml:space="preserve">
+    <value>Duration</value>
   </data>
-  <data name="ToolbarSortByReleaseYear" xml:space="preserve">
+  <data name="ToolbarSortByName.Text" xml:space="preserve">
+    <value>A to Z</value>
+  </data>
+  <data name="ToolbarSortByReleaseYear.Text" xml:space="preserve">
     <value>Release Year</value>
   </data>
-  <data name="ToolbarSortByTitle" xml:space="preserve">
-    <value>Title</value>
+  <data name="ToolbarSortByTrackArtist.Text" xml:space="preserve">
+    <value>Artist</value>
   </data>
   <data name="ToolbarSortDateAdded.Text" xml:space="preserve">
     <value>Date Added</value>

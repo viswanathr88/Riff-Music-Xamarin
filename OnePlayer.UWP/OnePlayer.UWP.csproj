@@ -126,6 +126,7 @@
     <Compile Include="Controls\Titlebar.xaml.cs">
       <DependentUpon>Titlebar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\TrackSortTypeConverter.cs" />
     <Compile Include="Converters\SortOrderConverter.cs" />
     <Compile Include="Converters\AlbumSortTypeConverter.cs" />
     <Compile Include="Converters\BoolNegationConverter.cs" />

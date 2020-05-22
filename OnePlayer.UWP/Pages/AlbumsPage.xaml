@@ -34,7 +34,7 @@
                 </Style>
             </MenuFlyout.MenuFlyoutPresenterStyle>
 
-            <ui:RadioMenuFlyoutItem x:Uid="ToolbarSortAlphabetical"
+            <ui:RadioMenuFlyoutItem x:Uid="ToolbarSortByName"
                                     Click="SortFlyoutItem_Click"
                                     Text=""
                                     x:Name="ToolbarSortByName"

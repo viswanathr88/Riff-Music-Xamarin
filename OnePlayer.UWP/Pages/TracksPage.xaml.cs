@@ -40,6 +40,16 @@ namespace OnePlayer.UWP.Pages
             }
         }
 
+        private async void SortFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.LoadAsync(VoidType.Empty);
+        }
+
+        private async void SortOrderFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            await ViewModel.LoadAsync(VoidType.Empty);
+        }
+
         private void TracksList_ItemClick(object sender, ItemClickEventArgs e)
         {
 
