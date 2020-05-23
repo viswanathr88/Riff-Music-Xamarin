@@ -67,6 +67,19 @@
         <DataTemplate x:DataType="data:Track"
                       x:Key="NarrowTrackItemTemplate">
             <RelativePanel>
+                <!-- Track Art -->
+                <Border x:Name="TrackArtContainer"
+                        Width="40"
+                        Height="40"
+                        Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignHorizontalCenterWithPanel="True"
+                        Margin="0,0,20,0">
+                    <Image x:Name="TrackArt"
+                           Width="40"
+                           Height="40" />
+                </Border>
                 <!-- Track Title -->
                 <TextBlock x:Name="TrackTitle"
                            x:Phase="0"
@@ -74,7 +87,7 @@
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top"
                            FontSize="13"
-                           RelativePanel.AlignLeftWithPanel="True"
+                           RelativePanel.RightOf="TrackArtContainer"
                            RelativePanel.AlignTopWithPanel="True"
                            RelativePanel.AlignHorizontalCenterWithPanel="True"
                            TextWrapping="NoWrap"
@@ -86,10 +99,13 @@
                            Text="{x:Bind Artist}"
                            x:Phase="1"
                            HorizontalAlignment="Left"
-                           FontSize="13"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
+                           RelativePanel.RightOf="TrackArtContainer"
                            RelativePanel.AlignLeftWith="TrackTitle"
                            RelativePanel.Below="TrackTitle"
                            MaxLines="1"
+                           MaxWidth="200"
                            TextWrapping="NoWrap"
                            TextTrimming="CharacterEllipsis"
                            Margin="0,0,10,0"/>
@@ -97,13 +113,14 @@
                 <!-- Track Album -->
                 <!--<TextBlock x:Name="TrackAlbum"
                            Text="{x:Bind Album.Name}"
-                           FontSize="13"
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
                            RelativePanel.Below="TrackArtist"
                            RelativePanel.AlignLeftWith="TrackTitle"
                            MaxLines="1"
                            TextWrapping="NoWrap"
                            TextTrimming="CharacterEllipsis"
-                           Margin="0,0,10,0" />-->
+                           Margin="10,0,10,0" />-->
 
                 <!-- Track Year -->
                 <!--<TextBlock x:Name="TrackReleaseYear" 
@@ -265,7 +282,8 @@
               ItemClick="TracksList_ItemClick"
               ShowsScrollingPlaceholders="False"
               ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
-              ItemTemplate="{StaticResource NarrowTrackItemTemplate}">
+              ItemTemplate="{StaticResource NarrowTrackItemTemplate}"
+              ContainerContentChanging="TracksList_ContainerContentChanging">
 
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
