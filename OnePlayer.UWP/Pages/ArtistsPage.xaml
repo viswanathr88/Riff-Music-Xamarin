@@ -7,7 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:OnePlayer.Data"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    ShowSortMenu="False">
 
     <ListView x:Name="ArtistList"
               ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
