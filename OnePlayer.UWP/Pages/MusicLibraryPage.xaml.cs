@@ -42,9 +42,6 @@ namespace OnePlayer.UWP.Pages
         {
             // Simulate the first entry in the filter being selected
             RadioMenuFlyoutItem_Click(ToolbarFilterFlyout.Items.First(), new RoutedEventArgs());
-
-            // Simulate the first entry in display mode being selected;
-            DisplayModeFlyoutItem_Click(ToolbarDisplayModeFlyout.Items.First(), new RoutedEventArgs());
         }
 
         private void RadioMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
@@ -85,18 +82,6 @@ namespace OnePlayer.UWP.Pages
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private void DisplayModeFlyoutItem_Click(object sender, RoutedEventArgs e)
-        {
-            var item = (sender as Microsoft.UI.Xaml.Controls.RadioMenuFlyoutItem);
-            if (item != null)
-            {
-                item.IsChecked = true;
-                var fontIcon = item.Icon as FontIcon;
-                ToolbarDisplayMode.Icon = new FontIcon() { Glyph = fontIcon.Glyph };
-                // ToolbarDisplayMode.Label = item.Text;
-            }
         }
     }
 }
