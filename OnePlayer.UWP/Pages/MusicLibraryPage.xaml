@@ -103,42 +103,6 @@
                                   Glyph="&#xE8CB;" />
                     </AppBarButton.Icon>
                 </AppBarButton>
-
-                <AppBarButton Label=""
-                              Click="AppBarButton_Click"
-                              x:Uid="ToolbarDisplayMode"
-                              x:Name="ToolbarDisplayMode">
-                    <AppBarButton.Flyout>
-                        <MenuFlyout Placement="BottomEdgeAlignedRight"
-                                    x:Name="ToolbarDisplayModeFlyout">
-                            <MenuFlyout.MenuFlyoutPresenterStyle>
-                                <Style TargetType="MenuFlyoutPresenter">
-                                    <Setter Property="Margin"
-                                            Value="0,0,20,0" />
-                                    <Setter Property="MinWidth"
-                                            Value="180" />
-                                </Style>
-                            </MenuFlyout.MenuFlyoutPresenterStyle>
-
-                            <ui:RadioMenuFlyoutItem x:Uid="ToolbarDisplayModeGrid"
-                                                    Text=""
-                                                    Click="DisplayModeFlyoutItem_Click">
-                                <ui:RadioMenuFlyoutItem.Icon>
-                                    <FontIcon FontFamily="Segoe MDL2 Assets"
-                                              Glyph="&#xF0E2;" />
-                                </ui:RadioMenuFlyoutItem.Icon>
-                            </ui:RadioMenuFlyoutItem>
-                            <ui:RadioMenuFlyoutItem x:Uid="ToolbarDisplayModeList"
-                                                    Text=""
-                                                    Click="DisplayModeFlyoutItem_Click">
-                                <ui:RadioMenuFlyoutItem.Icon>
-                                    <FontIcon FontFamily="Segoe MDL2 Assets"
-                                              Glyph="&#xEA37;" />
-                                </ui:RadioMenuFlyoutItem.Icon>
-                            </ui:RadioMenuFlyoutItem>
-                        </MenuFlyout>
-                    </AppBarButton.Flyout>
-                </AppBarButton>
             </CommandBar.PrimaryCommands>
         </CommandBar>
 
