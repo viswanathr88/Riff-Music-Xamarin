@@ -33,6 +33,11 @@ namespace OnePlayer.Data
             return Metadata.Albums.Get(options);
         }
 
+        public IList<Artist> GetArtists()
+        {
+            return Metadata.Artists.GetAll();
+        }
+
         public IList<Track> GetTracks()
         {
             var options = new TrackAccessOptions()

@@ -241,6 +241,10 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OnePlayer.Data.Sqlite\OnePlayer.Data.Sqlite.csproj">
+      <Project>{4497c461-2030-46ad-a065-8ce33cf9f7a6}</Project>
+      <Name>OnePlayer.Data.Sqlite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OnePlayer\OnePlayer.csproj">
       <Project>{0A546AAF-A4B7-40BF-9C08-8E58B05DFA45}</Project>
       <Name>OnePlayer</Name>

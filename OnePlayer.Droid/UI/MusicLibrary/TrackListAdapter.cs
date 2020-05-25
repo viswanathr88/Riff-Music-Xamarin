@@ -25,11 +25,11 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             var viewHolder = holder as TrackItemViewHolder;
             viewHolder.TrackName.Text = tracks[position].Title;
             viewHolder.TrackArtist.Text = tracks[position].Artist;
-            viewHolder.TrackDuration.Text = tracks[position].Duration.ToString();
+            viewHolder.TrackDuration.Text = tracks[position].Duration.ToString("mm':'ss");
 
-            if (this.library.TrackArts.Exists(tracks[position].Id, ThumbnailSize.Small))
+            if (this.library.TrackArts.Exists(tracks[position].Id.Value, ThumbnailSize.Small))
             {
-                using var stream = this.library.TrackArts.Get(tracks[position].Id, ThumbnailSize.Small);
+                using var stream = this.library.TrackArts.Get(tracks[position].Id.Value, ThumbnailSize.Small);
                 viewHolder.TrackArt.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
             }
             else
