@@ -37,9 +37,9 @@ namespace OnePlayer.UWP.ViewModel
             musicMetadata = new Lazy<IMusicMetadata>(() => new MusicMetadata(Path.Combine(DefaultPath, "OnePlayer.db")));
             musicLibrary = new Lazy<MusicLibrary>(() => new MusicLibrary(DefaultPath, MusicMetadata, WebClient));
 
-            mainVM = new Lazy<MainViewModel>(() => new MainViewModel(Library, SyncEngine));
+            mainVM = new Lazy<MainViewModel>(() => new MainViewModel(Library, SyncEngine, Preferences));
             musicLibraryVM = new Lazy<MusicLibraryViewModel>(() => new MusicLibraryViewModel(Library));
-            settingsVM = new Lazy<SettingsViewModel>(() => new SettingsViewModel(LoginManager, Preferences, SyncEngine));
+            settingsVM = new Lazy<SettingsViewModel>(() => new SettingsViewModel(LoginManager, Preferences));
             firstRunExperienceVM = new Lazy<FirstRunExperienceViewModel>(() => new FirstRunExperienceViewModel(loginManager.Value));
         }
 

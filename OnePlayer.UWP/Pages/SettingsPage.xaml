@@ -70,20 +70,7 @@
                     x:Name="SignOutButton"
                     Content="Sign Out"
                     Click="SignOutButton_Click"
-                    Margin="0,0,20,0"/>
-
-            <Button x:Uid="PauseSyncButton"
-                    x:Name="PauseSyncButton"
-                    Content="Pause sync"
-                    Click="{x:Bind ViewModel.PauseSync}"
-                    x:Load="{x:Bind ViewModel.IsSyncPaused, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                    Margin="0,0,20,0"/>
-
-            <Button x:Uid="ResumeSyncButton"
-                    x:Name="ResumeSyncButton"
-                    Content="Resume sync"
-                    Click="{x:Bind ViewModel.UnpauseSync}"
-                    x:Load="{x:Bind ViewModel.IsSyncPaused, Mode=OneWay}"/>
+                    Margin="0,0,20,0" />
         </StackPanel>
 
         <!-- Group header for Theme settings -->

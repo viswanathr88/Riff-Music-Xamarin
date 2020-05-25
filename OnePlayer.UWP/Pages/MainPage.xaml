@@ -7,9 +7,10 @@
       xmlns:ui="using:Microsoft.UI.Xaml.Controls"
       xmlns:oc="using:OnePlayer.UWP.Controls"
       xmlns:vm="using:OnePlayer.UWP.ViewModel"
-      xmlns:sys="using:System"
+      xmlns:conv="using:OnePlayer.UWP.Converters"
       xmlns:pages="using:OnePlayer.UWP.Pages"
-      mc:Ignorable="d"
+                       xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+                       mc:Ignorable="d"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <Storyboard x:Name="SyncStatusCommandBarIconRotation" 
@@ -17,6 +18,9 @@
                     RepeatBehavior="Forever">
             <DoubleAnimation Duration="0:0:3" To="360" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="SyncStatusCommandBarIcon" />
         </Storyboard>
+
+        <conv:BoolNegationConverter x:Key="BoolNegationConverter" />
+        <conv:SyncStatusIconConverter x:Key="SyncStatusIconConverter" />
     </Page.Resources>
 
     <Grid x:Name="RootGrid">
@@ -164,16 +168,83 @@
                 <ui:NavigationViewItem Tag="syncstatus"
                                        x:Uid="NavViewSyncStatusFooter"
                                        x:Name="NavViewSyncStatusFooter"
-                                       Content="">
+                                       Content=""
+                                       Tapped="NavViewSyncStatusFooter_Tapped">
                     <ui:NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                   x:Name="SyncStatusCommandBarIcon"
-                                  RenderTransformOrigin="0.5,0.5">
+                                  RenderTransformOrigin="0.5,0.5"
+                                  Glyph="{x:Bind ViewModel.Sync.State, Converter={StaticResource SyncStatusIconConverter}, Mode=OneWay}">
                             <FontIcon.RenderTransform>
                                 <CompositeTransform />
                             </FontIcon.RenderTransform>
                         </FontIcon>
                     </ui:NavigationViewItem.Icon>
+
+                    <FlyoutBase.AttachedFlyout>
+                        <Flyout Placement="BottomEdgeAlignedRight"
+                                Windows10version1809:AreOpenCloseAnimationsEnabled="True"
+                                Opening="SyncStatusFlyout_Opening"
+                                LightDismissOverlayMode="On">
+                            <Grid Width="300">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                
+                                <!-- Sync status icon -->
+                                <FontIcon x:Name="SyncStatusIcon"
+                                          Grid.Row="0"
+                                          Glyph="{x:Bind ViewModel.Sync.State, Converter={StaticResource SyncStatusIconConverter}, Mode=OneWay}"
+                                          FontSize="20"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,20,0"
+                                          />
+
+                                <!-- Sync text -->
+                                <TextBlock x:Name="SyncStatusText"
+                                           Grid.Row="0"
+                                           Grid.Column="1"
+                                           Style="{ThemeResource BodyTextBlockStyle}"
+                                           Text="{x:Bind GetSyncStatusText(ViewModel.Sync.State), Mode=OneWay}"
+                                           TextWrapping="Wrap"
+                                           TextLineBounds="Full"
+                                           />
+                                
+                                <!-- Sync now button -->
+                                <StackPanel Orientation="Horizontal"
+                                            Grid.Row="1"
+                                            Grid.ColumnSpan="2"
+                                            Margin="0,20,0,0">
+                                    <Button x:Uid="SyncNowButton" 
+                                            x:Name="SyncNowButton"
+                                            Content="Sync now"
+                                            Command="{x:Bind ViewModel.Sync.SyncNow}"
+                                            Margin="0,0,20,0" />
+                                    <Button x:Uid="PauseSyncButton"
+                                            x:Name="PauseSyncButton" 
+                                            Content="Pause Sync"
+                                            Margin="0,0,20,0"
+                                            x:Load="{x:Bind ViewModel.Sync.IsSyncPaused, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.Sync.PauseSync}"/>
+                                    <Button x:Uid="ResumeSyncButton"
+                                            x:Name="ResumeSyncButton"
+                                            Content="Resume Sync"
+                                            Margin="0,0,20,0"
+                                            x:Load="{x:Bind ViewModel.Sync.IsSyncPaused, Mode=OneWay}"
+                                            Click="{x:Bind ViewModel.Sync.ResumeSync}"/>
+                                    
+                                </StackPanel>
+                                
+                            </Grid>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                    
                 </ui:NavigationViewItem>
             </ui:NavigationView.PaneFooter>
 

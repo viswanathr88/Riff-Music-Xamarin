@@ -8,49 +8,30 @@ namespace OnePlayer.UWP.ViewModel
     public sealed class MainViewModel : DataViewModel
     {
         private readonly MusicLibrary library;
-        private readonly SyncEngine syncEngine;
-        private SyncState state;
 
         private readonly Lazy<SearchSuggestionsViewModel> searchSuggestionsVM;
+        private readonly Lazy<SyncViewModel> syncVM;
 
-        public MainViewModel(MusicLibrary library, SyncEngine engine)
+        public MainViewModel(MusicLibrary library, SyncEngine engine, IPreferences preferences)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
-            this.syncEngine = engine ?? throw new ArgumentNullException(nameof(engine));
-            this.syncEngine.StateChanged += SyncEngine_StateChanged;
-            State = this.syncEngine.State;
 
             this.searchSuggestionsVM = new Lazy<SearchSuggestionsViewModel>(() => new SearchSuggestionsViewModel(library));
-        }
-
-        public SyncState State
-        {
-            get
-            {
-                return this.state;
-            }
-            private set
-            {
-                SetProperty(ref this.state, value);
-            }
+            this.syncVM = new Lazy<SyncViewModel>(() => new SyncViewModel(engine, preferences));
         }
 
         public SearchSuggestionsViewModel SearchSuggestions => searchSuggestionsVM.Value;
 
-        public override Task LoadAsync()
+        public SyncViewModel Sync => syncVM.Value;
+
+        public override async Task LoadAsync()
         {
-            Task.Run(async() => await syncEngine.RunAsync());
-            return Task.CompletedTask;
+            await Sync.LoadAsync();
         }
 
         public void Load()
         {
-            Task.Run(async () => await syncEngine.RunAsync());
-        }
-
-        private void SyncEngine_StateChanged(object sender, SyncState state)
-        {
-            State = state;
+            Sync.Load();
         }
     }
 }

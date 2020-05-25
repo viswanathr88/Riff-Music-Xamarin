@@ -1,6 +1,5 @@
 ﻿using OnePlayer.Authentication;
 using OnePlayer.Data;
-using OnePlayer.Sync;
 using OnePlayer.UWP.Storage;
 using System;
 using System.IO;
@@ -14,15 +13,13 @@ namespace OnePlayer.UWP.ViewModel
     {
         private readonly ILoginManager loginManager;
         private readonly IAppPreferences preferences;
-        private readonly SyncEngine syncEngine;
         private UserProfile user;
         private ImageSource userPhoto;
 
-        public SettingsViewModel(ILoginManager loginManager, IAppPreferences preferences, SyncEngine syncEngine)
+        public SettingsViewModel(ILoginManager loginManager, IAppPreferences preferences)
         {
             this.loginManager = loginManager ?? throw new ArgumentNullException(nameof(loginManager));
             this.preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
-            this.syncEngine = syncEngine ?? throw new ArgumentNullException(nameof(syncEngine));
         }
 
         public UserProfile User
@@ -37,19 +34,6 @@ namespace OnePlayer.UWP.ViewModel
             private set => SetProperty(ref this.userPhoto, value);
         }
 
-        public bool IsSyncPaused
-        {
-            get => this.preferences.IsSyncPaused;
-            private set
-            {
-                if (IsSyncPaused != value)
-                {
-                    preferences.IsSyncPaused = value;
-                    RaisePropertyChanged(nameof(IsSyncPaused));
-                }
-            }
-        }
-
         public Theme AppTheme
         {
             get => this.preferences.AppTheme;
@@ -60,24 +44,6 @@ namespace OnePlayer.UWP.ViewModel
                     this.preferences.AppTheme = value;
                     RaisePropertyChanged(nameof(AppTheme));
                 }
-            }
-        }
-
-        public void PauseSync()
-        {
-            if (!IsSyncPaused)
-            {
-                syncEngine.Stop();
-                RaisePropertyChanged(nameof(IsSyncPaused));
-            }
-        }
-
-        public void UnpauseSync()
-        {
-            if (IsSyncPaused)
-            {
-                IsSyncPaused = false;
-                syncEngine.Start();
             }
         }
 

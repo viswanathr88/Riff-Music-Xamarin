@@ -126,6 +126,7 @@
     <Compile Include="Controls\Titlebar.xaml.cs">
       <DependentUpon>Titlebar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\SyncStatusIconConverter.cs" />
     <Compile Include="Converters\TrackSortTypeConverter.cs" />
     <Compile Include="Converters\SortOrderConverter.cs" />
     <Compile Include="Converters\AlbumSortTypeConverter.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="ViewModel\ArtistsViewModel.cs" />
     <Compile Include="ViewModel\AlbumsViewModel.cs" />
     <Compile Include="ViewModel\AlbumViewModel.cs" />
+    <Compile Include="ViewModel\Commands\SyncCommand.cs" />
     <Compile Include="ViewModel\ItemCache.cs" />
     <Compile Include="ViewModel\ItemIndexRangeExtensions.cs" />
     <Compile Include="ViewModel\ItemIndexRangeList.cs" />

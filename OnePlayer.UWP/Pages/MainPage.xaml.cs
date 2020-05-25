@@ -1,5 +1,6 @@
 ﻿using OnePlayer.Data;
 using OnePlayer.Data.Access;
+using OnePlayer.Sync;
 using OnePlayer.UWP.Storage;
 using OnePlayer.UWP.ViewModel;
 using System;
@@ -62,7 +63,7 @@ namespace OnePlayer.UWP.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+            ViewModel.Sync.PropertyChanged += Sync_ViewModel_PropertyChanged;
             
             UpdateSyncStateIcon();
             ViewModel.Load();
@@ -70,48 +71,39 @@ namespace OnePlayer.UWP.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
+            ViewModel.Sync.PropertyChanged -= Sync_ViewModel_PropertyChanged;
         }
 
-        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void Sync_ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.State))
+            if (e.PropertyName == nameof(ViewModel.Sync.State))
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, UpdateSyncStateIcon);
             }
         }
 
-        private void UpdateSyncStateIcon()
+        private string GetSyncStatusText(SyncState state)
         {
-            string glyph = string.Empty;
-            switch (ViewModel.State)
+            switch (state)
             {
-                case Sync.SyncState.NotStarted:
-                    glyph = "\uEA6A";
-                    break;
-                case Sync.SyncState.Started:
-                    glyph = "\uE895";
-                    break;
-                case Sync.SyncState.Syncing:
-                    glyph = "\uE895";
-                    break;
-                case Sync.SyncState.NotSyncing:
-                    glyph = "\uEA6A";
-                    break;
-                case Sync.SyncState.Uptodate:
-                    glyph = "\uE930";
-                    break;
-                case Sync.SyncState.Stopped:
-                    glyph = "\uE769";
-                    break;
-                default:
-                    glyph = "\uE895";
-                    break;
+                case SyncState.NotSyncing:
+                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusNotSyncingText");
+                case SyncState.Started:
+                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusStartedText");
+                case SyncState.Stopped:
+                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusStoppedText");
+                case SyncState.Syncing:
+                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusSyncingText");
+                case SyncState.Uptodate:
+                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusUptodateText");
             }
 
-            SyncStatusCommandBarIcon.Glyph = glyph;
+            return "";
+        }
 
-            if (ViewModel.State == Sync.SyncState.Syncing)
+        private void UpdateSyncStateIcon()
+        {
+            if (ViewModel.Sync.State == Sync.SyncState.Syncing)
             {
                 SyncStatusCommandBarIconRotation.Begin();
             }
@@ -249,6 +241,21 @@ namespace OnePlayer.UWP.Pages
             {
                 App.UpdateTheme(Locator.Preferences.AppTheme);
             }
+        }
+
+        private void NavViewSyncStatusFooter_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            Flyout.ShowAttachedFlyout(sender as FrameworkElement);
+        }
+
+        private void SyncStatusFlyout_Opening(object sender, object e)
+        {
+            UpdateSyncStatusFlyout();
+        }
+
+        private void UpdateSyncStatusFlyout()
+        {
+            SyncStatusIcon.Glyph = SyncStatusCommandBarIcon.Glyph;
         }
     }
 }

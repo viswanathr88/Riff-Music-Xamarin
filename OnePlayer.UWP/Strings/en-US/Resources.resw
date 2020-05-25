@@ -216,6 +216,24 @@
   <data name="SettingsPageHeader" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="SyncNowButton.Content" xml:space="preserve">
+    <value>Sync now</value>
+  </data>
+  <data name="SyncStatusNotSyncingText" xml:space="preserve">
+    <value>An error is preventing sync from continuing. Please try again later. If the problem persists, please sign out and sign back in from Settings</value>
+  </data>
+  <data name="SyncStatusStartedText" xml:space="preserve">
+    <value>Automatic sync is disabled. Please click the sync now button to keep your library up to date.</value>
+  </data>
+  <data name="SyncStatusStoppedText" xml:space="preserve">
+    <value>Your OneDrive music sync is currently paused. Please resume to stay up to date.</value>
+  </data>
+  <data name="SyncStatusSyncingText" xml:space="preserve">
+    <value>Your OneDrive music collection is currently being indexed. Please keep the app open to continue syncing.</value>
+  </data>
+  <data name="SyncStatusUptodateText" xml:space="preserve">
+    <value>Your music library is up to date.</value>
+  </data>
   <data name="ThemeSettingsDarkButton.Content" xml:space="preserve">
     <value>Dark</value>
   </data>
