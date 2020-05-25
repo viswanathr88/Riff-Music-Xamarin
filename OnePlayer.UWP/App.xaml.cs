@@ -1,4 +1,5 @@
 ﻿using OnePlayer.UWP.Pages;
+using OnePlayer.UWP.Storage;
 using OnePlayer.UWP.ViewModel;
 using System;
 using Windows.ApplicationModel;
@@ -25,6 +26,57 @@ namespace OnePlayer.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            UpdateTheme(new AppPreferences().AppTheme);
+        }
+
+        public static void UpdateTheme(Theme appTheme)
+        {
+            App app = Application.Current as App;
+            if (Window.Current.Content is FrameworkElement frameworkElement)
+            {
+                app.UpdateContentTheme(appTheme);
+            }
+            else
+            {
+                app.UpdateAppTheme(appTheme);
+            }
+        }
+
+        private void UpdateAppTheme(Theme appTheme)
+        {
+            switch (appTheme)
+            {
+                case Theme.Dark:
+                    Application.Current.RequestedTheme = ApplicationTheme.Dark;
+                    break;
+                case Theme.Light:
+                    Application.Current.RequestedTheme = ApplicationTheme.Light;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void UpdateContentTheme(Theme appTheme)
+        {
+            if (Window.Current.Content is FrameworkElement frameworkElement)
+            {
+                var elementTheme = ElementTheme.Default;
+                switch (appTheme)
+                {
+                    case Theme.Default:
+                        elementTheme = ElementTheme.Default;
+                        break;
+                    case Theme.Light:
+                        elementTheme = ElementTheme.Light;
+                        break;
+                    case Theme.Dark:
+                        elementTheme = ElementTheme.Dark;
+                        break;
+                }
+
+                frameworkElement.RequestedTheme = elementTheme;
+            }
         }
 
         /// <summary>

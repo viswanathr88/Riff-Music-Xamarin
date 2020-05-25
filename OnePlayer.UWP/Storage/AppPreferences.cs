@@ -1,29 +1,58 @@
 ﻿using OnePlayer.Data;
+using System;
+using System.Runtime.CompilerServices;
 using Windows.Storage;
+using Windows.UI.Text.Core;
 
 namespace OnePlayer.UWP.Storage
 {
-    sealed class AppPreferences : IPreferences
+    sealed class AppPreferences : IAppPreferences
     {
         private readonly string deltaUrlKey = "DeltaUrl";
         private readonly string lastSyncTimeKey = "LastSyncTime";
         private readonly string isSyncPausedKey = "IsSyncPaused";
+        private readonly string themeKey = "AppTheme";
 
         public string DeltaUrl 
         {
-            get => ApplicationData.Current.LocalSettings.Values[deltaUrlKey]?.ToString();
-            set => ApplicationData.Current.LocalSettings.Values[deltaUrlKey] = value;
+            get => GetPreference(deltaUrlKey);
+            set => SetPreference(deltaUrlKey, value);
         }
         
         public string LastSyncTime 
         {
-            get => ApplicationData.Current.LocalSettings.Values[lastSyncTimeKey]?.ToString();
-            set => ApplicationData.Current.LocalSettings.Values[lastSyncTimeKey] = value;
+            get => GetPreference(lastSyncTimeKey);
+            set => SetPreference(lastSyncTimeKey, value);
         }
         public bool IsSyncPaused 
         {
-            get => bool.Parse(ApplicationData.Current.LocalSettings.Values[isSyncPausedKey]?.ToString() ?? "false");
-            set => ApplicationData.Current.LocalSettings.Values[isSyncPausedKey] = value;
+            get => bool.Parse(GetPreference(isSyncPausedKey) ?? "false");
+            set => SetPreference(isSyncPausedKey, value.ToString());
+        }
+        public Theme AppTheme 
+        {
+            get => (Theme)System.Enum.Parse(typeof(Theme), GetPreference(themeKey) ?? Theme.Default.ToString());
+            set => SetPreference(themeKey, value.ToString());
+        }
+
+        public event EventHandler<string> Changed;
+
+        private string GetPreference(string key)
+        {
+            return ApplicationData.Current.LocalSettings.Values[key]?.ToString();
+        }
+
+        private bool SetPreference(string key, string value, [CallerMemberName]string member = "")
+        {
+            bool changed = false;
+            if (ApplicationData.Current.LocalSettings.Values[key]?.ToString() != value)
+            {
+                ApplicationData.Current.LocalSettings.Values[key] = value.ToString();
+                changed = true;
+                Changed?.Invoke(this, member);
+            }
+
+            return changed;
         }
     }
 }

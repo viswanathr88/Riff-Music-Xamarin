@@ -1,11 +1,11 @@
 ﻿using OnePlayer.Data;
 using OnePlayer.Data.Access;
+using OnePlayer.UWP.Storage;
 using OnePlayer.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -50,11 +50,13 @@ namespace OnePlayer.UWP.Pages
         };
 
         private Locator Locator => App.Current.Resources["VMLocator"] as Locator;
+
         public MainViewModel ViewModel => Locator.Main;
 
         public MainPage()
         {
             this.InitializeComponent();
+            Locator.Preferences.Changed += Preferences_Changed;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -238,6 +240,14 @@ namespace OnePlayer.UWP.Pages
                     var album = Locator.MusicMetadata.Albums.Get(options).First();
                     ContentFrame.Navigate(typeof(AlbumPage), album, new EntranceNavigationTransitionInfo());
                 }
+            }
+        }
+
+        private void Preferences_Changed(object sender, string preference)
+        {
+            if (preference == nameof(IAppPreferences.AppTheme))
+            {
+                App.UpdateTheme(Locator.Preferences.AppTheme);
             }
         }
     }

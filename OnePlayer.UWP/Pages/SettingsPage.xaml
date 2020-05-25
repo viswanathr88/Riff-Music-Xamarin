@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="using:System"
+    xmlns:storage="using:OnePlayer.UWP.Storage"
     xmlns:conv="using:OnePlayer.UWP.Converters"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
@@ -93,14 +94,20 @@
                    Margin="0,0,0,20" />
 
         <RadioButton x:Uid="ThemeSettingsDarkButton"
+                     x:Name="ThemeSettingsDarkButton"
                      GroupName="ThemeSettingsGroup"
-                     Content="Dark" />
+                     Content="Dark"
+                     IsChecked="{x:Bind IsChecked(ViewModel.AppTheme, storage:Theme.Dark), BindBack=SetTheme, Mode=TwoWay}"/>
         <RadioButton x:Uid="ThemeSettingsLightButton"
+                     x:Name="ThemeSettingsLightButton"
                      GroupName="ThemeSettingsGroup"
-                     Content="Light" />
+                     Content="Light"
+                     IsChecked="{x:Bind IsChecked(ViewModel.AppTheme, storage:Theme.Light), BindBack=SetTheme, Mode=TwoWay}"/>
         <RadioButton x:Uid="ThemeSettingsWindowsDefaultButton"
+                     x:Name="ThemeSettingsWindowsDefaultButton"
                      GroupName="ThemeSettingsGroup"
                      Content="Windows Default"
+                     IsChecked="{x:Bind IsChecked(ViewModel.AppTheme, storage:Theme.Default), BindBack=SetTheme, Mode=TwoWay}"
                      Margin="0,0,0,20"/>
     </StackPanel>
 </local:NavViewPageBase>
