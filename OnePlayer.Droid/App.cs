@@ -2,6 +2,7 @@
 using Android.Content;
 using OnePlayer.Authentication;
 using OnePlayer.Data;
+using OnePlayer.Data.Sqlite;
 using OnePlayer.Droid.Storage;
 using OnePlayer.Sync;
 using System;
@@ -17,13 +18,13 @@ namespace OnePlayer.Droid
         private ITokenCache tokenCache;
         private IProfileCache profileCache;
         private IPreferences appPreferences;
+        private IMusicMetadata metadata;
         private MusicLibrary musicLibrary;
-        private IMusicDataStore store;
         private SyncEngine syncEngine;
         private const string tokenCachePreferenceFile = "com.oneplayer.droid.tokencache.preferences";
         private const string appPreferenceFile = "com.oneplayer.droid.app.preferences";
         private readonly static HttpClient httpClient = new HttpClient();
-        private static readonly string DefaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+        private static readonly string DefaultPath = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
         public App(IntPtr javaReference, Android.Runtime.JniHandleOwnership transfer) : base(javaReference, transfer)
         {
@@ -32,19 +33,18 @@ namespace OnePlayer.Droid
         public override void OnCreate()
         {
             base.OnCreate();
-
         }
 
-        public IMusicDataStore DataStore
+        public IMusicMetadata MusicMetadata
         {
             get
             {
-                if (this.store == null)
+                if (this.metadata == null)
                 {
-                    this.store = new MusicDataStore(DefaultPath);
+                    this.metadata = new MusicMetadata(Path.Combine(DefaultPath, "OnePlayer.db"));
                 }
 
-                return this.store;
+                return this.metadata;
             }
         }
 
@@ -109,7 +109,7 @@ namespace OnePlayer.Droid
             {
                 if (musicLibrary == null)
                 {
-                    musicLibrary = new MusicLibrary(DataStore, WebClient);
+                    musicLibrary = new MusicLibrary(DefaultPath, MusicMetadata, WebClient);
                 }
 
                 return musicLibrary;

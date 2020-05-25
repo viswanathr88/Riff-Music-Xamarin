@@ -26,10 +26,10 @@ namespace OnePlayer.Droid.UI.MusicLibrary
         {
             var albumItemViewHolder = holder as AlbumItemViewHolder;
             albumItemViewHolder.AlbumName.Text = albums[position].Name;
-            albumItemViewHolder.ArtistName.Text = albums[position].ArtistId.ToString();
-            if (library.AlbumArts.Exists(albums[position].Id, ThumbnailSize.Medium))
+            albumItemViewHolder.ArtistName.Text = albums[position].Artist.Name;
+            if (library.AlbumArts.Exists(albums[position].Id.Value, ThumbnailSize.Medium))
             {
-                using var stream = library.AlbumArts.Get(albums[position].Id, ThumbnailSize.Medium);
+                using var stream = library.AlbumArts.Get(albums[position].Id.Value, ThumbnailSize.Medium);
                 albumItemViewHolder.AlbumArt.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
             }
             else
