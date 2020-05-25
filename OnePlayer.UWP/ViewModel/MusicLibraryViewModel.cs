@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OnePlayer.UWP.ViewModel
 {
-    public sealed class MusicLibraryViewModel : DataViewModel<VoidType>
+    public sealed class MusicLibraryViewModel : DataViewModel
     {
         private readonly MusicLibrary library;
         private readonly Lazy<AlbumsViewModel> albums;
@@ -25,7 +25,7 @@ namespace OnePlayer.UWP.ViewModel
 
         public TracksViewModel Tracks => tracks.Value;
 
-        public override Task LoadAsync(VoidType parameter)
+        public override Task LoadAsync()
         {
             IsLoaded = true;
             return Task.CompletedTask;

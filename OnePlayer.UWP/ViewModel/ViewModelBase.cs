@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace OnePlayer.UWP.ViewModel
 {
@@ -60,6 +61,11 @@ namespace OnePlayer.UWP.ViewModel
             }
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected async Task RunUISafe(Action action)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => action.Invoke());
         }
 
         private PropertyInfo GetProperty<T>(Expression<Func<T>> expr)

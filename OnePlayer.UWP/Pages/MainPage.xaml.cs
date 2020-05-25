@@ -63,7 +63,7 @@ namespace OnePlayer.UWP.Pages
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             
             UpdateSyncStateIcon();
-            //await ViewModel.LoadAsync(VoidType.Empty);
+            ViewModel.Load();
         }
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {

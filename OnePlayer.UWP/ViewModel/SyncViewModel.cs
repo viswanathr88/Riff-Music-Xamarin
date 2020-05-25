@@ -1,13 +1,10 @@
 ﻿using OnePlayer.Sync;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OnePlayer.UWP.ViewModel
 {
-    class SyncViewModel : DataViewModel<VoidType>
+    public sealed class SyncViewModel : DataViewModel
     {
         private readonly SyncEngine engine;
 
@@ -16,7 +13,7 @@ namespace OnePlayer.UWP.ViewModel
             this.engine = engine ?? throw new ArgumentNullException(nameof(engine));
         }
 
-        public override Task LoadAsync(VoidType parameter)
+        public override Task LoadAsync()
         {
             IsLoaded = true;
             return Task.CompletedTask;

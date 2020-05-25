@@ -7,11 +7,13 @@ namespace OnePlayer.Data.Sqlite
     sealed class MusicMetadataEditSession : IEditSession
     {
         private readonly SqliteConnection connection;
+        private readonly IEditSessionHandler handler;
         private SqliteTransaction transaction;
 
-        public MusicMetadataEditSession(SqliteConnection connection)
+        public MusicMetadataEditSession(SqliteConnection connection, IEditSessionHandler handler)
         {
             this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            this.handler = handler;
             this.transaction = this.connection.BeginTransaction();
         }
 
@@ -39,6 +41,7 @@ namespace OnePlayer.Data.Sqlite
         public void Save()
         {
             SaveInternal(true);
+            handler?.HandleSessionSaved();
         }
 
         public void Dispose()
@@ -46,6 +49,7 @@ namespace OnePlayer.Data.Sqlite
             RemoveOrphans();
             SaveInternal(false);
             transaction.Dispose();
+            handler?.HandleSessionDisposed();
         }
 
         private void SaveInternal(bool newTransaction)

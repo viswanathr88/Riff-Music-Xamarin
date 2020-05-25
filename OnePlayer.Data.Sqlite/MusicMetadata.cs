@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace OnePlayer.Data.Sqlite
 {
-    public sealed class MusicMetadata : IMusicMetadata
+    public sealed class MusicMetadata : IMusicMetadata, IEditSessionHandler
     {
         private static readonly Version LatestVersion = Version.AddIndexes;
         private readonly SqliteConnection connection;
@@ -17,6 +17,8 @@ namespace OnePlayer.Data.Sqlite
         private readonly DriveItemTable driveItemTable;
         private readonly IndexedTrackTable indexedTrackTable;
         private readonly ThumbnailInfoTable thumbnailInfoTable;
+
+        public event EventHandler<EventArgs> Refreshed;
 
         public MusicMetadata(string path)
         {
@@ -125,7 +127,7 @@ namespace OnePlayer.Data.Sqlite
 
         public IEditSession Edit()
         {
-            return new MusicMetadataEditSession(connection)
+            return new MusicMetadataEditSession(connection, this)
             {
                 Albums = albumTable,
                 Artists = artistTable,
@@ -135,6 +137,16 @@ namespace OnePlayer.Data.Sqlite
                 Index = indexedTrackTable,
                 Thumbnails = thumbnailInfoTable
             };
+        }
+
+        public void HandleSessionSaved()
+        {
+            Refreshed?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void HandleSessionDisposed()
+        {
+            
         }
     }
 }

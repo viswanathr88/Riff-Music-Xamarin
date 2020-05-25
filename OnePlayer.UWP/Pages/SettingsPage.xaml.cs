@@ -38,7 +38,7 @@ namespace OnePlayer.UWP.Pages
 
             if (!ViewModel.IsLoaded)
             {
-                await ViewModel.LoadAsync(VoidType.Empty);
+                await ViewModel.LoadAsync();
             }
         }
         private async void SignOutButton_Click(object sender, RoutedEventArgs e)

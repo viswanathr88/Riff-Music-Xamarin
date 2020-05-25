@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnePlayer.UWP.ViewModel
 {
-    public sealed class FirstRunExperienceViewModel : DataViewModel<VoidType>
+    public sealed class FirstRunExperienceViewModel : DataViewModel
     {
         private readonly ILoginManager loginManager;
         private bool loginRequired = false;
@@ -21,7 +21,7 @@ namespace OnePlayer.UWP.ViewModel
             ProviderUrl = this.loginManager.GetAuthorizeUrl();
         }
 
-        public override async Task LoadAsync(VoidType parameter)
+        public override async Task LoadAsync()
         {
             LoginRequired = !(await loginManager.LoginExistsAsync());
         }

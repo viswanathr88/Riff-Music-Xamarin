@@ -34,7 +34,7 @@ namespace OnePlayer.UWP.Pages
 
             if (!ViewModel.IsLoaded)
             {
-                await ViewModel.LoadAsync(VoidType.Empty);
+                await ViewModel.LoadAsync();
             }
         }
 
@@ -65,15 +65,11 @@ namespace OnePlayer.UWP.Pages
                 case "artists":
                     pageType = typeof(ArtistsPage);
                     break;
-                case "genres":
-                    pageType = typeof(GenresPage);
-                    break;
                 case "tracks":
                     pageType = typeof(TracksPage);
                     break;
                 default:
-                    pageType = null;
-                    break;
+                    throw new Exception("Unknown library page");
             }
 
             if (pageType != null && LibraryContentFrame.Content?.GetType() != pageType)

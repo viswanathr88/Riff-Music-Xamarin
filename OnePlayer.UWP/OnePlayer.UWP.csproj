@@ -143,9 +143,6 @@
     <Compile Include="Pages\FirstRunExperiencePage.xaml.cs">
       <DependentUpon>FirstRunExperiencePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\GenresPage.xaml.cs">
-      <DependentUpon>GenresPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
@@ -241,10 +238,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\GenresPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\HomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -283,6 +276,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ListDiff">
+      <Version>1.1.28</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.10</Version>
     </PackageReference>

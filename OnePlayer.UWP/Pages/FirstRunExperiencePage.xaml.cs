@@ -28,7 +28,7 @@ namespace OnePlayer.UWP.Pages
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildPaneAsync;
 
-            await ViewModel.LoadAsync(VoidType.Empty);
+            await ViewModel.LoadAsync();
 
             // Check the value of LoginRequired now
             if (!ViewModel.LoginRequired)

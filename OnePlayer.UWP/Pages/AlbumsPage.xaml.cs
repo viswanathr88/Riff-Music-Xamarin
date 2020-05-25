@@ -39,15 +39,26 @@ namespace OnePlayer.UWP.Pages
         {
             base.OnNavigatedTo(e);
 
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+
             if (!ViewModel.IsLoaded)
             {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() => await ViewModel.LoadAsync(VoidType.Empty));
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() => await ViewModel.LoadAsync());
+            }
+        }
+
+        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.IsLoaded) && !ViewModel.IsLoaded)
+            {
+                await ViewModel.LoadAsync();
             }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
         }
 
         private async void AlbumItems_Loaded(object sender, RoutedEventArgs e)
@@ -111,7 +122,13 @@ namespace OnePlayer.UWP.Pages
                 {
                     using (var rtStream = stream.AsRandomAccessStream())
                     {
-                        var bm = new BitmapImage();
+                        var bm = new BitmapImage
+                        {
+                            DecodePixelHeight = 128,
+                            DecodePixelWidth = 128,
+                            DecodePixelType = DecodePixelType.Logical,
+                            CreateOptions = BitmapCreateOptions.IgnoreImageCache
+                        };
                         await bm.SetSourceAsync(rtStream);
                         image.Source = bm;
                         loaded = true;
@@ -124,12 +141,12 @@ namespace OnePlayer.UWP.Pages
 
         private async void SortFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.LoadAsync(VoidType.Empty);
+            await ViewModel.ReloadAsync();
         }
 
         private async void SortOrderFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.LoadAsync(VoidType.Empty);
+            await ViewModel.ReloadAsync();
         }
 
         private void GridView_ItemClick(object sender, ItemClickEventArgs e)

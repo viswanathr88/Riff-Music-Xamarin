@@ -196,10 +196,12 @@ namespace OnePlayer.Sync
                             }
                         }
 
-                        Add(deltaQueryResponse.value, session);
 
-                        session.Save();
-
+                        if (deltaQueryResponse.value.Length > 0)
+                        {
+                            Add(deltaQueryResponse.value, session);
+                            session.Save();
+                        }
 
                         if (!string.IsNullOrEmpty(deltaQueryResponse.nextLink))
                         {
@@ -214,9 +216,10 @@ namespace OnePlayer.Sync
                         preferences.DeltaUrl = deltaUrl;
 
                         // Download thumbnails
-                        await DownloadThumbnailsAsync(session);
-
-                        session.Save();
+                        if (await DownloadThumbnailsAsync(session))
+                        {
+                            session.Save();
+                        }
 
                         if (completed)
                         {
@@ -351,13 +354,15 @@ namespace OnePlayer.Sync
             _ = isThumbnailInfoNew ? session.Thumbnails.Add(thumbnailInfo) : session.Thumbnails.Update(thumbnailInfo);
         }
 
-        public async Task DownloadThumbnailsAsync(IEditSession session)
+        public async Task<bool> DownloadThumbnailsAsync(IEditSession session)
         {
             // Get all thumbnails that have not been cached
             var thumbnails = session.Thumbnails.GetUncached();
 
             // Download and save the thumbnails
             await thumbnails.ForEachAsync(session, DownloadAndCacheThumbnailAsync);
+
+            return thumbnails.Count > 0;
         }
 
         private async Task DownloadAndCacheThumbnailAsync(ThumbnailInfo info, IEditSession session)

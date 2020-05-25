@@ -68,15 +68,6 @@
                                 </ui:RadioMenuFlyoutItem.Icon>
                             </ui:RadioMenuFlyoutItem>
                             <ui:RadioMenuFlyoutItem Text=""
-                                                    x:Uid="ToolbarFilterGenres"
-                                                    Tag="genres"
-                                                    Click="RadioMenuFlyoutItem_Click">
-                                <ui:RadioMenuFlyoutItem.Icon>
-                                    <FontIcon FontFamily="Segoe MDL2 Assets"
-                                              Glyph="&#xE8D6;" />
-                                </ui:RadioMenuFlyoutItem.Icon>
-                            </ui:RadioMenuFlyoutItem>
-                            <ui:RadioMenuFlyoutItem Text=""
                                                     x:Uid="ToolbarFilterTracks"
                                                     Tag="tracks"
                                                     Click="RadioMenuFlyoutItem_Click">

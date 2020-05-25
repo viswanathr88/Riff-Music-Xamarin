@@ -151,6 +151,11 @@ namespace OnePlayer.UWP.ViewModel
 
     public abstract class DataViewModel : DataViewModel<VoidType>
     {
+        public override async Task LoadAsync(VoidType parameter)
+        {
+            await LoadAsync();
+        }
 
+        public abstract Task LoadAsync();
     }
 }

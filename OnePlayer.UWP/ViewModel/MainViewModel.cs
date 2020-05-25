@@ -37,10 +37,15 @@ namespace OnePlayer.UWP.ViewModel
 
         public SearchSuggestionsViewModel SearchSuggestions => searchSuggestionsVM.Value;
 
-        public override Task LoadAsync(VoidType parameter)
+        public override Task LoadAsync()
         {
             Task.Run(async() => await syncEngine.RunAsync());
             return Task.CompletedTask;
+        }
+
+        public void Load()
+        {
+            Task.Run(async () => await syncEngine.RunAsync());
         }
 
         private void SyncEngine_StateChanged(object sender, SyncState state)

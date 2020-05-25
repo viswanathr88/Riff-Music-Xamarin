@@ -41,5 +41,7 @@ namespace OnePlayer.Data
         IThumbnailInfoReadOnlyAccessor Thumbnails { get; }
 
         IEditSession Edit();
+
+        event EventHandler<EventArgs> Refreshed;
     }
 }

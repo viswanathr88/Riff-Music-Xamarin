@@ -67,7 +67,7 @@ namespace OnePlayer.UWP.ViewModel
             }
         }
 
-        public async override Task LoadAsync(VoidType parameter)
+        public async override Task LoadAsync()
         {
             IsLoading = true;
 

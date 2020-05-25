@@ -1,19 +1,10 @@
 ﻿using OnePlayer.Data;
 using OnePlayer.UWP.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -37,21 +28,36 @@ namespace OnePlayer.UWP.Pages
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             if (!ViewModel.IsLoaded)
             {
-                await ViewModel.LoadAsync(VoidType.Empty);
+                await ViewModel.LoadAsync();
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
+        }
+
+        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ViewModel.IsLoaded) && !ViewModel.IsLoaded)
+            {
+                await ViewModel.LoadAsync();
             }
         }
 
         private async void SortFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.LoadAsync(VoidType.Empty);
+            await ViewModel.ReloadAsync();
         }
 
         private async void SortOrderFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            await ViewModel.LoadAsync(VoidType.Empty);
+            await ViewModel.ReloadAsync();
         }
 
         private void TracksList_ItemClick(object sender, ItemClickEventArgs e)
