@@ -1,12 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
-using Newtonsoft.Json;
 using OnePlayer.Data.Access;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.Graphics.Printing;
-using Windows.Networking.Sockets;
-using Windows.Services.Maps;
 using Xunit;
 
 namespace OnePlayer.Data.Sqlite.Test
