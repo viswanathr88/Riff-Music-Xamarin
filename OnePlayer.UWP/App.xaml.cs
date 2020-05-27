@@ -112,11 +112,12 @@ namespace OnePlayer.UWP
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     var locator = Resources["VMLocator"] as Locator;
+                    rootFrame.Navigate(typeof(MainPage), null, new EntranceNavigationTransitionInfo());
+
 
                     if (!await locator.LoginManager.LoginExistsAsync())
                     {
                         rootFrame.Navigate(typeof(FirstRunExperiencePage), e.Arguments, null);
-
                     }
                     else
                     {

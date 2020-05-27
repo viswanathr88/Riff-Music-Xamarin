@@ -123,6 +123,9 @@
   <data name="AccountSettingsLoginInformationHeader.Text" xml:space="preserve">
     <value>Logged into OneDrive as:</value>
   </data>
+  <data name="AccountSettingsRequireSignInInformationHeader.Text" xml:space="preserve">
+    <value>Please login to OneDrive so that OnePlayer can keep your local library up to date.</value>
+  </data>
   <data name="AlbumPageHeader" xml:space="preserve">
     <value>Album</value>
   </data>
@@ -145,7 +148,7 @@
     <value>Home</value>
   </data>
   <data name="LoginButton.Content" xml:space="preserve">
-    <value>LOG IN TO ONEDRIVE</value>
+    <value>Log in to OneDrive</value>
   </data>
   <data name="LoginDescription.Text" xml:space="preserve">
     <value>In order to access your music stored on OneDrive, please login using your Microsoft Account</value>

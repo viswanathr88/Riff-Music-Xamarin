@@ -34,7 +34,7 @@ namespace OnePlayer.Droid.UI.Auth
 
             try
             {
-                await this.appContext.LoginManager.EndLoginAsync(code);
+                await this.appContext.LoginManager.LoginAsync(code);
                 Android.Widget.Toast.MakeText(ApplicationContext, "Successfully signed in to OneDrive", Android.Widget.ToastLength.Short).Show();
             }
             catch (Exception ex)

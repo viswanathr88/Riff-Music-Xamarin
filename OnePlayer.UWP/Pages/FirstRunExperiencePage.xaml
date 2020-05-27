@@ -16,7 +16,6 @@
     <RelativePanel>
         <Image x:Name="SplashImage"
                Source="/Assets/SplashScreen.png"
-               Stretch="None"
                RelativePanel.AlignHorizontalCenterWithPanel="True"
                RelativePanel.AlignVerticalCenterWithPanel="True"/>
 
@@ -36,7 +35,7 @@
                 RelativePanel.Below="LoginDescription"
                 Foreground="White"
                 RelativePanel.AlignHorizontalCenterWithPanel="True"
-                Click="LoginButton_Click"
+                Click="{x:Bind ViewModel.LoginAsync}"
                 Margin="0,0,0,20"
                 IsEnabled="{x:Bind ViewModel.IsLoading, Converter={StaticResource BoolNegationConv}}"
                 Visibility="{x:Bind ViewModel.LoginRequired, Mode=OneWay, FallbackValue=Collapsed}"/>

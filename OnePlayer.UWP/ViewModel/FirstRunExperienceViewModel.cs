@@ -83,10 +83,10 @@ namespace OnePlayer.UWP.ViewModel
             }
         }
 
-        public async Task CompleteLoginAsync(object providerCommand)
+        public async void LoginAsync()
         {
             IsLoading = true;
-            await this.loginManager.EndLoginAsync(providerCommand);
+            await this.loginManager.LoginAsync(null);
             LoginRequired = false;
             Profile = await this.loginManager.GetUserAsync();
             Photo = await this.loginManager.GetUserPhotoAsync();

@@ -47,6 +47,8 @@ namespace OnePlayer.UWP.Authentication
 
         private readonly HttpClient webClient;
 
+        private event EventHandler<Token> LoginCompleted;
+
         public WindowsLoginManager(HttpClient client)
         {
             this.webClient = client ?? throw new ArgumentNullException(nameof(client));
@@ -69,26 +71,22 @@ namespace OnePlayer.UWP.Authentication
             }
         }
 
-        public async Task<Token> EndLoginAsync(object data)
+        public Task<Token> LoginAsync(object data)
         {
-            if (!(data is WebAccountProviderCommand))
+            AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildPaneAsync;
+            AccountsSettingsPane.Show();
+
+            TaskCompletionSource<Token> tcs = new TaskCompletionSource<Token>();
+
+            void callback(object sender, Token token)
             {
-                throw new Exception($"Data provided to {nameof(EndLoginAsync)} is not {nameof(WebAccountProviderCommand)}");
+                LoginCompleted -= callback;
+                AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested -= BuildPaneAsync;
+                tcs.SetResult(token);
             }
 
-            var providerCommand = data as WebAccountProviderCommand;
-
-            WebTokenRequest request = new WebTokenRequest(providerCommand.WebAccountProvider, string.Join(" ", scopes), appId);
-            request.Properties.Add("resource", "https://graph.microsoft.com");
-            WebTokenRequestResult result = await WebAuthenticationCoreManager.RequestTokenAsync(request);
-
-            if (result.ResponseStatus == WebTokenRequestStatus.Success)
-            {
-                StoreLoginProfile(new LoginProfile(providerCommand.WebAccountProvider, result.ResponseData[0].WebAccount));
-                return new Token() { AccessToken = result.ResponseData[0].Token };
-            }
-
-            throw new Exception($"Login failed with status {result.ResponseStatus}, Error Code: {result.ResponseError?.ErrorCode}, ErrorMessage: {result.ResponseError?.ErrorMessage}");
+            LoginCompleted += callback;
+            return tcs.Task;
         }
 
         public string GetAuthorizeUrl()
@@ -162,6 +160,39 @@ namespace OnePlayer.UWP.Authentication
         {
             ApplicationData.Current.LocalSettings.Values[currentProviderIdKey] = profile.Provider.Id;
             ApplicationData.Current.LocalSettings.Values[currentUserIdKey] = profile.Account.Id;
+        }
+
+        private async void BuildPaneAsync(AccountsSettingsPane sender, AccountsSettingsPaneCommandsRequestedEventArgs args)
+        {
+            var deferral = args.GetDeferral();
+
+            // Add consumer account provider
+            var msaProvider = await WebAuthenticationCoreManager.FindAccountProviderAsync(GetAuthorizeUrl(), "consumers");
+            args.WebAccountProviderCommands.Add(new WebAccountProviderCommand(msaProvider, GetMsaTokenAsync));
+
+            deferral.Complete();
+        }
+
+        private async void GetMsaTokenAsync(WebAccountProviderCommand providerCommand)
+        {
+            try
+            {
+                WebTokenRequest request = new WebTokenRequest(providerCommand.WebAccountProvider, string.Join(" ", scopes), appId);
+                request.Properties.Add("resource", "https://graph.microsoft.com");
+                WebTokenRequestResult result = await WebAuthenticationCoreManager.RequestTokenAsync(request);
+
+                if (result.ResponseStatus == WebTokenRequestStatus.Success)
+                {
+                    StoreLoginProfile(new LoginProfile(providerCommand.WebAccountProvider, result.ResponseData[0].WebAccount));
+                    LoginCompleted?.Invoke(this, new Token() { AccessToken = result.ResponseData[0].Token });
+                }
+
+                throw new Exception($"Login failed with status {result.ResponseStatus}, Error Code: {result.ResponseError?.ErrorCode}, ErrorMessage: {result.ResponseError?.ErrorMessage}");
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public async Task SignOutAsync()

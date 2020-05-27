@@ -26,7 +26,6 @@ namespace OnePlayer.UWP.Pages
         {
             base.OnNavigatedTo(e);
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-            AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildPaneAsync;
 
             await ViewModel.LoadAsync();
 
@@ -42,7 +41,6 @@ namespace OnePlayer.UWP.Pages
         {
             base.OnNavigatedFrom(e);
             ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
-            AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested -= BuildPaneAsync;
         }
 
         private void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -54,32 +52,5 @@ namespace OnePlayer.UWP.Pages
             }
         }
 
-        private async void BuildPaneAsync(AccountsSettingsPane sender, AccountsSettingsPaneCommandsRequestedEventArgs args)
-        {
-            var deferral = args.GetDeferral();
-
-            // Add consumer account provider
-            var msaProvider = await WebAuthenticationCoreManager.FindAccountProviderAsync(ViewModel.ProviderUrl, "consumers");
-            args.WebAccountProviderCommands.Add(new WebAccountProviderCommand(msaProvider, GetMsaTokenAsync));
-
-            deferral.Complete();
-        }
-
-        private async void GetMsaTokenAsync(WebAccountProviderCommand command)
-        {
-            try
-            {
-                await ViewModel.CompleteLoginAsync(command);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        private void LoginButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            AccountsSettingsPane.Show();
-        }
     }
 }

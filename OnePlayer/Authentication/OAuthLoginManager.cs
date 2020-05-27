@@ -87,11 +87,11 @@ namespace OnePlayer.Authentication
             return redirectUri;
         }
 
-        public async Task<Token> EndLoginAsync(object data)
+        public async Task<Token> LoginAsync(object data)
         {
             if (!(data is string))
             {
-                throw new Exception($"Data provided to {nameof(EndLoginAsync)} is not a string code");
+                throw new Exception($"Data provided to {nameof(LoginAsync)} is not a string code");
             }
 
             IList<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>

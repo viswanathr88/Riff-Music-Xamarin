@@ -7,7 +7,7 @@ namespace OnePlayer.Authentication
     public interface ILoginManager
     {
         Task<Token> AcquireTokenSilentAsync();
-        Task<Token> EndLoginAsync(object data);
+        Task<Token> LoginAsync(object data);
         string GetAuthorizeUrl();
         string GetRedirectUrl();
         Task<UserProfile> GetUserAsync();

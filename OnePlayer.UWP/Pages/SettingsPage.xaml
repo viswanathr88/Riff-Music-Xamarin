@@ -24,54 +24,70 @@
                    x:Uid="AccountSettingsHeader"
                    Text="Account"
                    Style="{StaticResource SubtitleTextBlockStyle}"
-                   Margin="0,0,0,20"/>
+                   Margin="0,0,0,20" />
         
-        <!-- Login information header-->
-        <TextBlock x:Name="AccountSettingsLoginInformationHeader"
-                   x:Uid="AccountSettingsLoginInformationHeader"
-                   Text="Logged in as:"
-                   Style="{StaticResource BaseTextBlockStyle}"
-                   Margin="0,0,0,20"/>
-        
-        <!-- Login Information -->
-        <RelativePanel
-            Margin="0,0,0,20">
-            <Image x:Name="UserPhoto" 
+        <!-- Logged out information -->
+        <RelativePanel Margin="0,0,0,20"
+                       x:Name="LoggedOutPanel"
+                       x:Load="{x:Bind ViewModel.IsLoggedIn, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}">
+            <!-- Text information -->
+            <TextBlock x:Uid="AccountSettingsRequireSignInInformationHeader"
+                       x:Name="AccountSettingsRequireSignInInformationHeader"
+                       Style="{StaticResource BaseTextBlockStyle}"
+                       Margin="0,0,0,20" />
+            
+            <!-- Login button -->
+            <Button x:Uid="LoginButton"
+                    x:Name="LoginButton"
+                    Content="Log in to OneDrive"
+                    RelativePanel.Below="AccountSettingsRequireSignInInformationHeader"
+                    Click="{x:Bind ViewModel.LoginAsync}"/>
+        </RelativePanel>
+
+        <!-- Logged in Information -->
+        <RelativePanel Margin="0,0,0,20"
+                       x:Name="LoggedInPanel"
+                       x:Load="{x:Bind ViewModel.IsLoggedIn, Mode=OneWay}">
+            <!-- Login information header-->
+            <TextBlock x:Name="AccountSettingsLoginInformationHeader"
+                       x:Uid="AccountSettingsLoginInformationHeader"
+                       Text="Logged in as:"
+                       Style="{StaticResource BaseTextBlockStyle}"
+                       Margin="0,0,0,20" />
+
+            <Image x:Name="UserPhoto"
                    Source="{x:Bind ViewModel.UserPhoto, Mode=OneWay}"
                    RelativePanel.AlignLeftWithPanel="True"
                    RelativePanel.AlignVerticalCenterWithPanel="True"
+                   RelativePanel.Below="AccountSettingsLoginInformationHeader"
                    Height="48"
                    Width="48"
-                   Margin="0,0,20,0"/>
+                   Margin="0,0,20,0" />
 
             <TextBlock x:Name="UserDisplayName"
-                       Text="{x:Bind ViewModel.User.DisplayName}"
+                       Text="{x:Bind ViewModel.User.DisplayName, Mode=OneWay}"
                        Style="{StaticResource BodyTextBlockStyle}"
                        RelativePanel.RightOf="UserPhoto"
                        HorizontalTextAlignment="Left"
                        VerticalAlignment="Top"
-                       RelativePanel.AlignTopWithPanel="True"
-                       RelativePanel.AlignRightWithPanel="True"/>
+                       RelativePanel.AlignTopWith="UserPhoto"
+                       RelativePanel.AlignRightWithPanel="True" />
 
-            <TextBlock Text="{x:Bind ViewModel.User.Email}"
+            <TextBlock Text="{x:Bind ViewModel.User.Email, Mode=OneWay}"
                        Style="{StaticResource BodyTextBlockStyle}"
+                       HorizontalTextAlignment="Left"
+                       VerticalAlignment="Top"
                        RelativePanel.Below="UserDisplayName"
                        RelativePanel.RightOf="UserPhoto"
-                       HorizontalTextAlignment="Left"
-                       VerticalAlignment="Top"
-                       RelativePanel.AlignRightWithPanel="True"
-                       RelativePanel.AlignBottomWithPanel="True" />
-        </RelativePanel>
-        
-        <!-- Sign out button -->
-        <StackPanel Orientation="Horizontal"
-                    Margin="0,0,0,20">
+                       RelativePanel.AlignRightWithPanel="True" />
+
             <Button x:Uid="SignOutButton"
                     x:Name="SignOutButton"
                     Content="Sign Out"
                     Click="SignOutButton_Click"
-                    Margin="0,0,20,0" />
-        </StackPanel>
+                    RelativePanel.Below="UserPhoto"
+                    Margin="0,20,20,0" />
+        </RelativePanel>
 
         <!-- Group header for Theme settings -->
         <TextBlock x:Name="ThemeSettingsHeader"

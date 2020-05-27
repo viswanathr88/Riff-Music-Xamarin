@@ -36,9 +36,9 @@ namespace OnePlayer.Authentication
             return await this.loginManagerImpl.AcquireTokenSilentAsync();
         }
 
-        public async Task<Token> EndLoginAsync(object code)
+        public async Task<Token> LoginAsync(object code)
         {
-            return await this.loginManagerImpl.EndLoginAsync(code);
+            return await this.loginManagerImpl.LoginAsync(code);
         }
 
         public string GetAuthorizeUrl()

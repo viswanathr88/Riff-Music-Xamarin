@@ -15,11 +15,18 @@ namespace OnePlayer.UWP.ViewModel
         private readonly IAppPreferences preferences;
         private UserProfile user;
         private ImageSource userPhoto;
+        private bool isLoggedIn = false;
 
         public SettingsViewModel(ILoginManager loginManager, IAppPreferences preferences)
         {
             this.loginManager = loginManager ?? throw new ArgumentNullException(nameof(loginManager));
             this.preferences = preferences ?? throw new ArgumentNullException(nameof(preferences));
+        }
+
+        public bool IsLoggedIn
+        {
+            get => isLoggedIn;
+            private set => SetProperty(ref this.isLoggedIn, value);
         }
 
         public UserProfile User
@@ -51,22 +58,28 @@ namespace OnePlayer.UWP.ViewModel
         {
             IsLoading = true;
 
-            // Get user
-            User = await this.loginManager.GetUserAsync();
+            // Check if login exists
+            IsLoggedIn = await loginManager.LoginExistsAsync();
 
-            // Get User Photo
-            using (var stream = await this.loginManager.GetUserPhotoAsync())
+            if (IsLoggedIn)
             {
-                using (var raStream = stream.AsRandomAccessStream())
-                {
-                    var bImage = new BitmapImage
-                    {
-                        DecodePixelHeight = 96,
-                        DecodePixelWidth = 96
-                    };
+                // Get user
+                User = await this.loginManager.GetUserAsync();
 
-                    await bImage.SetSourceAsync(raStream);
-                    UserPhoto = bImage;
+                // Get User Photo
+                using (var stream = await this.loginManager.GetUserPhotoAsync())
+                {
+                    using (var raStream = stream.AsRandomAccessStream())
+                    {
+                        var bImage = new BitmapImage
+                        {
+                            DecodePixelHeight = 96,
+                            DecodePixelWidth = 96
+                        };
+
+                        await bImage.SetSourceAsync(raStream);
+                        UserPhoto = bImage;
+                    }
                 }
             }
 
@@ -74,9 +87,17 @@ namespace OnePlayer.UWP.ViewModel
             IsLoaded = true;
         }
 
-        public Task SignOutAsync()
+        public async void LoginAsync()
         {
-            return this.loginManager.SignOutAsync();
+            await this.loginManager.LoginAsync(null);
+            await LoadAsync();
+        }
+
+        public async Task SignOutAsync()
+        {
+            await this.loginManager.SignOutAsync();
+
+            IsLoggedIn = await this.loginManager.LoginExistsAsync();
         }
     }
 }
