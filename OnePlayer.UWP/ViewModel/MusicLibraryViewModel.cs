@@ -27,8 +27,13 @@ namespace OnePlayer.UWP.ViewModel
 
         public override Task LoadAsync()
         {
-            IsLoaded = true;
+            Load();
             return Task.CompletedTask;
+        }
+
+        public void Load()
+        {
+            IsLoaded = true;
         }
     }
 }

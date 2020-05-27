@@ -47,6 +47,18 @@
                            IsTitleBarAutoPaddingEnabled="True"
                            Background="{x:Bind ContentFrame.Content.(local:NavViewPageBase.ShellBackground), Mode=OneWay}">
 
+            <ui:NavigationView.Transitions>
+                <TransitionCollection>
+                    
+                </TransitionCollection>
+            </ui:NavigationView.Transitions>
+
+            <ui:NavigationView.ContentTransitions>
+                <TransitionCollection>
+                    
+                </TransitionCollection>
+            </ui:NavigationView.ContentTransitions>
+
             <ui:NavigationView.Header>
                 <Grid x:Name="NavViewHeaderContainer"
                       Opacity="{x:Bind ContentFrame.Content.(local:NavViewPageBase.HeaderOpacity), Mode=OneWay}">

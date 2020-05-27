@@ -34,7 +34,7 @@ namespace OnePlayer.UWP.Pages
 
             if (!ViewModel.IsLoaded)
             {
-                await ViewModel.LoadAsync();
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => ViewModel.LoadAsync());
             }
         }
 
