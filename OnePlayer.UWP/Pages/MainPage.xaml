@@ -35,12 +35,15 @@
                      IsBackButtonVisible="{x:Bind ContentFrame.CanGoBack, Mode=OneWay}"
                      VerticalContentAlignment="Center"
                      VerticalAlignment="Top"
-                     Canvas.ZIndex="1000"
+                     Canvas.ZIndex="2"
+                     PaneDisplayMode="{x:Bind NavView.DisplayMode, Mode=OneWay}"
+                     IsPaneOpen="{x:Bind NavView.IsPaneOpen, Mode=OneWay}"
                      BackRequested="Titlebar_BackRequested"
                      />
 
         <ui:NavigationView x:Name="NavView"
                            Grid.Row="1"
+                           Canvas.ZIndex="1"
                            Loaded="NavView_Loaded"
                            ItemInvoked="NavView_ItemInvoked"
                            IsBackButtonVisible="Collapsed"
