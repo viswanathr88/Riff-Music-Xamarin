@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using Microsoft.UI.Xaml.Controls;
+using System;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -72,6 +63,26 @@ namespace OnePlayer.UWP.Controls
         public static readonly DependencyProperty CoreTitlebarPaddingProperty =
             DependencyProperty.Register("CoreTitlebarPadding", typeof(Thickness), typeof(Titlebar), new PropertyMetadata(new Thickness(0,0,0,0)));
 
+        public Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode PaneDisplayMode
+        {
+            get { return (Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode)GetValue(PaneDisplayModeProperty); }
+            set { SetValue(PaneDisplayModeProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PaneDisplayMode.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PaneDisplayModeProperty =
+            DependencyProperty.Register("PaneDisplayMode", typeof(Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode), typeof(Titlebar), new PropertyMetadata(Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Minimal, OnNavigationViewModeChanged));
+
+        public bool IsPaneOpen
+        {
+            get { return (bool)GetValue(IsPaneOpenProperty); }
+            set { SetValue(IsPaneOpenProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsPaneVisible.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsPaneOpenProperty =
+            DependencyProperty.Register("IsPaneOpen", typeof(bool), typeof(Titlebar), new PropertyMetadata(false, OnIsPaneOpenChanged));
+
         private void Titlebar_Loaded(object sender, RoutedEventArgs e)
         {
             coreTitlebar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
@@ -107,7 +118,7 @@ namespace OnePlayer.UWP.Controls
             {
                 this.CoreTitlebarPadding = new Thickness()
                 {
-                    Left = coreTitlebar.SystemOverlayLeftInset,
+                    Left = coreTitlebar.SystemOverlayLeftInset > 0 ? coreTitlebar.SystemOverlayLeftInset : this.CoreTitlebarPadding.Left,
                     Right = coreTitlebar.SystemOverlayRightInset
                 };
             }
@@ -116,7 +127,7 @@ namespace OnePlayer.UWP.Controls
                 this.CoreTitlebarPadding = new Thickness()
                 {
                     Left = coreTitlebar.SystemOverlayRightInset,
-                    Right = coreTitlebar.SystemOverlayLeftInset
+                    Right = coreTitlebar.SystemOverlayLeftInset > 0 ? coreTitlebar.SystemOverlayLeftInset : this.CoreTitlebarPadding.Left
                 };
             }
         }
@@ -126,11 +137,38 @@ namespace OnePlayer.UWP.Controls
             bool isVisible = (bool)e.NewValue;
 
             (d as Titlebar).TitlebarBackButton.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+            (d as Titlebar).UpdateTitlebarPadding();
+        }
+
+        private static void OnNavigationViewModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as Titlebar).UpdateTitlebarPadding();
+        }
+
+        private static void OnIsPaneOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as Titlebar).UpdateTitlebarPadding();
         }
 
         private void TitlebarBackButton_Click(object sender, RoutedEventArgs e)
         {
             BackRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void UpdateTitlebarPadding()
+        {
+            if (PaneDisplayMode == Microsoft.UI.Xaml.Controls.NavigationViewDisplayMode.Compact && !IsBackButtonVisible && !IsPaneOpen)
+            {
+                var currentPadding = CoreTitlebarPadding;
+                currentPadding.Left = 40.0;
+                CoreTitlebarPadding = currentPadding;
+            }
+            else
+            {
+                var currentPadding = CoreTitlebarPadding;
+                currentPadding.Left = 0.0;
+                CoreTitlebarPadding = currentPadding;
+            }
         }
     }
 }

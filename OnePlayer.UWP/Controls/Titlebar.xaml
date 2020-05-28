@@ -15,8 +15,7 @@
           VerticalAlignment="{x:Bind VerticalAlignment, Mode=OneWay}"
           Background="{x:Bind Background, Mode=OneWay}"
           HorizontalAlignment="{x:Bind HorizontalAlignment, Mode=OneWay}"
-          BorderThickness="{x:Bind BorderThickness, Mode=OneWay}"
-          Padding="{x:Bind CoreTitlebarPadding, Mode=OneWay}">
+          BorderThickness="{x:Bind BorderThickness, Mode=OneWay}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -42,7 +41,8 @@
         <!-- App Title -->
         <Grid Grid.Column="1"
               x:Name="TitlebarMiddleGrid"
-              Background="Transparent">
+              Background="Transparent"
+              Padding="{x:Bind CoreTitlebarPadding, Mode=OneWay}">
             <TextBlock x:Name="TitlebarAppName"
                        Text="{x:Bind AppName, Mode=OneWay}"
                        Padding="12,0,12,0"
