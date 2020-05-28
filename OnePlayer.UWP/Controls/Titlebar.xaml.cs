@@ -60,7 +60,7 @@ namespace OnePlayer.UWP.Controls
 
         // Using a DependencyProperty as the backing store for CoreTitlebarHeight.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty CoreTitlebarHeightProperty =
-            DependencyProperty.Register("CoreTitlebarHeight", typeof(double), typeof(Titlebar), new PropertyMetadata(32.0));
+            DependencyProperty.Register("CoreTitlebarHeight", typeof(double), typeof(Titlebar), new PropertyMetadata(0.0));
 
         public Thickness CoreTitlebarPadding
         {
