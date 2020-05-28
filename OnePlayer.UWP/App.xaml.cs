@@ -84,7 +84,7 @@ namespace OnePlayer.UWP
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected async override void OnLaunched(LaunchActivatedEventArgs e)
+        protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -106,33 +106,34 @@ namespace OnePlayer.UWP
 
             if (e.PrelaunchActivated == false)
             {
-                if (rootFrame.Content == null)
-                {
-                    // When the navigation stack isn't restored navigate to the first page,
-                    // configuring the new page by passing required information as a navigation
-                    // parameter
-                    var locator = Resources["VMLocator"] as Locator;
-
-                    if (!await locator.LoginManager.LoginExistsAsync())
-                    {
-                        rootFrame.Navigate(typeof(FirstRunExperiencePage), e.Arguments, null);
-                    }
-                    else
-                    {
-                        rootFrame.Navigate(typeof(MainPage), null, new EntranceNavigationTransitionInfo());
-                    }
-
-                }
-
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(350, 300));
-
-                // Ensure the current window is active
-                Window.Current.Activate();
-
                 CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += async(sender, arg) =>
+                {
+                    if (rootFrame.Content == null)
+                    {
+                        // When the navigation stack isn't restored navigate to the first page,
+                        // configuring the new page by passing required information as a navigation
+                        // parameter
+                        var locator = Resources["VMLocator"] as Locator;
 
-                UpdateTitlebarColors();
+                        if (!await locator.LoginManager.LoginExistsAsync())
+                        {
+                            rootFrame.Navigate(typeof(FirstRunExperiencePage), e.Arguments, null);
+                        }
+                        else
+                        {
+                            rootFrame.Navigate(typeof(MainPage), null, new EntranceNavigationTransitionInfo());
+                        }
+                    }
+                };
             }
+
+
+            // Ensure the current window is active
+            Window.Current.Activate();
+
+            UpdateTitlebarColors();
         }
 
         private void UpdateTitlebarColors()
