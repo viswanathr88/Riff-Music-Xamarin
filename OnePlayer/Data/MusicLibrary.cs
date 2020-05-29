@@ -12,14 +12,11 @@ namespace OnePlayer.Data
         {
             Metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
             AlbumArts = new ThumbnailCache(Path.Combine(path, "Thumbnails", "Albums"));
-            TrackArts = new ThumbnailCache(Path.Combine(path, "Thumbnails", "Tracks"));
         }
 
         public IMusicMetadata Metadata { get; }
 
         public IThumbnailCache AlbumArts { get; }
-
-        public IThumbnailCache TrackArts { get; }
 
         public IList<Album> GetAlbums()
         {
@@ -76,7 +73,7 @@ namespace OnePlayer.Data
             var tracks = Metadata.Index.FindMatchingTracks(query.Term, query.MaxTrackCount);
             foreach (var track in Metadata.Index.FindMatchingTracks(query.Term, query.MaxTrackCount))
             {
-                results.Add(new SearchItem() { Id = track.Id, Type = SearchItemType.Track, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank });
+                results.Add(new SearchItem() { Id = track.Id, Type = SearchItemType.Track, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank, ParentId = track.AlbumId });
             }
 
             if (query.MaxTrackCount > tracks.Count)

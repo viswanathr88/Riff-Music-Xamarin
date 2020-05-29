@@ -66,9 +66,9 @@ namespace OnePlayer.Data.Sqlite
         {
             Query("DELETE FROM Track WHERE Id NOT IN (SELECT DISTINCT TrackId FROM DriveItem)");
             Query("DELETE FROM IndexedTrack WHERE docid NOT IN (SELECT DISTINCT TrackId FROM DriveItem)");
-            Query("DELETE FROM ThumbnailInfo WHERE Id NOT IN (SELECT DISTINCT TrackId FROM DriveItem)");
             Query("DELETE FROM Genre WHERE Id NOT IN (SELECT DISTINCT GenreId FROM Track)");
             Query("DELETE FROM Album WHERE Id NOT IN (SELECT DISTINCT AlbumId FROM Track)");
+            Query("DELETE FROM ThumbnailInfo WHERE Id NOT IN (SELECT DISTINCT Id FROM Album)");
             Query("DELETE FROM Artist WHERE Id NOT IN (SELECT DISTINCT ArtistId FROM Album)");
         }
 

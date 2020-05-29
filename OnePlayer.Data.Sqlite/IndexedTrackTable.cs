@@ -262,7 +262,7 @@ namespace OnePlayer.Data.Sqlite
                 using (var command = connection.CreateCommand())
                 {
                     var builder = new StringBuilder();
-                    builder.AppendLine($"SELECT docid AS Id, TrackName, TrackArtist, CAST(substr(offsets({Name}), 5, 2) AS INTEGER) AS Rank");
+                    builder.AppendLine($"SELECT docid AS Id, TrackName, TrackArtist, CAST(substr(offsets({Name}), 5, 2) AS INTEGER) AS Rank, CAST(AlbumId AS INTEGER) AS AlbumId");
                     builder.AppendLine($"FROM {Name}");
                     builder.AppendLine($"WHERE TrackName MATCH \"{term}*\"");
                     builder.AppendLine("ORDER BY RANK ASC, TrackName ASC");
@@ -297,7 +297,7 @@ namespace OnePlayer.Data.Sqlite
                 using (var command = connection.CreateCommand())
                 {
                     var builder = new StringBuilder();
-                    builder.AppendLine($"SELECT docid AS Id, TrackName, TrackArtist, CAST(substr(offsets({Name}), 5, 2) AS INTEGER) AS Rank");
+                    builder.AppendLine($"SELECT docid AS Id, TrackName, TrackArtist, CAST(substr(offsets({Name}), 5, 2) AS INTEGER) AS Rank, CAST(AlbumId AS INTEGER) AS AlbumId");
                     builder.AppendLine($"FROM {Name}");
                     builder.AppendLine($"WHERE TrackArtist MATCH \"{term}*\"");
                     builder.AppendLine("ORDER BY RANK ASC, TrackName ASC");
@@ -380,7 +380,8 @@ namespace OnePlayer.Data.Sqlite
                 Id = reader.GetInt64(0),
                 TrackName = reader.GetString(1),
                 TrackArtist = reader.GetString(2),
-                Rank = reader.GetInt32(3)
+                Rank = reader.GetInt32(3),
+                AlbumId = reader.GetInt64(4)
             };
         }
 

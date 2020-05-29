@@ -24,16 +24,11 @@ namespace OnePlayer.Data.Sqlite
                 throw new ArgumentException(nameof(info.Id));
             }
 
-            if (string.IsNullOrEmpty(info.DriveItemId))
-            {
-                throw new ArgumentNullException(nameof(info.DriveItemId));
-            }
-
             using (var command = connection.CreateCommand())
             {
                 var builder = new StringBuilder();
-                builder.AppendLine($"INSERT INTO {Name} (Id, SmallUrl, MediumUrl, LargeUrl, Cached, AttemptCount, DriveItemId, AlbumId)");
-                builder.AppendLine("VALUES (@Id, @SmallUrl, @MediumUrl, @LargeUrl, @Cached, @AttemptCount, @DriveItemId, @AlbumId);");
+                builder.AppendLine($"INSERT INTO {Name} (Id, SmallUrl, MediumUrl, LargeUrl, Cached, AttemptCount)");
+                builder.AppendLine("VALUES (@Id, @SmallUrl, @MediumUrl, @LargeUrl, @Cached, @AttemptCount);");
                 builder.AppendLine("select last_insert_rowid();");
 
                 command.CommandText = builder.ToString();
@@ -101,12 +96,20 @@ namespace OnePlayer.Data.Sqlite
                     builder.AppendLine("MediumUrl VARCHAR,");
                     builder.AppendLine("LargeUrl VARCHAR,");
                     builder.AppendLine("Cached INTEGER,");
-                    builder.AppendLine("AttemptCount INTEGER,");
-                    builder.AppendLine("DriveItemId VARCHAR,");
-                    builder.AppendLine("AlbumId INTEGER,");
-                    builder.AppendLine("FOREIGN KEY(DriveItemId) REFERENCES DriveItem(Id),");
-                    builder.AppendLine("FOREIGN KEY(AlbumId) REFERENCES Album(Id)");
+                    builder.AppendLine("AttemptCount INTEGER");
                     builder.AppendLine(")");
+
+                    command.CommandText = builder.ToString();
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            if (version == Version.AddIndexes)
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    var builder = new StringBuilder();
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_Cached ON {Name}(Cached);");
 
                     command.CommandText = builder.ToString();
                     command.ExecuteNonQuery();
@@ -129,9 +132,7 @@ namespace OnePlayer.Data.Sqlite
                 builder.AppendLine("MediumUrl = @MediumUrl,");
                 builder.AppendLine("LargeUrl = @LargeUrl,");
                 builder.AppendLine("Cached = @Cached,");
-                builder.AppendLine("AttemptCount = @AttemptCount,");
-                builder.AppendLine("DriveItemId = @DriveItemId,");
-                builder.AppendLine("AlbumId = @AlbumId");
+                builder.AppendLine("AttemptCount = @AttemptCount");
                 builder.AppendLine($"WHERE Id = @Id");
 
                 command.CommandText = builder.ToString();
@@ -152,8 +153,6 @@ namespace OnePlayer.Data.Sqlite
                 LargeUrl = reader.IsDBNull(3) ? null : reader.GetString(3),
                 Cached = Convert.ToBoolean(reader.GetInt32(4)),
                 AttemptCount = reader.GetInt32(5),
-                DriveItemId = reader.GetString(6),
-                AlbumId = reader.GetInt64(7)
             };
         }
 
@@ -165,8 +164,6 @@ namespace OnePlayer.Data.Sqlite
             command.Parameters.AddWithNullableValue("@LargeUrl", info.LargeUrl);
             command.Parameters.AddWithValue("@Cached", info.Cached);
             command.Parameters.AddWithValue("@AttemptCount", info.AttemptCount);
-            command.Parameters.AddWithValue("@DriveItemId", info.DriveItemId);
-            command.Parameters.AddWithValue("@AlbumId", info.AlbumId);
         }
     }
 }

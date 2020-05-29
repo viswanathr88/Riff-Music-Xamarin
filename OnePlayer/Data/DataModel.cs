@@ -80,8 +80,6 @@ namespace OnePlayer.Data
         public string LargeUrl { get; set; }
         public bool Cached { get; set; }
         public int AttemptCount { get; set; }
-        public string DriveItemId { get; set; }
-        public long AlbumId { get; set; }
     }
     public class IndexedTrack
     {
@@ -161,6 +159,7 @@ namespace OnePlayer.Data
         public string TrackName { get; set; }
         public string TrackArtist { get; set; }
         public int Rank { get; set; }
+        public long AlbumId { get; set; }
     }
 
     public enum SearchItemType
@@ -176,12 +175,10 @@ namespace OnePlayer.Data
     {
         public long Id { get; set; }
         public SearchItemType Type { get; set; }
-
         public string Name { get; set; }
-
         public string Description { get; set; }
-
         public int Rank { get; set; }
+        public long? ParentId { get; set; }
     }
 
     public sealed class SearchQuery

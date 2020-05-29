@@ -12,7 +12,7 @@ namespace OnePlayer.UWP.ViewModel
         private readonly MusicLibrary library;
         private readonly SearchItem item;
         private BitmapImage image = null;
-
+        private ThumbnailSize size = ThumbnailSize.Medium;
         public SearchItemViewModel(MusicLibrary library, SearchItem item)
         {
             this.library = library;
@@ -34,10 +34,10 @@ namespace OnePlayer.UWP.ViewModel
         private bool GetHasArt()
         {
             bool hasArt = false;
-            if (item.Type == SearchItemType.Album || item.Type == SearchItemType.Track || item.Type == SearchItemType.TrackArtist)
+            long? id = (item.Type == SearchItemType.Album) ? item.Id : item.ParentId;
+            if (id.HasValue && item.Type == SearchItemType.Album)
             {
-                var cache = item.Type == SearchItemType.Album ? library.AlbumArts : library.TrackArts;
-                hasArt = cache.Exists(item.Id, ThumbnailSize.Small);
+                hasArt = library.AlbumArts.Exists(id.Value, size);
             }
 
             return hasArt;
@@ -45,12 +45,12 @@ namespace OnePlayer.UWP.ViewModel
 
         public async Task LoadArtAsync()
         {
-            if (item.Type == SearchItemType.Album || item.Type == SearchItemType.Track || item.Type == SearchItemType.TrackArtist)
+            long? id = (item.Type == SearchItemType.Album) ? item.Id : item.ParentId;
+            if (id.HasValue)
             {
-                var cache = item.Type == SearchItemType.Album ? library.AlbumArts : library.TrackArts;
-                if (cache.Exists(item.Id, ThumbnailSize.Small))
+                if (library.AlbumArts.Exists(id.Value, size))
                 {
-                    using (var stream = cache.Get(item.Id, ThumbnailSize.Small))
+                    using (var stream = library.AlbumArts.Get(id.Value, size))
                     {
                         using (var rtStream = stream.AsRandomAccessStream())
                         {

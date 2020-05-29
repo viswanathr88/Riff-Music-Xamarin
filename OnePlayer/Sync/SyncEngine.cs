@@ -200,7 +200,6 @@ namespace OnePlayer.Sync
                         if (deltaQueryResponse.value.Length > 0)
                         {
                             Add(deltaQueryResponse.value, session);
-                            session.Save();
                         }
 
                         if (!string.IsNullOrEmpty(deltaQueryResponse.nextLink))
@@ -213,13 +212,16 @@ namespace OnePlayer.Sync
                             completed = true;
                         }
 
-                        preferences.DeltaUrl = deltaUrl;
-
                         // Download thumbnails
-                        if (await DownloadThumbnailsAsync(session))
+                        bool thumbnailsDownloaded = await DownloadThumbnailsAsync(session);
+
+                        if (deltaQueryResponse.value.Length > 0 && thumbnailsDownloaded)
                         {
                             session.Save();
                         }
+
+                        preferences.DeltaUrl = deltaUrl;
+
 
                         if (completed)
                         {
@@ -264,9 +266,9 @@ namespace OnePlayer.Sync
 
             Track track = (driveItem != null) ? session.Tracks.Get(driveItem.Track.Id.Value) : null;
             IndexedTrack indexedTrack = (track != null) ? session.Index.Get(track.Id.Value) : null;
-            ThumbnailInfo thumbnailInfo = (track != null) ? session.Thumbnails.Get(track.Id.Value) : null;
             Artist artist = session.Artists.Find(item.audio.albumArtist);
             Album album = artist != null ? session.Albums.FindByArtist(artist.Id.Value, item.audio.album) : null;
+            ThumbnailInfo thumbnailInfo = (album != null) ? session.Thumbnails.Get(album.Id.Value) : null;
             Genre genre = session.Genres.Find(item.audio.genre);
 
             // If we already have a genre, do nothing. If not create a new one
@@ -343,9 +345,7 @@ namespace OnePlayer.Sync
             // Add or update thumbnail
             bool isThumbnailInfoNew = (thumbnailInfo == null);
             thumbnailInfo = thumbnailInfo ?? new ThumbnailInfo();
-            thumbnailInfo.Id = track.Id;
-            thumbnailInfo.DriveItemId = item.id;
-            thumbnailInfo.AlbumId = album.Id.Value;
+            thumbnailInfo.Id = album.Id;
             thumbnailInfo.AttemptCount = 0;
             thumbnailInfo.SmallUrl = item.Thumbnails?.FirstOrDefault()?.Small?.Url;
             thumbnailInfo.MediumUrl = item.Thumbnails?.FirstOrDefault()?.Medium?.Url;
@@ -369,36 +369,15 @@ namespace OnePlayer.Sync
         {
             try
             {
-                // Download the small thumbnail
-                if (!string.IsNullOrEmpty(info.SmallUrl))
+                string url = info.MediumUrl ?? info.SmallUrl;
+
+                if (!string.IsNullOrEmpty(url))
                 {
-                    using (HttpResponseMessage message = await webClient.GetAsync(info.SmallUrl, HttpCompletionOption.ResponseHeadersRead))
+                    using (HttpResponseMessage message = await webClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
                     {
                         using (var stream = await message.Content.ReadAsStreamAsync())
                         {
-                            await library.TrackArts.SaveAsync(info.Id.Value, stream, ThumbnailSize.Small);
-
-                            using (var trackThumbnailStream = library.TrackArts.Get(info.Id.Value, ThumbnailSize.Small))
-                            {
-                                await library.AlbumArts.SaveAsync(info.AlbumId, trackThumbnailStream, ThumbnailSize.Small);
-                            }
-                        }
-                    }
-                }
-
-                // Download the medium thumbnail
-                if (!string.IsNullOrEmpty(info.MediumUrl))
-                {
-                    using (HttpResponseMessage message = await webClient.GetAsync(info.MediumUrl, HttpCompletionOption.ResponseHeadersRead))
-                    {
-                        using (var stream = await message.Content.ReadAsStreamAsync())
-                        {
-                            await library.TrackArts.SaveAsync(info.Id.Value, stream, ThumbnailSize.Medium);
-
-                            using (var trackThumbnailStream = library.TrackArts.Get(info.Id.Value, ThumbnailSize.Medium))
-                            {
-                                await library.AlbumArts.SaveAsync(info.AlbumId, trackThumbnailStream, ThumbnailSize.Medium);
-                            }
+                            await library.AlbumArts.SaveAsync(info.Id.Value, stream, ThumbnailSize.Medium);
                         }
                     }
                 }

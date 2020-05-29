@@ -109,9 +109,9 @@ namespace OnePlayer.UWP.Pages
         {
             bool loaded = false;
             ThumbnailSize artSize = ThumbnailSize.Medium;
-            if (Library.TrackArts.Exists(track.Id.Value, artSize))
+            if (Library.AlbumArts.Exists(track.Album.Id.Value, artSize))
             {
-                using (var stream = Library.TrackArts.Get(track.Id.Value, artSize))
+                using (var stream = Library.AlbumArts.Get(track.Album.Id.Value, artSize))
                 {
                     using (var rtStream = stream.AsRandomAccessStream())
                     {
