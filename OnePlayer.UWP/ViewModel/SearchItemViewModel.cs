@@ -12,7 +12,6 @@ namespace OnePlayer.UWP.ViewModel
         private readonly MusicLibrary library;
         private readonly SearchItem item;
         private BitmapImage image = null;
-        private ThumbnailSize size = ThumbnailSize.Medium;
         public SearchItemViewModel(MusicLibrary library, SearchItem item)
         {
             this.library = library;
@@ -37,7 +36,7 @@ namespace OnePlayer.UWP.ViewModel
             long? id = (item.Type == SearchItemType.Album) ? item.Id : item.ParentId;
             if (id.HasValue && item.Type == SearchItemType.Album)
             {
-                hasArt = library.AlbumArts.Exists(id.Value, size);
+                hasArt = library.AlbumArts.Exists(id.Value);
             }
 
             return hasArt;
@@ -48,9 +47,9 @@ namespace OnePlayer.UWP.ViewModel
             long? id = (item.Type == SearchItemType.Album) ? item.Id : item.ParentId;
             if (id.HasValue)
             {
-                if (library.AlbumArts.Exists(id.Value, size))
+                if (library.AlbumArts.Exists(id.Value))
                 {
-                    using (var stream = library.AlbumArts.Get(id.Value, size))
+                    using (var stream = library.AlbumArts.Get(id.Value))
                     {
                         using (var rtStream = stream.AsRandomAccessStream())
                         {

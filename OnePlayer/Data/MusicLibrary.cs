@@ -16,7 +16,7 @@ namespace OnePlayer.Data
 
         public IMusicMetadata Metadata { get; }
 
-        public IThumbnailCache AlbumArts { get; }
+        public ThumbnailCache AlbumArts { get; }
 
         public IList<Album> GetAlbums()
         {

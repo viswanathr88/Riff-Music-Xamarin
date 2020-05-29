@@ -377,7 +377,7 @@ namespace OnePlayer.Sync
                     {
                         using (var stream = await message.Content.ReadAsStreamAsync())
                         {
-                            await library.AlbumArts.SaveAsync(info.Id.Value, stream, ThumbnailSize.Medium);
+                            await library.AlbumArts.SaveAsync(info.Id.Value, stream);
                         }
                     }
                 }

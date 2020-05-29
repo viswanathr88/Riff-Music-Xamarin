@@ -115,10 +115,9 @@ namespace OnePlayer.UWP.Pages
         private async Task<bool> LoadArtAsync(Image image, Album album)
         {
             bool loaded = false;
-            ThumbnailSize artSize = ThumbnailSize.Medium;
-            if (Library.AlbumArts.Exists(album.Id.Value, artSize))
+            if (Library.AlbumArts.Exists(album.Id.Value))
             {
-                using (var stream = Library.AlbumArts.Get(album.Id.Value, artSize))
+                using (var stream = Library.AlbumArts.Get(album.Id.Value))
                 {
                     using (var rtStream = stream.AsRandomAccessStream())
                     {

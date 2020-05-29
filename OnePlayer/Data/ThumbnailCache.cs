@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace OnePlayer.Data
 {
-    sealed class ThumbnailCache : IThumbnailCache
+    public sealed class ThumbnailCache
     {
         private readonly string rootPath;
 
@@ -23,32 +23,24 @@ namespace OnePlayer.Data
             }
         }
 
-        public bool Exists(long id, ThumbnailSize size)
+        public bool Exists(long id)
         {
-            return File.Exists(GetPath(id, size));
+            return File.Exists(GetPath(id));
         }
 
-        public Stream Get(long id, ThumbnailSize size)
+        public Stream Get(long id)
         {
-            return new FileStream(GetPath(id, size), FileMode.Open, FileAccess.Read);
+            return new FileStream(GetPath(id), FileMode.Open, FileAccess.Read);
         }
 
-        public string GetPath(long id, ThumbnailSize size)
+        public string GetPath(long id)
         {
-            return Path.Combine(rootPath, id.ToString(), $"{size}.jpg");
+            return Path.Combine(rootPath, $"{id}.jpg");
         }
 
-        public async Task SaveAsync(long id, Stream stream, ThumbnailSize size)
+        public async Task SaveAsync(long id, Stream stream)
         {
-            string thumbnailFolderPath = Path.Combine(rootPath, id.ToString());
-
-            if (!Directory.Exists(thumbnailFolderPath))
-            {
-                Directory.CreateDirectory(thumbnailFolderPath);
-            }
-
-            string fullPath = Path.Combine(thumbnailFolderPath, $"{size}.jpg");
-            using (FileStream fstream = new FileStream(fullPath, FileMode.OpenOrCreate, FileAccess.Write))
+            using (FileStream fstream = new FileStream(GetPath(id), FileMode.OpenOrCreate, FileAccess.Write))
             {
                 await stream.CopyToAsync(fstream);
             }

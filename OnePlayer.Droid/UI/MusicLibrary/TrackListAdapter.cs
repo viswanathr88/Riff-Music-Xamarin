@@ -27,9 +27,9 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             viewHolder.TrackArtist.Text = tracks[position].Artist;
             viewHolder.TrackDuration.Text = tracks[position].Duration.ToString("mm':'ss");
 
-            if (this.library.TrackArts.Exists(tracks[position].Id.Value, ThumbnailSize.Small))
+            if (this.library.AlbumArts.Exists(tracks[position].Album.Id.Value))
             {
-                using var stream = this.library.TrackArts.Get(tracks[position].Id.Value, ThumbnailSize.Small);
+                using var stream = this.library.AlbumArts.Get(tracks[position].Album.Id.Value);
                 viewHolder.TrackArt.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
             }
             else

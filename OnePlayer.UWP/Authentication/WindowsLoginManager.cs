@@ -189,9 +189,8 @@ namespace OnePlayer.UWP.Authentication
 
                 throw new Exception($"Login failed with status {result.ResponseStatus}, Error Code: {result.ResponseError?.ErrorCode}, ErrorMessage: {result.ResponseError?.ErrorMessage}");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
             }
         }
 

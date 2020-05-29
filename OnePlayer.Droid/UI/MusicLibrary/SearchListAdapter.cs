@@ -43,9 +43,9 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             if (searchItems[position].Type == SearchItemType.Album)
             {
                 description.Text = activity.Resources.GetString(Resource.String.search_album_description, searchItems[position].Description);
-                if (app.MusicLibrary.AlbumArts.Exists(searchItems[position].Id, ThumbnailSize.Small))
+                if (app.MusicLibrary.AlbumArts.Exists(searchItems[position].Id))
                 {
-                    using var stream = app.MusicLibrary.AlbumArts.Get(searchItems[position].Id, ThumbnailSize.Small);
+                    using var stream = app.MusicLibrary.AlbumArts.Get(searchItems[position].Id);
                     image.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
                 }
                 else
@@ -67,9 +67,9 @@ namespace OnePlayer.Droid.UI.MusicLibrary
             {
                 description.Text = activity.Resources.GetString(Resource.String.search_track_description, searchItems[position].Description);
 
-                if (app.MusicLibrary.TrackArts.Exists(searchItems[position].Id, ThumbnailSize.Small))
+                if (searchItems[position].ParentId.HasValue && app.MusicLibrary.AlbumArts.Exists(searchItems[position].ParentId.Value))
                 {
-                    using var stream = app.MusicLibrary.TrackArts.Get(searchItems[position].Id, ThumbnailSize.Small);
+                    using var stream = app.MusicLibrary.AlbumArts.Get(searchItems[position].Id);
                     image.SetImageBitmap(Android.Graphics.BitmapFactory.DecodeStream(stream));
                 }
                 else

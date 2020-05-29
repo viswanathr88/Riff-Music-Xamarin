@@ -14,7 +14,7 @@
               ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
         <ListView.ItemTemplate>
             <DataTemplate x:DataType="data:Artist">
-                <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+                <TextBlock Text="{x:Bind Name}" />
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

@@ -5,7 +5,7 @@
     <RootNamespace>OnePlayer</RootNamespace>
     <UserSecretsId>e4b4e46a-623b-4729-ac04-ab2fcb768617</UserSecretsId>
     <AssemblyName>OnePlayer</AssemblyName>
-    <Platforms>AnyCPU;x86</Platforms>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
