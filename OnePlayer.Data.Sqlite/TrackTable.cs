@@ -114,6 +114,11 @@ namespace OnePlayer.Data.Sqlite
                 throw new ArgumentNullException(nameof(options));
             }
 
+            if (options.AlbumArtistFilter.HasValue)
+            {
+                options.IncludeAlbum = true;
+            }
+
             IList<Track> tracks = new List<Track>();
             using (var command = connection.CreateCommand())
             {
@@ -287,6 +292,12 @@ namespace OnePlayer.Data.Sqlite
             {
                 filters.Add($"track.GenreId = @GenreId");
                 command.Parameters.AddWithValue("@GenreId", options.GenreFilter);
+            }
+
+            if (options.AlbumArtistFilter.HasValue)
+            {
+                filters.Add($"album.ArtistId = @AlbumArtistId");
+                command.Parameters.AddWithValue("@AlbumArtistId", options.AlbumArtistFilter.Value);
             }
 
             return filters;

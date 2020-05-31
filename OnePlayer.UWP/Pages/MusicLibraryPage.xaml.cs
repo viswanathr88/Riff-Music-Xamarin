@@ -40,8 +40,11 @@ namespace OnePlayer.UWP.Pages
 
         private void MusicLibraryPage_Loaded(object sender, RoutedEventArgs e)
         {
-            // Simulate the first entry in the filter being selected
-            RadioMenuFlyoutItem_Click(ToolbarFilterFlyout.Items.First(), new RoutedEventArgs());
+            if (!ToolbarFilterAlbums.IsChecked && !ToolbarFilterArtists.IsChecked && !ToolbarFilterTracks.IsChecked)
+            {
+                // Simulate the first entry in the filter being selected
+                RadioMenuFlyoutItem_Click(ToolbarFilterFlyout.Items.First(), new RoutedEventArgs());
+            }
         }
 
         private void RadioMenuFlyoutItem_Click(object sender, RoutedEventArgs e)

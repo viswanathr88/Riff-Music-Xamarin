@@ -1,0 +1,102 @@
+﻿<local:NavViewPageBase
+    x:Class="OnePlayer.UWP.Pages.ArtistPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:OnePlayer.UWP.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:OnePlayer.UWP.ViewModel"
+    xmlns:data="using:OnePlayer.Data"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}"
+    HeaderOpacity="1.0">
+
+    <ListView x:Name="AlbumList"
+              SelectionMode="None"
+              IsItemClickEnabled="False"
+              ItemsSource="{x:Bind ViewModel.AlbumTracks, Mode=OneWay}">
+        <ListView.Header>
+            <Grid x:Name="ArtistHeader"
+                  Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top"
+                  Padding="20,0,20,20">
+                
+            </Grid>
+        </ListView.Header>
+
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="vm:ExpandedAlbumItemViewModel">
+                <RelativePanel>
+                    <!-- Album Art -->
+                    <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                            RelativePanel.AlignLeftWithPanel="True"
+                            RelativePanel.AlignTopWithPanel="True"
+                            Margin="20"
+                            x:Name="AlbumArtContainer">
+                        <Image x:Name="AlbumArt"
+                               Source="{x:Bind Art}"
+                               Height="128"
+                               Width="128"
+                               x:Phase="1"
+                               Stretch="Uniform"
+                               />
+                    </Border>
+
+                    <!-- Album Name -->
+                    <TextBlock x:Name="AlbumName" 
+                               Text="{x:Bind Album.Name}"
+                               Style="{ThemeResource BaseTextBlockStyle}"
+                               x:Phase="1"
+                               RelativePanel.Below="AlbumArtContainer"
+                               RelativePanel.AlignLeftWithPanel="True"/>
+                    
+                    <!-- Release Year -->
+                    <TextBlock Text="{x:Bind Album.ReleaseYear}"
+                               Style="{ThemeResource CaptionTextBlockStyle}"
+                               RelativePanel.Below="AlbumName"
+                               x:Phase="2"
+                               RelativePanel.AlignLeftWithPanel="True" />
+
+                    <ListView x:Name="TrackList"
+                              ItemsSource="{x:Bind Tracks}"
+                              SelectionMode="None"
+                              IsItemClickEnabled="True"
+                              x:Phase="1"
+                              RelativePanel.RightOf="AlbumArtContainer"
+                              RelativePanel.AlignTopWithPanel="True"
+                              ShowsScrollingPlaceholders="False">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="data:Track">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    
+                                    <!-- Track Name -->
+                                    <TextBlock Text="{x:Bind Title}"
+                                               Grid.Column="0"
+                                               FontSize="13" />
+                                    
+                                    <!-- Track Artist -->
+                                    <TextBlock Text="{x:Bind Artist}"
+                                               Grid.Column="1"
+                                               FontSize="13" />
+                                    
+                                    <!-- Track Duration -->
+                                    <TextBlock Text="{x:Bind FormatDuration(Duration)}"
+                                               Grid.Column="2"
+                                               FontSize="13" />
+
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </RelativePanel>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+</local:NavViewPageBase>

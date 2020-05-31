@@ -19,6 +19,7 @@ namespace OnePlayer.Data.Access
         public SortOrder SortOrder { get; set; } = SortOrder.Descending;
         public long? TrackFilter { get; set; }
         public long? AlbumFilter { get; set; }
+        public long? AlbumArtistFilter { get; set; }
         public long? GenreFilter { get; set; }
         public long? StartPosition { get; set; }
         public long? Count { get; set; }

@@ -144,6 +144,12 @@
   <data name="AppDisplayName" xml:space="preserve">
     <value>OnePlayer</value>
   </data>
+  <data name="ArtistsPageMultipleAlbumFormat" xml:space="preserve">
+    <value>{0} albums</value>
+  </data>
+  <data name="ArtistsPageOneAlbumFormat" xml:space="preserve">
+    <value>{0} album</value>
+  </data>
   <data name="HomePageHeader" xml:space="preserve">
     <value>Home</value>
   </data>
