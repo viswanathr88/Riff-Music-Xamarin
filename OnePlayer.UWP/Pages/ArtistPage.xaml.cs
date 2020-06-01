@@ -1,5 +1,6 @@
 ﻿using OnePlayer.Data;
 using OnePlayer.UWP.ViewModel;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Navigation;
 
@@ -15,6 +16,7 @@ namespace OnePlayer.UWP.Pages
         public ArtistPage()
         {
             this.InitializeComponent();
+            HeaderText = ResourceLoader.GetForCurrentView().GetString("ArtistPageHeader");
         }
 
         private static Locator Locator => Application.Current.Resources["VMLocator"] as Locator;

@@ -12,90 +12,182 @@
     ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}"
     HeaderOpacity="1.0">
 
+    <Page.Resources>
+        <CollectionViewSource x:Name="CVSExpandedAlbums"
+                              x:Key="CVSExpandedAlbums"
+                              Source="{x:Bind ViewModel.AlbumTracks, Mode=OneWay}"
+                              IsSourceGrouped="True" />
+    </Page.Resources>
+
     <ListView x:Name="AlbumList"
               SelectionMode="None"
-              IsItemClickEnabled="False"
-              ItemsSource="{x:Bind ViewModel.AlbumTracks, Mode=OneWay}">
+              IsItemClickEnabled="True"
+              ItemsSource="{x:Bind CVSExpandedAlbums.View, Mode=OneWay}"
+              ShowsScrollingPlaceholders="False">
+
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch" />
+            </Style>
+        </ListView.ItemContainerStyle>
         <ListView.Header>
             <Grid x:Name="ArtistHeader"
                   Background="{ThemeResource SystemControlAcrylicWindowBrush}"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Top"
-                  Padding="20,0,20,20">
+                  Padding="12,20,20,20">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 
+                <!-- Artist icon -->
+                <Border Width="128"
+                        Height="128"
+                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                        CornerRadius="64"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                              Glyph="&#xE77B;"
+                              FontSize="64"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"/>
+                </Border>
+                          
+                
+                <!-- Artist Name -->
+                <TextBlock Text="{x:Bind ViewModel.Parameter.Name, Mode=OneWay}"
+                           Style="{ThemeResource TitleTextBlockStyle}"
+                           MaxLines="2"
+                           TextWrapping="Wrap"
+                           TextTrimming="CharacterEllipsis"
+                           HorizontalAlignment="Center"
+                           Margin="20,10,20,10"
+                           Grid.Row="1"/>
+                
+                <!-- Artist Genres -->
+                <CommandBar x:Name="ArtistToolbar"
+                            Grid.Row="3"
+                            Background="Transparent"
+                            DefaultLabelPosition="Right"
+                            Margin="5,0,5,0"
+                            HorizontalAlignment="Center"
+                            Grid.ColumnSpan="2">
+                    <CommandBar.CommandBarOverflowPresenterStyle>
+                        <Style TargetType="CommandBarOverflowPresenter">
+                            <Setter Property="Margin"
+                                    Value="0,0,20,0" />
+                            <Setter Property="MinWidth"
+                                    Value="180" />
+                            <Setter Property="Width"
+                                    Value="200" />
+                        </Style>
+                    </CommandBar.CommandBarOverflowPresenterStyle>
+
+                    <CommandBar.PrimaryCommands>
+                        <AppBarButton Label=""
+                                      x:Uid="ArtistToolbarPlayButton"
+                                      Icon="Play"
+                                      Margin="0,0,10,0" />
+                        <AppBarButton Label=""
+                                      x:Uid="ArtistToolbarAddToButton"
+                                      Icon="Add"
+                                      Margin="0,0,10,0" />
+                        <AppBarButton Label=""
+                                      x:Uid="ArtistToolbarPinToStartButton"
+                                      Icon="Pin"
+                                      Margin="0,0,10,0" />
+                    </CommandBar.PrimaryCommands>
+                </CommandBar>
+
             </Grid>
         </ListView.Header>
+        
+        <ListView.GroupStyle>
+            <GroupStyle>
+                <GroupStyle.HeaderContainerStyle>
+                    <Style TargetType="ListViewHeaderItem">
+                        <Setter Property="HorizontalContentAlignment"
+                                Value="Stretch" />
+
+                    </Style>
+                </GroupStyle.HeaderContainerStyle>
+                <GroupStyle.HeaderTemplate>
+                    <DataTemplate x:DataType="vm:ExpandedAlbumItem">
+                        <StackPanel Orientation="Vertical" 
+                                    HorizontalAlignment="Left"
+                                    Width="128">
+                            <!-- Album art -->
+                            <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                                  HorizontalAlignment="Left">
+                                <Image Source="{x:Bind AlbumArt}"
+                                       Stretch="UniformToFill"
+                                       Height="128"
+                                       Width="128"
+                                       x:Phase="2"/>
+                            </Grid>
+
+                            <!-- Album name -->
+                            <TextBlock Text="{x:Bind Key.Name}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       TextWrapping="Wrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxLines="2"
+                                       x:Phase="0"/>
+
+                            <!-- Release year -->
+                            <TextBlock Text="{x:Bind Key.ReleaseYear}"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
+                                       x:Phase="1"/>
+
+                        </StackPanel>
+                    </DataTemplate>
+                </GroupStyle.HeaderTemplate>
+            </GroupStyle>
+        </ListView.GroupStyle>
 
         <ListView.ItemTemplate>
-            <DataTemplate x:DataType="vm:ExpandedAlbumItemViewModel">
-                <RelativePanel>
-                    <!-- Album Art -->
-                    <Border Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
-                            RelativePanel.AlignLeftWithPanel="True"
-                            RelativePanel.AlignTopWithPanel="True"
-                            Margin="20"
-                            x:Name="AlbumArtContainer">
-                        <Image x:Name="AlbumArt"
-                               Source="{x:Bind Art}"
-                               Height="128"
-                               Width="128"
-                               x:Phase="1"
-                               Stretch="Uniform"
-                               />
-                    </Border>
+            <DataTemplate x:DataType="data:Track">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
 
-                    <!-- Album Name -->
-                    <TextBlock x:Name="AlbumName" 
-                               Text="{x:Bind Album.Name}"
-                               Style="{ThemeResource BaseTextBlockStyle}"
-                               x:Phase="1"
-                               RelativePanel.Below="AlbumArtContainer"
-                               RelativePanel.AlignLeftWithPanel="True"/>
-                    
-                    <!-- Release Year -->
-                    <TextBlock Text="{x:Bind Album.ReleaseYear}"
-                               Style="{ThemeResource CaptionTextBlockStyle}"
-                               RelativePanel.Below="AlbumName"
-                               x:Phase="2"
-                               RelativePanel.AlignLeftWithPanel="True" />
+                    <!-- Track Name -->
+                    <TextBlock Text="{x:Bind Title}"
+                               Grid.Column="0"
+                               FontSize="13"
+                               Margin="0,0,30,0"
+                               TextWrapping="Wrap"
+                               TextTrimming="CharacterEllipsis"
+                               MaxLines="1"/>
 
-                    <ListView x:Name="TrackList"
-                              ItemsSource="{x:Bind Tracks}"
-                              SelectionMode="None"
-                              IsItemClickEnabled="True"
-                              x:Phase="1"
-                              RelativePanel.RightOf="AlbumArtContainer"
-                              RelativePanel.AlignTopWithPanel="True"
-                              ShowsScrollingPlaceholders="False">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="data:Track">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    
-                                    <!-- Track Name -->
-                                    <TextBlock Text="{x:Bind Title}"
-                                               Grid.Column="0"
-                                               FontSize="13" />
-                                    
-                                    <!-- Track Artist -->
-                                    <TextBlock Text="{x:Bind Artist}"
-                                               Grid.Column="1"
-                                               FontSize="13" />
-                                    
-                                    <!-- Track Duration -->
-                                    <TextBlock Text="{x:Bind FormatDuration(Duration)}"
-                                               Grid.Column="2"
-                                               FontSize="13" />
+                    <!-- Track Artist -->
+                    <TextBlock Text="{x:Bind Artist}"
+                               Grid.Column="1"
+                               FontSize="13"
+                               Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
+                               Margin="0,0,30,0"
+                               TextWrapping="Wrap"
+                               TextTrimming="CharacterEllipsis"
+                               MaxLines="1"/>
 
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </RelativePanel>
+                    <!-- Track Duration -->
+                    <TextBlock Text="{x:Bind FormatDuration(Duration)}"
+                               Grid.Column="2"
+                               FontSize="13"
+                               Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
+                               Margin="0,0,20,0"/>
+
+                </Grid>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>

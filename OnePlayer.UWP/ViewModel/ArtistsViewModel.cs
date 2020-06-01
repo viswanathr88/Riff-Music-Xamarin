@@ -67,7 +67,9 @@ namespace OnePlayer.UWP.ViewModel
         {
             var options = new AlbumAccessOptions()
             {
-                IncludeArtist = true
+                IncludeArtist = true,
+                SortType = AlbumSortType.ReleaseYear,
+                SortOrder = SortOrder.Descending
             };
 
             var albums = library.Metadata.Albums.Get(options);

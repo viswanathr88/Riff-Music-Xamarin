@@ -183,7 +183,6 @@
     <Compile Include="ViewModel\AlbumViewModel.cs" />
     <Compile Include="ViewModel\ArtistViewModel.cs" />
     <Compile Include="ViewModel\Commands\SyncCommand.cs" />
-    <Compile Include="ViewModel\ExpandedAlbumItemViewModel.cs" />
     <Compile Include="ViewModel\ItemCache.cs" />
     <Compile Include="ViewModel\ItemIndexRangeExtensions.cs" />
     <Compile Include="ViewModel\ItemIndexRangeList.cs" />

@@ -1,10 +1,7 @@
-﻿using Microsoft.Graphics.Canvas.Effects;
-using OnePlayer.UWP.ViewModel;
+﻿using OnePlayer.UWP.ViewModel;
 using Windows.ApplicationModel.Resources;
-using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
