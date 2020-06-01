@@ -1,22 +1,25 @@
 ﻿<local:NavViewPageBase x:Class="OnePlayer.UWP.Pages.MainPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:local="using:OnePlayer.UWP.Pages"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:ui="using:Microsoft.UI.Xaml.Controls"
-      xmlns:oc="using:OnePlayer.UWP.Controls"
-      xmlns:vm="using:OnePlayer.UWP.ViewModel"
-      xmlns:conv="using:OnePlayer.UWP.Converters"
-      xmlns:pages="using:OnePlayer.UWP.Pages"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:local="using:OnePlayer.UWP.Pages"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:ui="using:Microsoft.UI.Xaml.Controls"
+                       xmlns:oc="using:OnePlayer.UWP.Controls"
+                       xmlns:vm="using:OnePlayer.UWP.ViewModel"
+                       xmlns:conv="using:OnePlayer.UWP.Converters"
+                       xmlns:pages="using:OnePlayer.UWP.Pages"
                        xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
                        mc:Ignorable="d"
-      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
-        <Storyboard x:Name="SyncStatusCommandBarIconRotation" 
+        <Storyboard x:Name="SyncStatusCommandBarIconRotation"
                     AutoReverse="False"
                     RepeatBehavior="Forever">
-            <DoubleAnimation Duration="0:0:3" To="360" Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)" Storyboard.TargetName="SyncStatusCommandBarIcon" />
+            <DoubleAnimation Duration="0:0:3"
+                             To="360"
+                             Storyboard.TargetProperty="(UIElement.RenderTransform).(CompositeTransform.Rotation)"
+                             Storyboard.TargetName="SyncStatusCommandBarIcon" />
         </Storyboard>
 
         <conv:BoolNegationConverter x:Key="BoolNegationConverter" />
@@ -38,8 +41,7 @@
                      Canvas.ZIndex="2"
                      PaneDisplayMode="{x:Bind NavView.DisplayMode, Mode=OneWay}"
                      IsPaneOpen="{x:Bind NavView.IsPaneOpen, Mode=OneWay}"
-                     BackRequested="Titlebar_BackRequested"
-                     />
+                     BackRequested="Titlebar_BackRequested" />
 
         <ui:NavigationView x:Name="NavView"
                            Grid.Row="1"
@@ -52,13 +54,13 @@
 
             <ui:NavigationView.Transitions>
                 <TransitionCollection>
-                    
+
                 </TransitionCollection>
             </ui:NavigationView.Transitions>
 
             <ui:NavigationView.ContentTransitions>
                 <TransitionCollection>
-                    
+
                 </TransitionCollection>
             </ui:NavigationView.ContentTransitions>
 
@@ -76,7 +78,7 @@
                                VerticalAlignment="Top"
                                Style="{StaticResource NavigationViewItemHeaderTextStyle}"
                                Margin="0,5,0,0"
-                               FontSize="15"/>
+                               FontSize="15" />
 
                     <!-- Header Toolbar -->
 
@@ -144,7 +146,7 @@
                                           RelativePanel.AlignLeftWithPanel="True"
                                           RelativePanel.AlignTopWithPanel="True"
                                           FontSize="32"
-                                          Visibility="{x:Bind HasNoArt}"/>
+                                          Visibility="{x:Bind HasNoArt}" />
                                 <Image Source="{x:Bind Art, FallbackValue=''}"
                                        x:Name="ImageArt"
                                        Width="32"
@@ -161,7 +163,7 @@
                                            Padding="20,0,0,0"
                                            RelativePanel.RightOf="ImageArt"
                                            RelativePanel.AlignTopWith="ImageArt"
-                                           TextLineBounds="TrimToCapHeight"/>
+                                           TextLineBounds="TrimToCapHeight" />
                                 <TextBlock Text="{x:Bind pages:MainPage.FormatSearchItemDescription(Description, Type)}"
                                            x:Name="SearchItemDescription"
                                            Style="{StaticResource CaptionTextBlockStyle}"
@@ -172,7 +174,7 @@
                                            RelativePanel.RightOf="ImageArt"
                                            RelativePanel.Below="SearchItemName"
                                            RelativePanel.AlignBottomWith="ImageArt"
-                                           TextLineBounds="TrimToBaseline"/>
+                                           TextLineBounds="TrimToBaseline" />
                             </RelativePanel>
                         </DataTemplate>
                     </AutoSuggestBox.ItemTemplate>
@@ -211,15 +213,14 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <!-- Sync status icon -->
                                 <FontIcon x:Name="SyncStatusIcon"
                                           Grid.Row="0"
                                           Glyph="{x:Bind ViewModel.Sync.State, Converter={StaticResource SyncStatusIconConverter}, Mode=OneWay}"
                                           FontSize="20"
                                           VerticalAlignment="Center"
-                                          Margin="0,0,20,0"
-                                          />
+                                          Margin="0,0,20,0" />
 
                                 <!-- Sync text -->
                                 <TextBlock x:Name="SyncStatusText"
@@ -228,46 +229,73 @@
                                            Style="{ThemeResource BodyTextBlockStyle}"
                                            Text="{x:Bind GetSyncStatusText(ViewModel.Sync.State), Mode=OneWay}"
                                            TextWrapping="Wrap"
-                                           TextLineBounds="Full"
-                                           />
-                                
+                                           TextLineBounds="Full" />
+
                                 <!-- Sync now button -->
                                 <StackPanel Orientation="Horizontal"
                                             Grid.Row="1"
                                             Grid.ColumnSpan="2"
                                             Margin="0,20,0,0">
-                                    <Button x:Uid="SyncNowButton" 
+                                    <Button x:Uid="SyncNowButton"
                                             x:Name="SyncNowButton"
                                             Content="Sync now"
                                             Command="{x:Bind ViewModel.Sync.SyncNow}"
                                             Margin="0,0,20,0" />
                                     <Button x:Uid="PauseSyncButton"
-                                            x:Name="PauseSyncButton" 
+                                            x:Name="PauseSyncButton"
                                             Content="Pause Sync"
                                             Margin="0,0,20,0"
                                             x:Load="{x:Bind ViewModel.Sync.IsSyncPaused, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                                            Click="{x:Bind ViewModel.Sync.PauseSync}"/>
+                                            Click="{x:Bind ViewModel.Sync.PauseSync}" />
                                     <Button x:Uid="ResumeSyncButton"
                                             x:Name="ResumeSyncButton"
                                             Content="Resume Sync"
                                             Margin="0,0,20,0"
                                             x:Load="{x:Bind ViewModel.Sync.IsSyncPaused, Mode=OneWay}"
-                                            Click="{x:Bind ViewModel.Sync.ResumeSync}"/>
-                                    
+                                            Click="{x:Bind ViewModel.Sync.ResumeSync}" />
+
                                 </StackPanel>
-                                
+
                             </Grid>
                         </Flyout>
                     </FlyoutBase.AttachedFlyout>
-                    
+
                 </ui:NavigationViewItem>
             </ui:NavigationView.PaneFooter>
 
-            <Frame x:Name="ContentFrame"
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Frame x:Name="ContentFrame"
                        IsTabStop="True"
                        Navigated="ContentFrame_Navigated"
-                       NavigationFailed="ContentFrame_NavigationFailed"
-                   Background="Transparent"/>
+                       NavigationFailed="ContentFrame_NavigationFailed"/>
+
+                <MediaPlayerElement x:Name="MediaPlayerControl" 
+                                    AreTransportControlsEnabled="True"
+                                    Grid.Row="1">
+                    <MediaPlayerElement.TransportControls>
+                        <MediaTransportControls IsCompact="False" 
+                                                IsPlaybackRateButtonVisible="True"
+                                                IsFastForwardButtonVisible="True"
+                                                IsRepeatButtonVisible="True"
+                                                IsFastRewindButtonVisible="True"
+                                                IsFullWindowEnabled="False"
+                                                IsFullWindowButtonVisible="False"
+                                                IsVolumeButtonVisible="True"
+                                                IsVolumeEnabled="True"
+                                                IsNextTrackButtonVisible="True"
+                                                IsPreviousTrackButtonVisible="True"
+                                                IsSeekBarVisible="True"
+                                                IsStopButtonVisible="True"
+                                                IsStopEnabled="True"/>
+                    </MediaPlayerElement.TransportControls>
+                </MediaPlayerElement>
+            </Grid>
+
+            
 
         </ui:NavigationView>
 
@@ -302,7 +330,6 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-
 
     </Grid>
 </local:NavViewPageBase>

@@ -121,7 +121,8 @@
                     <DataTemplate x:DataType="vm:ExpandedAlbumItem">
                         <StackPanel Orientation="Vertical" 
                                     HorizontalAlignment="Left"
-                                    Width="128">
+                                    Width="128"
+                                    Margin="0,30,0,0">
                             <!-- Album art -->
                             <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                                   HorizontalAlignment="Left">

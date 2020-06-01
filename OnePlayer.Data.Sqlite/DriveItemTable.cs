@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using OnePlayer.Data.Access;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace OnePlayer.Data.Sqlite
@@ -36,6 +38,19 @@ namespace OnePlayer.Data.Sqlite
                     builder.AppendLine("TrackId INTEGER,");
                     builder.AppendLine("FOREIGN KEY(TrackId) REFERENCES Track(Id)");
                     builder.AppendLine(")");
+
+                    command.CommandText = builder.ToString();
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            if (version == Version.AddIndexes)
+            {
+                using (var command = connection.CreateCommand())
+                {
+                    var builder = new StringBuilder();
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_Source ON {Name}(Source);");
+                    builder.AppendLine($"CREATE INDEX Idx_{Name}_TrackId ON {Name}(TrackId);");
 
                     command.CommandText = builder.ToString();
                     command.ExecuteNonQuery();
@@ -99,21 +114,46 @@ namespace OnePlayer.Data.Sqlite
                 throw new ArgumentNullException(nameof(id));
             }
 
-            DriveItem item = null;
+            var options = new DriveItemAccessOptions()
+            {
+                DriveItemFilter = id
+            };
+            return Get(options).FirstOrDefault();
+        }
 
+        public IList<DriveItem> Get(DriveItemAccessOptions options)
+        {
+            if (options == null)
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            if (options.AlbumFilter.HasValue || options.AlbumArtistFilter.HasValue)
+            {
+                options.IncludeTrack = true;
+                options.IncludeTrackAlbum = true;
+            }
+
+            IList<DriveItem> items = new List<DriveItem>();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {Name} WHERE Id = @Id";
-                command.Parameters.AddWithValue("@Id", id);
+                StringBuilder builder = new StringBuilder();
+                ApplySelect(options, builder);
+                ApplyFilters(options, command, builder);
+                ApplySorting(options, builder);
+                ApplyLimits(options, builder);
 
-                var reader = command.ExecuteReader();
-                while (reader.Read())
+                command.CommandText = builder.ToString();
+                using (var reader = command.ExecuteReader())
                 {
-                    item = ExtractDriveItem(reader);
+                    while (reader.Read())
+                    {
+                        items.Add(ExtractDriveItem(reader));
+                    }
                 }
             }
 
-            return item;
+            return items;
         }
 
         public DriveItem Update(DriveItem item)
@@ -154,6 +194,101 @@ namespace OnePlayer.Data.Sqlite
             return item;
         }
 
+        private static void ApplySelect(DriveItemAccessOptions options, StringBuilder builder)
+        {
+            IList<string> fields = new List<string>() { "item.Id AS Id", "item.CTag AS CTag", "item.ETag AS ETag", "item.AddedDate AS AddedDate", "item.LastModified AS LastModified", "item.DownloadUrl AS DownloadUrl", "item.Size AS Size", "item.Source AS Source", "item.TrackId as TrackId" };
+            IList<string> joins = new List<string>();
+
+            if (options.IncludeTrack)
+            {
+                fields.Add("track.Title AS TrackTitle, track.Number AS TrackNumber, track.Artist AS TrackArtist, track.Bitrate AS TrackBitrate, track.Duration as TrackDuration, track.Composers AS TrackComposers, track.ReleaseYear AS TrackReleaseYear, track.AlbumId AS TrackAlbumId, track.GenreId AS TrackGenreId");
+                joins.Add("INNER JOIN Track track ON track.Id = item.TrackId");
+            }
+
+            if (options.IncludeTrackAlbum)
+            {
+                fields.Add("album.Name AS AlbumName, album.ReleaseYear AS AlbumReleaseYear, album.ArtistId as AlbumArtistId, album.GenreId AS AlbumGenreId");
+                joins.Add("INNER JOIN Album album ON track.AlbumId = album.Id");
+            }
+
+            builder.AppendLine($"SELECT {string.Join(",", fields)}");
+            builder.AppendLine($"FROM DriveItem item");
+            foreach (var joinStmt in joins)
+            {
+                builder.AppendLine(joinStmt);
+            }
+        }
+
+        private static void ApplyLimits(DriveItemAccessOptions options, StringBuilder builder)
+        {
+            if (options.Count.HasValue)
+            {
+                builder.Append($"LIMIT {options.Count}");
+                if (options.StartPosition.HasValue)
+                {
+                    builder.Append($" OFFSET {options.StartPosition.Value}");
+                }
+            }
+        }
+
+        private static void ApplySorting(DriveItemAccessOptions options, StringBuilder builder)
+        {
+            if (options.SortType.HasValue && options.IncludeTrack)
+            {
+                builder.Append("ORDER BY ");
+                string sortOrderStr = $"{(options.SortOrder == SortOrder.Ascending ? "ASC" : "DESC")}";
+                if (options.SortType == TrackSortType.ReleaseYear && options.IncludeTrackAlbum)
+                {
+                    builder.AppendLine($"AlbumReleaseYear {sortOrderStr}, AlbumName ASC, Number ASC, Title ASC");
+                }
+                else
+                {
+                    builder.Append($"{options.SortType.Value} {sortOrderStr}");
+                }
+            }
+        }
+
+        private static void ApplyFilters(DriveItemAccessOptions options, SqliteCommand command, StringBuilder builder)
+        {
+            var filters = BuildFilters(command, options);
+
+            if (filters.Count > 0)
+            {
+                builder.AppendLine($"WHERE {string.Join(" AND ", filters)}");
+            }
+        }
+
+        private static IList<string> BuildFilters(SqliteCommand command, DriveItemAccessOptions options)
+        {
+            IList<string> filters = new List<string>();
+            
+            if (!string.IsNullOrEmpty(options.DriveItemFilter))
+            {
+                filters.Add("Id = @Id");
+                command.Parameters.AddWithValue("@Id", options.DriveItemFilter);
+            }
+            
+            if (options.TrackFilter.HasValue)
+            {
+                filters.Add("TrackId = @TrackId");
+                command.Parameters.AddWithValue("@TrackId", options.TrackFilter);
+            }
+
+            if (options.AlbumFilter.HasValue)
+            {
+                filters.Add("track.AlbumId = @AlbumId");
+                command.Parameters.AddWithValue("@AlbumId", options.AlbumFilter.Value);
+            }
+
+            if (options.AlbumArtistFilter.HasValue)
+            {
+                filters.Add($"album.ArtistId = @AlbumArtistId");
+                command.Parameters.AddWithValue("@AlbumArtistId", options.AlbumArtistFilter.Value);
+            }
+
+            return filters;
+        }
+
         private static void AddParameters(DriveItem item, SqliteCommand command, StringBuilder builder)
         {
             command.CommandText = builder.ToString();
@@ -168,10 +303,9 @@ namespace OnePlayer.Data.Sqlite
             command.Parameters.AddWithValue("@TrackId", item.Track.Id);
         }
 
-        private DriveItem ExtractDriveItem(SqliteDataReader reader)
+        public static DriveItem ExtractDriveItem(SqliteDataReader reader, int index = 0)
         {
-            int index = 0;
-            return new DriveItem()
+            var item = new DriveItem()
             {
                 Id = reader.GetString(index++),
                 CTag = reader.GetString(index++),
@@ -181,11 +315,10 @@ namespace OnePlayer.Data.Sqlite
                 DownloadUrl = reader.GetString(index++),
                 Size = reader.GetInt32(index++),
                 Source = (DriveItemSource)reader.GetInt32(index++),
-                Track = new Track()
-                {
-                    Id = reader.GetInt64(index++)
-                }
+                Track = TrackTable.ExtractTrack(reader, index)
             };
+
+            return item;
         }
     }
 }
