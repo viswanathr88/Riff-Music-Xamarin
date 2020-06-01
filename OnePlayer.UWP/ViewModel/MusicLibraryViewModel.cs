@@ -4,12 +4,20 @@ using System.Threading.Tasks;
 
 namespace OnePlayer.UWP.ViewModel
 {
+    public enum MusicLibrarySection
+    {
+        Albums,
+        Artists,
+        Tracks
+    };
+
     public sealed class MusicLibraryViewModel : DataViewModel
     {
         private readonly MusicLibrary library;
         private readonly Lazy<AlbumsViewModel> albums;
         private readonly Lazy<ArtistsViewModel> artists;
         private readonly Lazy<TracksViewModel> tracks;
+        private MusicLibrarySection section = MusicLibrarySection.Albums;
 
         public MusicLibraryViewModel(MusicLibrary library)
         {
@@ -24,6 +32,12 @@ namespace OnePlayer.UWP.ViewModel
         public ArtistsViewModel Artists => artists.Value;
 
         public TracksViewModel Tracks => tracks.Value;
+
+        public MusicLibrarySection CurrentSection
+        {
+            get => section;
+            set => SetProperty(ref this.section, value);
+        }
 
         public override Task LoadAsync()
         {

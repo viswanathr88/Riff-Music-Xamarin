@@ -51,7 +51,9 @@
 
                             <ui:RadioMenuFlyoutItem Text=""
                                                     x:Uid="ToolbarFilterAlbums"
+                                                    x:Name="ToolbarFilterAlbums"
                                                     Tag="albums"
+                                                    GroupName="ToolbarSectionGroup"
                                                     Click="RadioMenuFlyoutItem_Click">
                                 <ui:RadioMenuFlyoutItem.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets"
@@ -61,6 +63,8 @@
                             <ui:RadioMenuFlyoutItem Text=""
                                                     Tag="artists"
                                                     x:Uid="ToolbarFilterArtists"
+                                                    x:Name="ToolbarFilterArtists"
+                                                    GroupName="ToolbarSectionGroup"
                                                     Click="RadioMenuFlyoutItem_Click">
                                 <ui:RadioMenuFlyoutItem.Icon>
                                     <FontIcon FontFamily="Segoe MDL2 Assets"
@@ -69,6 +73,8 @@
                             </ui:RadioMenuFlyoutItem>
                             <ui:RadioMenuFlyoutItem Text=""
                                                     x:Uid="ToolbarFilterTracks"
+                                                    x:Name="ToolbarFilterTracks"
+                                                    GroupName="ToolbarSectionGroup"
                                                     Tag="tracks"
                                                     Click="RadioMenuFlyoutItem_Click">
                                 <ui:RadioMenuFlyoutItem.Icon>
