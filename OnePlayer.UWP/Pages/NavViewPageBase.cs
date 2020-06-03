@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
+﻿using Windows.UI;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 namespace OnePlayer.UWP.Pages
 {
-    public class NavViewPageBase : Page
+    /// <summary>
+    /// Represents any page that is rendered within the NavigationView
+    /// </summary>
+    public abstract class NavViewPageBase : PageBase
     {
         public string HeaderText
         {
@@ -42,8 +39,5 @@ namespace OnePlayer.UWP.Pages
         // Using a DependencyProperty as the backing store for HeaderOpacity.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HeaderOpacityProperty =
             DependencyProperty.Register("HeaderOpacity", typeof(double), typeof(NavViewPageBase), new PropertyMetadata(1.0));
-
-
-
     }
 }

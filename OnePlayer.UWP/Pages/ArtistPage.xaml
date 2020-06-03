@@ -22,6 +22,7 @@
     <ListView x:Name="AlbumList"
               SelectionMode="None"
               IsItemClickEnabled="True"
+              ItemClick="AlbumList_ItemClick"
               ItemsSource="{x:Bind CVSExpandedAlbums.View, Mode=OneWay}"
               ShowsScrollingPlaceholders="False">
 
@@ -92,8 +93,10 @@
                     <CommandBar.PrimaryCommands>
                         <AppBarButton Label=""
                                       x:Uid="ArtistToolbarPlayButton"
+                                      x:Name="ArtistToolbarPlayButton"
                                       Icon="Play"
-                                      Margin="0,0,10,0" />
+                                      Margin="0,0,10,0"
+                                      Click="ArtistToolbarPlayButton_Click"/>
                         <AppBarButton Label=""
                                       x:Uid="ArtistToolbarAddToButton"
                                       Icon="Add"
@@ -121,7 +124,8 @@
                     <DataTemplate x:DataType="vm:ExpandedAlbumItem">
                         <StackPanel Orientation="Vertical" 
                                     HorizontalAlignment="Left"
-                                    Width="128">
+                                    Width="128"
+                                    Margin="0,30,0,0">
                             <!-- Album art -->
                             <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                                   HorizontalAlignment="Left">

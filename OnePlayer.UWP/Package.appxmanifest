@@ -4,17 +4,18 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  IgnorableNamespaces="uap mp uap3">
 
   <Identity
-    Name="18719ViswanathRamanan.Gimmix"
+    Name="18719ViswanathRamanan.RiffMusic"
     Publisher="CN=F13159E3-8501-4753-9208-FDD795A7A68F"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="28150e3d-dd72-4047-a4d2-e78055f3f65f" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="84f61813-e62f-4a2c-98bf-96bb311aa542" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Gimmix</DisplayName>
+    <DisplayName>Riff Music</DisplayName>
     <PublisherDisplayName>Viswanath Ramanan</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -52,5 +53,6 @@
   <Capabilities>
     <Capability Name="internetClient" />
     <uap:Capability Name="userAccountInformation"/>
+    <uap3:Capability Name="backgroundMediaPlayback"/>
   </Capabilities>
 </Package>

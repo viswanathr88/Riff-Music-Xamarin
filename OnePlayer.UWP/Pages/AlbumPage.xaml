@@ -116,8 +116,10 @@
                     <CommandBar.PrimaryCommands>
                         <AppBarButton Label=""
                                       x:Uid="AlbumToolbarPlayButton"
+                                      x:Name="AlbumToolbarPlayButton"
                                       Icon="Play"
-                                      Margin="0,0,10,0" />
+                                      Margin="0,0,10,0"
+                                      Click="AlbumToolbarPlayButton_Click"/>
                         <AppBarButton Label=""
                                       x:Uid="AlbumToolbarAddToButton"
                                       Icon="Add"

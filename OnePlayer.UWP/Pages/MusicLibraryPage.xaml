@@ -89,12 +89,6 @@
             <CommandBar.PrimaryCommands>
                 <AppBarButton Label=""
                               Click="AppBarButton_Click"
-                              x:Name="ToolbarPlayAllButton"
-                              x:Uid="ToolbarPlayAllButton"
-                              Icon="Play"/>
-
-                <AppBarButton Label=""
-                              Click="AppBarButton_Click"
                               x:Name="ToolbarShuffleutton"
                               x:Uid="ToolbarShuffleButton"
                               Icon="Shuffle" />

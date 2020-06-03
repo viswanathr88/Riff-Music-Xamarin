@@ -1,8 +1,7 @@
-﻿using OnePlayer.Data;
-using OnePlayer.UWP.ViewModel;
+﻿using OnePlayer.UWP.ViewModel;
+using System;
 using Windows.ApplicationModel.Resources;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -11,7 +10,7 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ArtistPage : NavViewPageBase, ISupportViewModel<ArtistViewModel>
+    public sealed partial class ArtistPage : NavViewPageBase, ISupportViewModel<ArtistViewModel>, ISupportPlaying
     {
         public ArtistPage()
         {
@@ -19,16 +18,23 @@ namespace OnePlayer.UWP.Pages
             HeaderText = ResourceLoader.GetForCurrentView().GetString("ArtistPageHeader");
         }
 
-        private static Locator Locator => Application.Current.Resources["VMLocator"] as Locator;
         public ArtistViewModel ViewModel { get; } = new ArtistViewModel(Locator.Library);
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
+        public override IDataViewModel DataViewModel => ViewModel;
 
-            if (!ViewModel.IsLoaded)
+        public PlayerViewModel Player => Locator.Player;
+
+        private async void ArtistToolbarPlayButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await Player.PlayAsync(ViewModel.Parameter);
+        }
+
+        private async void AlbumList_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+        {
+            if (e.ClickedItem != null)
             {
-                await ViewModel.LoadAsync(e.Parameter as Artist);
+                var index = (sender as ListView).Items.IndexOf(e.ClickedItem);
+                await Player.PlayAsync(ViewModel.Parameter, Convert.ToUInt32(index));
             }
         }
     }

@@ -17,7 +17,7 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumPage : NavViewPageBase, ISupportViewModel<AlbumViewModel>
+    public sealed partial class AlbumPage : NavViewPageBase, ISupportViewModel<AlbumViewModel>, ISupportPlaying
     {
         bool animateBack = false;
         public AlbumPage()
@@ -29,11 +29,13 @@ namespace OnePlayer.UWP.Pages
 
         public AlbumViewModel ViewModel { get; } = new AlbumViewModel(Locator.MusicMetadata);
 
-        private static Locator Locator => Application.Current.Resources["VMLocator"] as Locator;
+        public override IDataViewModel DataViewModel => ViewModel;
+
+        public PlayerViewModel Player => Locator.Player;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            // base.OnNavigatedTo(e);
 
             ConnectedAnimation imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("ca1");
             if (imageAnimation != null)
@@ -81,9 +83,13 @@ namespace OnePlayer.UWP.Pages
             await LoadArtAsync(AlbumArt, ViewModel.AlbumInfo);
         }
 
-        private void AlbumTrackList_ItemClick(object sender, ItemClickEventArgs e)
+        private async void AlbumTrackList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // TODO: Play the track
+            if (e.ClickedItem != null)
+            {
+                var index = Convert.ToUInt32(AlbumTrackList.Items.IndexOf(e.ClickedItem));
+                await Player.PlayAsync(ViewModel.AlbumInfo, index);
+            }
         }
 
         private void AlbumTrackList_Loaded(object sender, RoutedEventArgs e)
@@ -132,6 +138,11 @@ namespace OnePlayer.UWP.Pages
 
 
             // headerVisual.StartAnimation("Offset.Y", offsetExpression);*/
+        }
+
+        private async void AlbumToolbarPlayButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Player.PlayAsync(ViewModel.AlbumInfo);
         }
     }
 }

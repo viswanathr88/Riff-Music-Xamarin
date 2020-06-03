@@ -3,7 +3,10 @@ using Windows.UI.Xaml.Controls;
 
 namespace OnePlayer.UWP.Pages
 {
-    public class LibraryPageBase : NavViewPageBase
+    /// <summary>
+    /// Represents any page that is rendered within the Music Library Frame
+    /// </summary>
+    public abstract class LibraryPageBase : NavViewPageBase
     {
         public bool ShowSortMenu
         {

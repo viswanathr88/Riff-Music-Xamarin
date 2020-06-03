@@ -58,7 +58,8 @@ namespace OnePlayer.Sync
         public event EventHandler<SyncState> StateChanged;
         public event EventHandler<SyncStatus> Checkpoint;
         private SyncState state = SyncState.NotStarted;
-        private readonly string baseUrl = "https://graph.microsoft.com/v1.0/drive/special/music/delta?$expand=thumbnails";
+        private static readonly string baseUrl = "https://graph.microsoft.com/v1.0";
+        private static readonly string baseDeltaUrl = $"{baseUrl}/drive/special/music/delta?$expand=thumbnails";
         private readonly IPreferences preferences;
         private readonly ILoginManager loginManager;
         private readonly HttpClient webClient;
@@ -148,6 +149,36 @@ namespace OnePlayer.Sync
             }
         }
 
+        public async Task<Uri> GetDownloadUrlAsync(string driveItemId)
+        {
+            if (string.IsNullOrEmpty(driveItemId))
+            {
+                throw new ArgumentNullException(nameof(driveItemId));
+            }
+
+            var url = $"{baseUrl}/me/drive/items/{driveItemId}/content";
+            var token = await loginManager.AcquireTokenSilentAsync();
+            var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+
+            var response = await webClient.SendAsync(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.Redirect)
+            {
+                return response.Headers.Location;
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                Uri uri;
+                if (Uri.TryCreate(content, UriKind.Absolute, out uri))
+                {
+                    return uri;
+                }
+            }
+
+            throw new Exception("Failed to fetch download url");
+        }
+
         private async Task RunInternalAsync()
         {
             if (State == SyncState.Syncing || State == SyncState.Stopped)
@@ -174,7 +205,7 @@ namespace OnePlayer.Sync
                     if (deltaUrl == string.Empty)
                     {
                         // Read delta url from a previous sync
-                        deltaUrl = preferences.DeltaUrl ?? baseUrl;
+                        deltaUrl = preferences.DeltaUrl ?? baseDeltaUrl;
                     }
 
                     var request = new HttpRequestMessage(HttpMethod.Get, deltaUrl);

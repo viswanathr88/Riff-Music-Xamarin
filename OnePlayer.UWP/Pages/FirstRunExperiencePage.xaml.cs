@@ -24,7 +24,7 @@ namespace OnePlayer.UWP.Pages
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            // base.OnNavigatedTo(e);
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
 
             await ViewModel.LoadAsync();

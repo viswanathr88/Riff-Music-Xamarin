@@ -21,7 +21,7 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : NavViewPageBase, ISupportViewModel<MainViewModel>
+    public sealed partial class MainPage : NavViewPageBase, ISupportViewModel<MainViewModel>, ISupportPlaying
     {
         private readonly IDictionary<string, Type> pages = new Dictionary<string, Type>()
         {
@@ -50,33 +50,25 @@ namespace OnePlayer.UWP.Pages
             { SearchItemType.TrackArtist, "\uEC4F" }
         };
 
-        private Locator Locator => App.Current.Resources["VMLocator"] as Locator;
-
         public MainViewModel ViewModel => Locator.Main;
+
+        public override IDataViewModel DataViewModel => ViewModel;
+
+        public PlayerViewModel Player => Locator.Player;
 
         public MainPage()
         {
             this.InitializeComponent();
+            RegisterForChanges = true;
             Locator.Preferences.Changed += Preferences_Changed;
+            MediaPlayerControl.SetMediaPlayer(Player.MediaPlayer);
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void HandleViewModelPropertyChanged(string propertyName)
         {
-            base.OnNavigatedTo(e);
-            ViewModel.Sync.PropertyChanged += Sync_ViewModel_PropertyChanged;
-            
-            UpdateSyncStateIcon();
-            ViewModel.Load();
-        }
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-            ViewModel.Sync.PropertyChanged -= Sync_ViewModel_PropertyChanged;
-        }
+            base.HandleViewModelPropertyChanged(propertyName);
 
-        private async void Sync_ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ViewModel.Sync.State))
+            if (propertyName == nameof(ViewModel.Sync.State))
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, UpdateSyncStateIcon);
             }
@@ -115,7 +107,8 @@ namespace OnePlayer.UWP.Pages
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)
         {
-            NavView.SelectedItem = NavView.MenuItems[1];
+            UpdateSyncStateIcon();
+            NavView.SelectedItem = NavView.MenuItems[0];
             NavView_Navigate(pages.First().Key, new EntranceNavigationTransitionInfo());
         }
 

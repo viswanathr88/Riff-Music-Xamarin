@@ -31,9 +31,11 @@ namespace OnePlayer.UWP.Pages
             NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
-        private MusicLibrary Library => (Application.Current.Resources["VMLocator"] as Locator).Library;
+        private MusicLibrary Library => Locator.Library;
 
-        public AlbumsViewModel ViewModel => (Application.Current.Resources["VMLocator"] as Locator).MusicLibrary.Albums;
+        public AlbumsViewModel ViewModel => Locator.MusicLibrary.Albums;
+
+        public override IDataViewModel DataViewModel => ViewModel;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
