@@ -28,7 +28,7 @@ namespace OnePlayer.UWP.ViewModel
         /// </summary>
         /// <param name="parameter">input param</param>
         /// <returns></returns>
-        Task LoadAsync(object parameter, bool fReload);
+        Task LoadAsync(object parameter);
         /// <summary>
         /// Gets the error object
         /// </summary>

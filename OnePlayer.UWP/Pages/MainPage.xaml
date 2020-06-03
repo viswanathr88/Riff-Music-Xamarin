@@ -277,11 +277,11 @@
                                     AreTransportControlsEnabled="True"
                                     Grid.Row="1">
                     <MediaPlayerElement.TransportControls>
-                        <MediaTransportControls IsCompact="False" 
-                                                IsPlaybackRateButtonVisible="True"
-                                                IsFastForwardButtonVisible="True"
+                        <MediaTransportControls IsCompact="False"
+                                                IsZoomButtonVisible="False"
+                                                IsZoomEnabled="False"
                                                 IsRepeatButtonVisible="True"
-                                                IsFastRewindButtonVisible="True"
+                                                IsRepeatEnabled="True"
                                                 IsFullWindowEnabled="False"
                                                 IsFullWindowButtonVisible="False"
                                                 IsVolumeButtonVisible="True"
@@ -289,8 +289,9 @@
                                                 IsNextTrackButtonVisible="True"
                                                 IsPreviousTrackButtonVisible="True"
                                                 IsSeekBarVisible="True"
-                                                IsStopButtonVisible="True"
-                                                IsStopEnabled="True"/>
+                                                IsStopButtonVisible="False"
+                                                IsStopEnabled="False"
+                                                />
                     </MediaPlayerElement.TransportControls>
                 </MediaPlayerElement>
             </Grid>

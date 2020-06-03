@@ -19,6 +19,7 @@ namespace OnePlayer.UWP.ViewModel
         private readonly Lazy<FirstRunExperienceViewModel> firstRunExperienceVM;
         private readonly Lazy<SettingsViewModel> settingsVM;
         private readonly Lazy<MainViewModel> mainVM;
+        private readonly Lazy<PlayerViewModel> playerVM;
         
         private readonly Lazy<ILoginManager> loginManager;
         private readonly Lazy<HttpClient> httpClient;
@@ -31,7 +32,7 @@ namespace OnePlayer.UWP.ViewModel
         public Locator()
         {
             preferences = new Lazy<IAppPreferences>(() => new AppPreferences());
-            httpClient = new Lazy<HttpClient>(() => new HttpClient());
+            httpClient = new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler() { AllowAutoRedirect = false }));
             loginManager = new Lazy<ILoginManager>(() => new CacheReadyLoginManager(new WindowsLoginManager(WebClient), DefaultPath));
             syncEngine = new Lazy<SyncEngine>(() => new SyncEngine(new AppPreferences(), LoginManager, WebClient, Library));
             musicMetadata = new Lazy<IMusicMetadata>(() => new MusicMetadata(Path.Combine(DefaultPath, "OnePlayer.db")));
@@ -41,6 +42,7 @@ namespace OnePlayer.UWP.ViewModel
             musicLibraryVM = new Lazy<MusicLibraryViewModel>(() => new MusicLibraryViewModel(Library));
             settingsVM = new Lazy<SettingsViewModel>(() => new SettingsViewModel(LoginManager, Preferences));
             firstRunExperienceVM = new Lazy<FirstRunExperienceViewModel>(() => new FirstRunExperienceViewModel(loginManager.Value));
+            playerVM = new Lazy<PlayerViewModel>(() => new PlayerViewModel(Library, SyncEngine));
         }
 
         public MainViewModel Main => mainVM.Value;
@@ -50,6 +52,8 @@ namespace OnePlayer.UWP.ViewModel
         public FirstRunExperienceViewModel FirstRunExperience => firstRunExperienceVM.Value;
 
         public SettingsViewModel Settings => settingsVM.Value;
+
+        public PlayerViewModel Player => playerVM.Value;
 
         public ILoginManager LoginManager => loginManager.Value;
 

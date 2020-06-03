@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OnePlayer.UWP.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,5 +29,7 @@ namespace OnePlayer.UWP.Pages
             this.InitializeComponent();
             HeaderText = ResourceLoader.GetForCurrentView().GetString("NowPlayingPageHeader");
         }
+
+        public override IDataViewModel DataViewModel => throw new NotImplementedException();
     }
 }

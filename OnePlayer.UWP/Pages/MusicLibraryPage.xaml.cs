@@ -16,26 +16,17 @@ namespace OnePlayer.UWP.Pages
     /// </summary>
     public sealed partial class MusicLibraryPage : NavViewPageBase, ISupportViewModel<MusicLibraryViewModel>
     {
-        public MusicLibraryViewModel ViewModel => (App.Current.Resources["VMLocator"] as Locator).MusicLibrary;
+        public MusicLibraryViewModel ViewModel => Locator.MusicLibrary;
+
+        public override IDataViewModel DataViewModel => ViewModel;
 
         public MusicLibraryPage()
         {
             this.InitializeComponent();
+            PreferViewUpdateBeforeLoad = true;
             NavigationCacheMode = NavigationCacheMode.Enabled;
             Loaded += MusicLibraryPage_Loaded;
             HeaderText = ResourceLoader.GetForCurrentView().GetString("MusicLibraryPageHeader");
-        }
-
-        public LibraryPageBase ChildPage => (LibraryContentFrame.Content as LibraryPageBase);
-
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
-        {
-            base.OnNavigatedTo(e);
-
-            if (!ViewModel.IsLoaded)
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => ViewModel.LoadAsync());
-            }
         }
 
         private void MusicLibraryPage_Loaded(object sender, RoutedEventArgs e)

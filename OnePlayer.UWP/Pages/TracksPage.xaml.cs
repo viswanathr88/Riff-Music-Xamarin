@@ -15,36 +15,25 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class TracksPage : LibraryPageBase, ISupportViewModel<TracksViewModel>
+    public sealed partial class TracksPage : LibraryPageBase, ISupportViewModel<TracksViewModel>, ISupportPlaying
     {
         public TracksPage()
         {
             this.InitializeComponent();
+            RegisterForChanges = true;
         }
 
-        public TracksViewModel ViewModel => (Application.Current.Resources["VMLocator"] as Locator).MusicLibrary.Tracks;
-        public MusicLibrary Library => (Application.Current.Resources["VMLocator"] as Locator).Library;
+        public TracksViewModel ViewModel => Locator.MusicLibrary.Tracks;
+        public MusicLibrary Library => Locator.Library;
 
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        public override IDataViewModel DataViewModel => ViewModel;
+
+        public PlayerViewModel Player => Locator.Player;
+
+        protected async override void HandleViewModelPropertyChanged(string propertyName)
         {
-            base.OnNavigatedTo(e);
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-
-            if (!ViewModel.IsLoaded)
-            {
-                await ViewModel.LoadAsync();
-            }
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
-        }
-
-        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ViewModel.IsLoaded) && !ViewModel.IsLoaded)
+            base.HandleViewModelPropertyChanged(propertyName);
+            if (propertyName == nameof(ViewModel.IsLoaded) && !ViewModel.IsLoaded)
             {
                 await ViewModel.LoadAsync();
             }
@@ -60,9 +49,13 @@ namespace OnePlayer.UWP.Pages
             await ViewModel.ReloadAsync();
         }
 
-        private void TracksList_ItemClick(object sender, ItemClickEventArgs e)
+        private async void TracksList_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            if (e.ClickedItem != null)
+            {
+                var index = (sender as ListView).Items.IndexOf(e.ClickedItem);
+                await Player.PlayAsync(ViewModel.SortType, ViewModel.SortOrder, Convert.ToUInt32(index));
+            }
         }
 
         private void TracksList_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
