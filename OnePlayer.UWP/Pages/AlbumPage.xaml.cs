@@ -144,5 +144,10 @@ namespace OnePlayer.UWP.Pages
         {
             await Player.PlayAsync(ViewModel.AlbumInfo);
         }
+
+        private void AlbumToolbarBrowseArtistButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(ArtistPage), ViewModel.AlbumInfo.Artist, new EntranceNavigationTransitionInfo());
+        }
     }
 }
