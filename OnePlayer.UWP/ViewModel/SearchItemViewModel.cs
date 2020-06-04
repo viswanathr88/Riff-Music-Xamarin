@@ -34,7 +34,7 @@ namespace OnePlayer.UWP.ViewModel
         {
             bool hasArt = false;
             long? id = (item.Type == SearchItemType.Album) ? item.Id : item.ParentId;
-            if (id.HasValue && item.Type == SearchItemType.Album)
+            if (id.HasValue)
             {
                 hasArt = library.AlbumArts.Exists(id.Value);
             }
@@ -45,20 +45,17 @@ namespace OnePlayer.UWP.ViewModel
         public async Task LoadArtAsync()
         {
             long? id = (item.Type == SearchItemType.Album) ? item.Id : item.ParentId;
-            if (id.HasValue)
+            if (id.HasValue && library.AlbumArts.Exists(id.Value))
             {
-                if (library.AlbumArts.Exists(id.Value))
+                using (var stream = library.AlbumArts.Get(id.Value))
                 {
-                    using (var stream = library.AlbumArts.Get(id.Value))
+                    using (var rtStream = stream.AsRandomAccessStream())
                     {
-                        using (var rtStream = stream.AsRandomAccessStream())
+                        if (this.image == null)
                         {
-                            if (this.image == null)
-                            {
-                                this.image = new BitmapImage();
-                            }
-                            await this.image.SetSourceAsync(rtStream);
+                            this.image = new BitmapImage();
                         }
+                        await this.image.SetSourceAsync(rtStream);
                     }
                 }
             }

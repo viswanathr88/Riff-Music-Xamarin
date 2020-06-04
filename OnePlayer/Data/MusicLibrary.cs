@@ -69,7 +69,7 @@ namespace OnePlayer.Data
             {
                 results.Add(new SearchItem() { Id = album.Id, Type = SearchItemType.Album, Name = album.AlbumName, Description = album.ArtistName, Rank = album.Rank });
             }
-
+             
             var tracks = Metadata.Index.FindMatchingTracks(query.Term, query.MaxTrackCount);
             foreach (var track in Metadata.Index.FindMatchingTracks(query.Term, query.MaxTrackCount))
             {
@@ -81,7 +81,7 @@ namespace OnePlayer.Data
                 int diff = query.MaxTrackCount - tracks.Count;
                 foreach (var track in Metadata.Index.FindMatchingTracksWithArtists(query.Term, diff))
                 {
-                    results.Add(new SearchItem() { Id = track.Id, Type = SearchItemType.TrackArtist, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank });
+                    results.Add(new SearchItem() { Id = track.Id, Type = SearchItemType.TrackArtist, Name = track.TrackName, Description = track.TrackArtist, Rank = track.Rank, ParentId = track.AlbumId });
                 }
             }
 
