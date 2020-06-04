@@ -225,6 +225,11 @@ namespace OnePlayer.UWP.Pages
                     var album = Locator.MusicMetadata.Albums.Get(options).First();
                     ContentFrame.Navigate(typeof(AlbumPage), album, new EntranceNavigationTransitionInfo());
                 }
+                else if (item.Type == SearchItemType.Artist)
+                {
+                    var artist = Locator.MusicMetadata.Artists.Get(item.Id);
+                    ContentFrame.Navigate(typeof(ArtistPage), artist, new EntranceNavigationTransitionInfo());
+                }
             }
         }
 

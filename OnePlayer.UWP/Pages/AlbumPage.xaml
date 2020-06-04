@@ -126,8 +126,10 @@
                                       Margin="0,0,10,0" />
                         <AppBarButton Label=""
                                       x:Uid="AlbumToolbarBrowseArtistButton"
+                                      x:Name="AlbumToolbarBrowseArtistButton"
                                       Icon="Contact"
-                                      Margin="0,0,10,0" />
+                                      Margin="0,0,10,0"
+                                      Click="AlbumToolbarBrowseArtistButton_Click"/>
                         <AppBarButton Label=""
                                       x:Uid="AlbumToolbarPinToStartButton"
                                       Icon="Pin"
