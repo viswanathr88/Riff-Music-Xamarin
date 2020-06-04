@@ -10,11 +10,13 @@ namespace OnePlayer.Data.Sqlite
     public sealed class TrackTable : ITrackAccessor, ITable
     {
         private readonly SqliteConnection connection;
+        private readonly DataExtractor extractor;
         private const string tableName = "Track";
 
-        public TrackTable(SqliteConnection connection)
+        public TrackTable(SqliteConnection connection, DataExtractor extractor)
         {
             this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            this.extractor = extractor;
         }
 
         public string Name => tableName;
@@ -133,7 +135,7 @@ namespace OnePlayer.Data.Sqlite
                 {
                     while (reader.Read())
                     {
-                        tracks.Add(ExtractTrack(reader));
+                        tracks.Add(extractor.ExtractTrack(reader));
                     }
                 }
             }
@@ -211,19 +213,32 @@ namespace OnePlayer.Data.Sqlite
 
         private static void ApplySelect(TrackAccessOptions options, StringBuilder builder)
         {
-            IList<string> fields = new List<string>() { "track.Id AS Id", "track.Title AS Title", "track.Number AS Number", "track.Artist AS TrackArtist", "track.Bitrate AS Bitrate", "track.Duration AS Duration", "track.Composers AS Composers", "track.ReleaseYear AS ReleaseYear", "track.AlbumId AS AlbumId", "track.genreId AS GenreId" };
+            IList<string> fields = new List<string>() { "track.Id AS TrackId", "track.Title AS TrackTitle", "track.Number AS TrackNumber", "track.Artist AS TrackArtist", "track.Bitrate AS TrackBitrate", "track.Duration AS TrackDuration", "track.Composers AS TrackComposers", "track.ReleaseYear AS TrackReleaseYear" };
             IList<string> joins = new List<string>();
 
             if (options.IncludeAlbum)
             {
-                fields.Add("album.Name AS AlbumName, album.ReleaseYear AS AlbumReleaseYear, album.ArtistId AS AlbumArtistId, album.GenreId AS AlbumGenreId");
+                fields.Add("album.Id AS AlbumId");
+                fields.Add("album.Name AS AlbumName");
+                fields.Add("album.ReleaseYear AS AlbumReleaseYear");
+                fields.Add("album.ArtistId AS ArtistId"); 
+                fields.Add("album.GenreId AS GenreId");
                 joins.Add("INNER JOIN Album album ON track.AlbumId = album.Id");
+            }
+            else
+            {
+                fields.Add("track.AlbumId AS AlbumId");
             }
 
             if (options.IncludeGenre)
             {
-                fields.Add("genre.Name AS GenreName");
+                fields.Add("genre.Id AS TrackGenreId");
+                fields.Add("genre.Name AS TrackGenreName");
                 joins.Add("INNER JOIN Genre genre ON track.GenreId = genre.Id");
+            }
+            else
+            {
+                fields.Add("track.GenreId AS TrackGenreId");
             }
 
             builder.AppendLine($"SELECT {string.Join(",", fields)}");
@@ -256,11 +271,11 @@ namespace OnePlayer.Data.Sqlite
                 {
                     if (options.IncludeAlbum)
                     {
-                        builder.AppendLine($"AlbumReleaseYear {sortOrderStr}, AlbumName ASC, Number ASC, Title ASC");
+                        builder.AppendLine($"AlbumReleaseYear {sortOrderStr}, AlbumName ASC, TrackNumber ASC, TrackTitle ASC");
                     }
                     else
                     {
-                        builder.AppendLine($"ReleaseYear {sortOrderStr}, Title ASC");
+                        builder.AppendLine($"TrackReleaseYear {sortOrderStr}, TrackTitle ASC");
                     }
                 }
                 else
@@ -321,66 +336,6 @@ namespace OnePlayer.Data.Sqlite
             command.Parameters.AddWithValue("@ReleaseYear", track.ReleaseYear);
             command.Parameters.AddWithValue("@AlbumId", track.Album.Id);
             command.Parameters.AddWithValue("@GenreId", track.Genre.Id);
-        }
-
-        public static Track ExtractTrack(SqliteDataReader reader, int index = 0)
-        {
-            Track track = null;
-            if (index == reader.FieldCount - 1)
-            {
-                track = new Track() { Id = reader.GetInt64(index++) };
-            }
-            else
-            {
-                track = new Track()
-                {
-                    Id = reader.GetInt64(index++),
-                    Title = reader.IsDBNull(index) ? null : reader.GetString(index++),
-                    Number = reader.GetInt32(index++),
-                    Artist = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                    Bitrate = reader.GetInt32(index++),
-                    Duration = TimeSpan.FromMilliseconds(reader.GetInt32(index++)),
-                    Composers = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                    ReleaseYear = reader.GetInt32(index++),
-                    Album = new Album()
-                    {
-                        Id = reader.GetInt64(index++)
-                    },
-                    Genre = new Genre()
-                    {
-                        Id = reader.GetInt64(index++)
-                    }
-                };
-
-                while (index < reader.FieldCount)
-                {
-                    string columnName = reader.GetName(index);
-                    if (columnName == "AlbumName")
-                    {
-                        track.Album.Name = reader.GetString(index);
-                    }
-                    else if (columnName == "AlbumReleaseYear")
-                    {
-                        track.Album.ReleaseYear = reader.GetInt32(index);
-                    }
-                    else if (columnName == "AlbumArtistId")
-                    {
-                        track.Album.Artist = new Artist() { Id = reader.GetInt64(index) };
-                    }
-                    else if (columnName == "AlbumGenreId")
-                    {
-                        track.Album.Genre = new Genre() { Id = reader.GetInt64(index) };
-                    }
-                    else if (columnName == "GenreName")
-                    {
-                        track.Genre.Name = reader.GetString(index);
-                    }
-
-                    index++;
-                }
-            }
-
-            return track;
         }
     }
 }

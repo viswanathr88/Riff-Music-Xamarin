@@ -62,7 +62,6 @@ namespace OnePlayer.UWP.ViewModel
             var options = new AlbumAccessOptions()
             {
                 IncludeArtist = true,
-                IncludeGenre = true,
                 SortType = SortType,
                 SortOrder = SortOrder
             };

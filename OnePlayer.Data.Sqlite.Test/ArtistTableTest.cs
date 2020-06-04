@@ -16,14 +16,14 @@ namespace OnePlayer.Data.Sqlite.Test
             connection = new SqliteConnection($"Data Source = {dbPath}");
             connection.Open();
 
-            artistTable = new ArtistTable(connection);
+            artistTable = new ArtistTable(connection, new DataExtractor());
             artistTable.HandleUpgrade(Version.Initial);
         }
 
         [Fact]
         public void Constructor_NullConnection_ThrowException()
         {
-            Assert.Throws<ArgumentNullException>(() => new ArtistTable(null));
+            Assert.Throws<ArgumentNullException>(() => new ArtistTable(null, new DataExtractor()));
         }
 
         [Fact]

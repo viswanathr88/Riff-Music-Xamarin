@@ -1,16 +1,11 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using OnePlayer.Data;
-using OnePlayer.Data.Access;
+﻿using OnePlayer.Data;
 using OnePlayer.UWP.ViewModel;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Windows.Networking.Sockets;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
@@ -29,6 +24,8 @@ namespace OnePlayer.UWP.Pages
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
+            RegisterForChanges = true;
+            PreferViewUpdateBeforeLoad = true;
         }
 
         private MusicLibrary Library => Locator.Library;
@@ -37,30 +34,14 @@ namespace OnePlayer.UWP.Pages
 
         public override IDataViewModel DataViewModel => ViewModel;
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void HandleViewModelPropertyChanged(string propertyName)
         {
-            base.OnNavigatedTo(e);
+            base.HandleViewModelPropertyChanged(propertyName);
 
-            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-
-            if (!ViewModel.IsLoaded)
-            {
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() => await ViewModel.LoadAsync());
-            }
-        }
-
-        private async void ViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ViewModel.IsLoaded) && !ViewModel.IsLoaded)
+            if (propertyName == nameof(ViewModel.IsLoaded) && !ViewModel.IsLoaded)
             {
                 await ViewModel.LoadAsync();
             }
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-            ViewModel.PropertyChanged -= ViewModel_PropertyChanged;
         }
 
         private async void AlbumItems_Loaded(object sender, RoutedEventArgs e)
@@ -127,8 +108,7 @@ namespace OnePlayer.UWP.Pages
                         {
                             DecodePixelHeight = 128,
                             DecodePixelWidth = 128,
-                            DecodePixelType = DecodePixelType.Logical,
-                            CreateOptions = BitmapCreateOptions.IgnoreImageCache
+                            DecodePixelType = DecodePixelType.Logical
                         };
                         await bm.SetSourceAsync(rtStream);
                         image.Source = bm;

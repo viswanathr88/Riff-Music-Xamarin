@@ -21,23 +21,25 @@ namespace OnePlayer.Data.Sqlite.Test
             connection = new SqliteConnection($"Data Source = {dbPath}");
             connection.Open();
 
-            artistTable = new ArtistTable(connection);
+            var extractor = new DataExtractor();
+
+            artistTable = new ArtistTable(connection, extractor);
             artistTable.HandleUpgrade(Version.Initial);
 
-            genreTable = new GenreTable(connection);
+            genreTable = new GenreTable(connection, extractor);
             genreTable.HandleUpgrade(Version.Initial);
 
-            albumTable = new AlbumTable(connection);
+            albumTable = new AlbumTable(connection, extractor);
             albumTable.HandleUpgrade(Version.Initial);
 
-            trackTable = new TrackTable(connection);
+            trackTable = new TrackTable(connection, extractor);
             trackTable.HandleUpgrade(Version.Initial);
         }
 
         [Fact]
         public void Constructor_NullConnection_Throw()
         {
-            Assert.Throws<ArgumentNullException>(() => new TrackTable(null));
+            Assert.Throws<ArgumentNullException>(() => new TrackTable(null, new DataExtractor()));
         }
 
         [Fact]

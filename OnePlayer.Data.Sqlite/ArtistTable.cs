@@ -8,10 +8,12 @@ namespace OnePlayer.Data.Sqlite
     public sealed class ArtistTable : IArtistAccessor, ITable
     {
         private readonly SqliteConnection connection;
+        private readonly DataExtractor extractor;
 
-        public ArtistTable(SqliteConnection connection)
+        public ArtistTable(SqliteConnection connection, DataExtractor extractor)
         {
             this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            this.extractor = extractor;
         }
 
         public string Name { get; } = "Artist";
@@ -66,14 +68,14 @@ namespace OnePlayer.Data.Sqlite
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {Name} WHERE Name = @Name LIMIT 1";
+                command.CommandText = $"SELECT Id AS ArtistId, Name AS ArtistName FROM {Name} WHERE Name = @Name LIMIT 1";
                 command.Parameters.AddWithNullableValue("@Name", artistName);
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        artist = ExtractArtist(reader);
+                        artist = extractor.ExtractArtist(reader);
                     }
                 }
             }
@@ -87,14 +89,14 @@ namespace OnePlayer.Data.Sqlite
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {Name} WHERE Id = @Id";
+                command.CommandText = $"SELECT Id AS ArtistId, Name AS ArtistName FROM {Name} WHERE Id = @Id";
                 command.Parameters.AddWithValue("@Id", id);
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        artist = ExtractArtist(reader);
+                        artist = extractor.ExtractArtist(reader);
                     }
                 }
             }
@@ -108,13 +110,13 @@ namespace OnePlayer.Data.Sqlite
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {Name} ORDER BY Name ASC";
+                command.CommandText = $"SELECT Id AS ArtistId, Name AS ArtistName FROM {Name} ORDER BY Name ASC";
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        artists.Add(ExtractArtist(reader));
+                        artists.Add(extractor.ExtractArtist(reader));
                     }
                 }
             }
@@ -144,15 +146,6 @@ namespace OnePlayer.Data.Sqlite
             }
 
             return artist;
-        }
-
-        private Artist ExtractArtist(SqliteDataReader reader)
-        {
-            return new Artist()
-            {
-                Id = reader.GetInt64(0),
-                Name = !reader.IsDBNull(1) ? reader.GetString(1) : null
-            };
         }
     }
 }

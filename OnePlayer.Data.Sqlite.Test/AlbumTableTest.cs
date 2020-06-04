@@ -20,13 +20,15 @@ namespace OnePlayer.Data.Sqlite.Test
             connection = new SqliteConnection($"Data Source = {dbPath};foreign keys=true;");
             connection.Open();
 
-            artistTable = new ArtistTable(connection);
+            var extractor = new DataExtractor();
+
+            artistTable = new ArtistTable(connection, extractor);
             artistTable.HandleUpgrade(Version.Initial);
 
-            genreTable = new GenreTable(connection);
+            genreTable = new GenreTable(connection, extractor);
             genreTable.HandleUpgrade(Version.Initial);
 
-            albumTable = new AlbumTable(connection);
+            albumTable = new AlbumTable(connection, extractor);
             albumTable.HandleUpgrade(Version.Initial);
         }
 

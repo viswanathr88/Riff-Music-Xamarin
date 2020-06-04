@@ -10,10 +10,12 @@ namespace OnePlayer.Data.Sqlite
     public sealed class DriveItemTable : IDriveItemAccessor, ITable
     {
         private readonly SqliteConnection connection;
+        private readonly DataExtractor extractor;
 
-        public DriveItemTable(SqliteConnection connection)
+        public DriveItemTable(SqliteConnection connection, DataExtractor extractor)
         {
             this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            this.extractor = extractor;
         }
 
         public string Name { get; } = "DriveItem";
@@ -148,7 +150,7 @@ namespace OnePlayer.Data.Sqlite
                 {
                     while (reader.Read())
                     {
-                        items.Add(ExtractDriveItem(reader));
+                        items.Add(extractor.ExtractDriveItem(reader));
                     }
                 }
             }
@@ -196,19 +198,36 @@ namespace OnePlayer.Data.Sqlite
 
         private static void ApplySelect(DriveItemAccessOptions options, StringBuilder builder)
         {
-            IList<string> fields = new List<string>() { "item.Id AS Id", "item.CTag AS CTag", "item.ETag AS ETag", "item.AddedDate AS AddedDate", "item.LastModified AS LastModified", "item.DownloadUrl AS DownloadUrl", "item.Size AS Size", "item.Source AS Source", "item.TrackId as TrackId" };
+            IList<string> fields = new List<string>() { "item.Id AS DriveItemId", "item.CTag AS DriveItemCTag", "item.ETag AS DriveItemETag", "item.AddedDate AS DriveItemAddedDate", "item.LastModified AS DriveItemLastModified", "item.DownloadUrl AS DriveItemDownloadUrl", "item.Size AS DriveItemSize", "item.Source AS DriveItemSource" };
             IList<string> joins = new List<string>();
 
             if (options.IncludeTrack)
             {
-                fields.Add("track.Title AS TrackTitle, track.Number AS TrackNumber, track.Artist AS TrackArtist, track.Bitrate AS TrackBitrate, track.Duration as TrackDuration, track.Composers AS TrackComposers, track.ReleaseYear AS TrackReleaseYear, track.AlbumId AS TrackAlbumId, track.GenreId AS TrackGenreId");
+                fields.Add("track.Id AS TrackId");
+                fields.Add("track.Title AS TrackTitle");
+                fields.Add("track.Number AS TrackNumber");
+                fields.Add("track.Artist AS TrackArtist");
+                fields.Add("track.Bitrate AS TrackBitrate");
+                fields.Add("track.Duration as TrackDuration");
+                fields.Add("track.Composers AS TrackComposers");
+                fields.Add("track.ReleaseYear AS TrackReleaseYear");
+                fields.Add("track.AlbumId AS AlbumId");
+
+                if (options.IncludeTrackAlbum)
+                {
+                    fields.Add("album.Name AS AlbumName");
+                    fields.Add("album.ReleaseYear AS AlbumReleaseYear");
+                    fields.Add("album.ArtistId as ArtistId");
+                    fields.Add("album.GenreId AS GenreId");
+                    joins.Add("INNER JOIN Album album ON track.AlbumId = album.Id");
+                }
+
+                fields.Add("track.GenreId AS TrackGenreId");
                 joins.Add("INNER JOIN Track track ON track.Id = item.TrackId");
             }
-
-            if (options.IncludeTrackAlbum)
+            else
             {
-                fields.Add("album.Name AS AlbumName, album.ReleaseYear AS AlbumReleaseYear, album.ArtistId as AlbumArtistId, album.GenreId AS AlbumGenreId");
-                joins.Add("INNER JOIN Album album ON track.AlbumId = album.Id");
+                fields.Add("item.TrackId as TrackId");
             }
 
             builder.AppendLine($"SELECT {string.Join(",", fields)}");
@@ -239,11 +258,11 @@ namespace OnePlayer.Data.Sqlite
                 string sortOrderStr = $"{(options.SortOrder == SortOrder.Ascending ? "ASC" : "DESC")}";
                 if (options.SortType == TrackSortType.ReleaseYear && options.IncludeTrackAlbum)
                 {
-                    builder.AppendLine($"AlbumReleaseYear {sortOrderStr}, AlbumName ASC, Number ASC, Title ASC");
+                    builder.AppendLine($"AlbumReleaseYear {sortOrderStr}, AlbumName ASC, TrackNumber ASC, TrackTitle ASC");
                 }
                 else
                 {
-                    builder.Append($"{options.SortType.Value} {sortOrderStr}");
+                    builder.Append($"Track{options.SortType.Value} {sortOrderStr}");
                 }
             }
         }
@@ -301,24 +320,6 @@ namespace OnePlayer.Data.Sqlite
             command.Parameters.AddWithValue("@Size", item.Size);
             command.Parameters.AddWithValue("@Source", item.Source);
             command.Parameters.AddWithValue("@TrackId", item.Track.Id);
-        }
-
-        public static DriveItem ExtractDriveItem(SqliteDataReader reader, int index = 0)
-        {
-            var item = new DriveItem()
-            {
-                Id = reader.GetString(index++),
-                CTag = reader.GetString(index++),
-                ETag = reader.GetString(index++),
-                AddedDate = new DateTime(reader.GetInt64(index++)),
-                LastModified = new DateTime(reader.GetInt64(index++)),
-                DownloadUrl = reader.GetString(index++),
-                Size = reader.GetInt32(index++),
-                Source = (DriveItemSource)reader.GetInt32(index++),
-                Track = TrackTable.ExtractTrack(reader, index)
-            };
-
-            return item;
         }
     }
 }
