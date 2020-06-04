@@ -8,10 +8,12 @@ namespace OnePlayer.Data.Sqlite
     public sealed class GenreTable : IGenreAccessor, ITable
     {
         private readonly SqliteConnection connection;
+        private readonly DataExtractor extractor;
 
-        public GenreTable(SqliteConnection connection)
+        public GenreTable(SqliteConnection connection, DataExtractor extractor)
         {
             this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            this.extractor = extractor;
         }
 
         public string Name { get; } = "Genre";
@@ -72,14 +74,14 @@ namespace OnePlayer.Data.Sqlite
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {Name} WHERE Name = @Name LIMIT 1";
+                command.CommandText = $"SELECT Id AS GenreId, Name AS GenreName FROM {Name} WHERE Name = @Name LIMIT 1";
                 command.Parameters.AddWithValue("@Name", genreName);
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        genre = ExtractGenre(reader);
+                        genre = extractor.ExtractGenre(reader);
                     }
                 }
             }
@@ -93,14 +95,14 @@ namespace OnePlayer.Data.Sqlite
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {Name} WHERE Id = @Id";
+                command.CommandText = $"SELECT Id AS GenreId, Name AS GenreName FROM {Name} WHERE Id = @Id";
                 command.Parameters.AddWithValue("@Id", id);
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        genre = ExtractGenre(reader);
+                        genre = extractor.ExtractGenre(reader);
                     }
                 }
             }
@@ -114,13 +116,13 @@ namespace OnePlayer.Data.Sqlite
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT * FROM {Name}";
+                command.CommandText = $"SELECT Id AS GenreId, Name AS GenreName FROM {Name}";
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        genres.Add(ExtractGenre(reader));
+                        genres.Add(extractor.ExtractGenre(reader));
                     }
                 }
             }
@@ -150,15 +152,6 @@ namespace OnePlayer.Data.Sqlite
             }
 
             return genre;
-        }
-
-        private Genre ExtractGenre(SqliteDataReader reader)
-        {
-            return new Genre()
-            {
-                Id = reader.GetInt64(0),
-                Name = reader.GetString(1)
-            };
         }
     }
 }

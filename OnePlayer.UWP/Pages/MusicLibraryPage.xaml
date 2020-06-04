@@ -110,7 +110,8 @@
         <Frame x:Name="LibraryContentFrame"
                Padding="0,20,0,20"
                Grid.Row="1"
-               Navigated="LibraryContentFrame_Navigated" />
+               Navigated="LibraryContentFrame_Navigated"
+               CacheSize="0"/>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

@@ -10,11 +10,13 @@ namespace OnePlayer.Data.Sqlite
     public sealed class AlbumTable : IAlbumAccessor, ITable
     {
         private readonly SqliteConnection connection;
+        private readonly DataExtractor extractor;
         private const string tableName = "Album";
 
-        public AlbumTable(SqliteConnection connection)
+        public AlbumTable(SqliteConnection connection, DataExtractor extractor)
         {
             this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            this.extractor = extractor;
         }
 
         public string Name => tableName;
@@ -143,7 +145,7 @@ namespace OnePlayer.Data.Sqlite
                 {
                     while (reader.Read())
                     {
-                        albums.Add(ExtractAlbum(reader));
+                        albums.Add(extractor.ExtractAlbum(reader));
                     }
                 }
             }
@@ -211,19 +213,29 @@ namespace OnePlayer.Data.Sqlite
 
         private static void ApplySelect(AlbumAccessOptions options, StringBuilder builder)
         {
-            IList<string> fields = new List<string>() { "album.Id AS Id", "album.Name AS Name", "album.ReleaseYear AS ReleaseYear", "album.ArtistId AS ArtistId", "album.GenreId AS GenreId" };
+            IList<string> fields = new List<string>() { "album.Id AS AlbumId", "album.Name AS AlbumName", "album.ReleaseYear AS AlbumReleaseYear" };
             IList<string> joins = new List<string>();
 
             if (options.IncludeArtist)
             {
+                fields.Add("artist.Id AS ArtistId");
                 fields.Add("artist.Name AS ArtistName");
                 joins.Add("INNER JOIN Artist artist ON artist.Id = album.ArtistId");
+            }
+            else
+            {
+                fields.Add("album.ArtistId AS ArtistId");
             }
 
             if (options.IncludeGenre)
             {
+                fields.Add("genre.Id AS GenreId");
                 fields.Add("genre.Name AS GenreName");
                 joins.Add("INNER JOIN Genre genre ON album.GenreId = genre.Id");
+            }
+            else
+            {
+                fields.Add("album.GenreId AS GenreId");
             }
 
             builder.AppendLine($"SELECT {string.Join(",", fields)}");
@@ -255,11 +267,11 @@ namespace OnePlayer.Data.Sqlite
 
                 if (options.SortType == AlbumSortType.ReleaseYear)
                 {
-                    builder.AppendLine($"ReleaseYear {sortOrderStr}, Name ASC");
+                    builder.AppendLine($"AlbumReleaseYear {sortOrderStr}, AlbumName ASC");
                 }
                 else
                 {
-                    builder.AppendLine($"{options.SortType.Value} {sortOrderStr}");
+                    builder.AppendLine($"Album{options.SortType.Value} {sortOrderStr}");
                 }
             }
         }
@@ -302,42 +314,6 @@ namespace OnePlayer.Data.Sqlite
             }
 
             return filters;
-        }
-
-        private Album ExtractAlbum(SqliteDataReader reader)
-        {
-            int index = 0;
-            var album = new Album()
-            {
-                Id = reader.GetInt64(index++),
-                Name = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                ReleaseYear = reader.GetInt32(index++),
-                Artist = new Artist()
-                {
-                    Id = reader.GetInt64(index++)
-                },
-                Genre = new Genre()
-                {
-                    Id = reader.GetInt64(index++),
-                }
-            };
-
-            while (index < reader.FieldCount)
-            {
-                string columnName = reader.GetName(index);
-                if (columnName == "ArtistName")
-                {
-                    album.Artist.Name = reader.IsDBNull(index) ? null : reader.GetString(index);
-                }
-                else if (columnName == "GenreName")
-                {
-                    album.Genre.Name = reader.IsDBNull(index) ? null : reader.GetString(index);
-                }
-
-                index++;
-            }
-
-            return album;
         }
 
         private static void AddParameters(Album album, SqliteCommand command)

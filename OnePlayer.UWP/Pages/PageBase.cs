@@ -22,7 +22,7 @@ namespace OnePlayer.UWP.Pages
                 DataViewModel.PropertyChanged += DataViewModel_PropertyChanged;
             }
 
-            bool load = (e.NavigationMode == NavigationMode.New || e.NavigationMode == NavigationMode.Refresh || !DataViewModel.IsLoaded);
+            bool load = e.NavigationMode == NavigationMode.Refresh || !DataViewModel.IsLoaded;
 
             if (load)
             {

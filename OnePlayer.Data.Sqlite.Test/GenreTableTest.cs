@@ -16,13 +16,13 @@ namespace OnePlayer.Data.Sqlite.Test
             connection = new SqliteConnection($"Data Source = {dbPath}");
             connection.Open();
 
-            genreTable = new GenreTable(connection);
+            genreTable = new GenreTable(connection, new DataExtractor());
             genreTable.HandleUpgrade(Version.Initial);
         }
         [Fact]
         public void Constructor_NullConnection_ThrowException()
         {
-            Assert.Throws<ArgumentNullException>(() => new GenreTable(null));
+            Assert.Throws<ArgumentNullException>(() => new GenreTable(null, new DataExtractor()));
         }
 
         [Fact]

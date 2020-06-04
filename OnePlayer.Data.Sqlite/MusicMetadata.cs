@@ -9,6 +9,7 @@ namespace OnePlayer.Data.Sqlite
     {
         private static readonly Version LatestVersion = Version.AddIndexes;
         private readonly SqliteConnection connection;
+        private readonly DataExtractor extractor = new DataExtractor();
 
         private readonly ArtistTable artistTable;
         private readonly GenreTable genreTable;
@@ -37,11 +38,14 @@ namespace OnePlayer.Data.Sqlite
             this.connection = new SqliteConnection(builder.ToString());
             this.connection.Open();
 
-            artistTable = new ArtistTable(connection);
-            genreTable = new GenreTable(connection);
-            albumTable = new AlbumTable(connection);
-            tracksTable = new TrackTable(connection);
-            driveItemTable = new DriveItemTable(connection);
+            // Enable object cache
+            extractor.DisableCache = false;
+
+            artistTable = new ArtistTable(connection, extractor);
+            genreTable = new GenreTable(connection, extractor);
+            albumTable = new AlbumTable(connection, extractor);
+            tracksTable = new TrackTable(connection, extractor);
+            driveItemTable = new DriveItemTable(connection, extractor);
             indexedTrackTable = new IndexedTrackTable(connection);
             thumbnailInfoTable = new ThumbnailInfoTable(connection);
 
