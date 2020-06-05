@@ -59,16 +59,14 @@ namespace OnePlayer.UWP.Pages
         public MainPage()
         {
             this.InitializeComponent();
-            RegisterForChanges = true;
+            ViewModel.Sync.PropertyChanged += Sync_PropertyChanged;
             Locator.Preferences.Changed += Preferences_Changed;
-            MediaPlayerControl.SetMediaPlayer(Player.MediaPlayer);
+            NavigationCacheMode = NavigationCacheMode.Required;
         }
 
-        protected async override void HandleViewModelPropertyChanged(string propertyName)
+        private async void Sync_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            base.HandleViewModelPropertyChanged(propertyName);
-
-            if (propertyName == nameof(ViewModel.Sync.State))
+            if (e.PropertyName == nameof(ViewModel.Sync.State))
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, UpdateSyncStateIcon);
             }
@@ -134,7 +132,14 @@ namespace OnePlayer.UWP.Pages
             var currentPageType = ContentFrame.CurrentSourcePageType;
             if (page != currentPageType)
             {
-                ContentFrame.Navigate(page, null, transitionInfo);
+                if (page == typeof(NowPlayingPage))
+                {
+                    Frame.Navigate(page, null, transitionInfo);
+                }
+                else
+                {
+                    ContentFrame.Navigate(page, null, transitionInfo);
+                }
             }
         }
 
@@ -254,6 +259,11 @@ namespace OnePlayer.UWP.Pages
         private void UpdateSyncStatusFlyout()
         {
             SyncStatusIcon.Glyph = SyncStatusCommandBarIcon.Glyph;
+        }
+
+        private void MediaPlayerControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            MediaPlayerControl.SetMediaPlayer(Player.MediaPlayer);
         }
     }
 }

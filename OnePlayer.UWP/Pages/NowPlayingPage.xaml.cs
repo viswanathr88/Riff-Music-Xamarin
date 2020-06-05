@@ -22,7 +22,7 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NowPlayingPage : NavViewPageBase
+    public sealed partial class NowPlayingPage : NavViewPageBase, ISupportViewModel<PlayerViewModel>
     {
         public NowPlayingPage()
         {
@@ -30,6 +30,32 @@ namespace OnePlayer.UWP.Pages
             HeaderText = ResourceLoader.GetForCurrentView().GetString("NowPlayingPageHeader");
         }
 
-        public override IDataViewModel DataViewModel => throw new NotImplementedException();
+        public override IDataViewModel DataViewModel => ViewModel;
+
+        public PlayerViewModel ViewModel => Locator.Player;
+
+        private void Titlebar_BackRequested(object sender, EventArgs e)
+        {
+            if (Frame.CanGoBack)
+            {
+                Frame.GoBack();
+            }
+        }
+
+        private void NowPlayingList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem != null)
+            {
+            }
+        }
+
+        private void NowPlayingList_Loaded(object sender, RoutedEventArgs e)
+        {
+            MediaPlayerControl.SetMediaPlayer(ViewModel.MediaPlayer);
+            if (ViewModel.PlaybackList != null && ViewModel.PlaybackList.CurrentItem != null)
+            {
+                NowPlayingList.ScrollIntoView(ViewModel.PlaybackList.CurrentItem, ScrollIntoViewAlignment.Leading);
+            }
+        }
     }
 }

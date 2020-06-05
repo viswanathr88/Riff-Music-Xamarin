@@ -1,12 +1,8 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
-using OnePlayer.Data;
+﻿using OnePlayer.Data;
 using OnePlayer.Data.Access;
 using OnePlayer.Sync;
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
-using Windows.Storage.Streams;
 
 namespace OnePlayer.UWP.ViewModel
 {
@@ -15,6 +11,7 @@ namespace OnePlayer.UWP.ViewModel
         private bool isPlayerVisible;
         private readonly MusicLibrary library;
         private readonly SyncEngine syncEngine;
+        private MediaList list;
 
         public PlayerViewModel(MusicLibrary library, SyncEngine engine)
         {
@@ -25,6 +22,16 @@ namespace OnePlayer.UWP.ViewModel
         }
 
         public Windows.Media.Playback.MediaPlayer MediaPlayer { get; }
+
+        public MediaList PlaybackList
+        {
+            get => list;
+            private set
+            {
+                SetProperty(ref this.list, value);
+                IsPlayerVisible = value != null;
+            }
+        }
 
         public bool IsPlayerVisible
         {
@@ -75,54 +82,14 @@ namespace OnePlayer.UWP.ViewModel
 
         private async Task PlayAsync(DriveItemAccessOptions options, uint startIndex)
         {
-            Windows.Media.Playback.MediaPlaybackList list = new Windows.Media.Playback.MediaPlaybackList();
-            MediaPlayer.Source = list;
+            PlaybackList = new MediaList(library, syncEngine);
+            MediaPlayer.Source = PlaybackList.InnerList;
 
             await Task.Run(() =>
             {
                 var items = library.Metadata.DriveItems.Get(options);
-
-                uint currentIndex = 0;
-                foreach (var item in items)
-                {
-                    var playbackItem = AddToPlaybackList(list, item);
-                    if (currentIndex == startIndex)
-                    {
-                        list.StartingItem = playbackItem;
-                        list.MoveTo(startIndex);
-                        MediaPlayer.Play();
-                    }
-                    currentIndex++;
-                }
+                PlaybackList.SetItems(items, startIndex, MediaPlayer);
             });
-        }
-        
-        private MediaPlaybackItem AddToPlaybackList(MediaPlaybackList list, DriveItem item)
-        {
-            var binder = new Windows.Media.Core.MediaBinder();
-            binder.Token = item.Id;
-            binder.Binding += Binder_Binding;
-            var playbackSource = Windows.Media.Core.MediaSource.CreateFromMediaBinder(binder);
-            var playbackItem = new Windows.Media.Playback.MediaPlaybackItem(playbackSource);
-            var props = playbackItem.GetDisplayProperties();
-            props.Type = Windows.Media.MediaPlaybackType.Music;
-            props.MusicProperties.Title = item.Track.Title;
-            props.MusicProperties.Artist = item.Track.Artist;
-            props.MusicProperties.AlbumTitle = item.Track.Album.Name;
-            props.MusicProperties.TrackNumber = Convert.ToUInt32(item.Track.Number);
-            // props.MusicProperties.AlbumArtist = item.Track.Album.Artist.Name;
-            // props.MusicProperties.Genres.Add(item.Track.Genre.Name);
-            playbackItem.ApplyDisplayProperties(props);
-            list.Items.Add(playbackItem);
-            return playbackItem;
-        }
-
-        private async void Binder_Binding(Windows.Media.Core.MediaBinder sender, Windows.Media.Core.MediaBindingEventArgs args)
-        {
-            var deferral = args.GetDeferral();
-            var uri = await this.syncEngine.GetDownloadUrlAsync(sender.Token);
-            args.SetUri(uri);
-            deferral.Complete();
         }
 
         public override Task LoadAsync()
