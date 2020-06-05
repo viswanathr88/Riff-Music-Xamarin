@@ -275,7 +275,9 @@
 
                 <MediaPlayerElement x:Name="MediaPlayerControl" 
                                     AreTransportControlsEnabled="True"
-                                    Grid.Row="1">
+                                    Grid.Row="1"
+                                    x:Load="{x:Bind Player.IsPlayerVisible, Mode=OneWay}"
+                                    Loaded="MediaPlayerControl_Loaded">
                     <MediaPlayerElement.TransportControls>
                         <MediaTransportControls IsCompact="False"
                                                 IsZoomButtonVisible="False"

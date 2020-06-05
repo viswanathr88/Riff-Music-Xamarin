@@ -210,6 +210,9 @@
   <data name="NavViewTracks.Content" xml:space="preserve">
     <value>Tracks</value>
   </data>
+  <data name="NowPlayingPageDefaultMessage.Text" xml:space="preserve">
+    <value>You are not playing any songs in your collection right now. You will find songs you're playing and what's coming up next here. </value>
+  </data>
   <data name="NowPlayingPageHeader" xml:space="preserve">
     <value>Now Playing</value>
   </data>

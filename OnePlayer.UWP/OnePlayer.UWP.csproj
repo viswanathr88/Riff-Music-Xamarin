@@ -185,6 +185,8 @@
     <Compile Include="ViewModel\ItemCache.cs" />
     <Compile Include="ViewModel\ItemIndexRangeExtensions.cs" />
     <Compile Include="ViewModel\ItemIndexRangeList.cs" />
+    <Compile Include="ViewModel\MediaList.cs" />
+    <Compile Include="ViewModel\MediaListItem.cs" />
     <Compile Include="ViewModel\PlayerViewModel.cs" />
     <Compile Include="ViewModel\PlaylistsViewModel.cs" />
     <Compile Include="ViewModel\TracksViewModel.cs" />
