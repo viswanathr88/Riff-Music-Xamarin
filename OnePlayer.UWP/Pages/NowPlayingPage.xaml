@@ -50,7 +50,8 @@
                   ShowsScrollingPlaceholders="False"
                   SelectionMode="Single"
                   SelectedIndex="{x:Bind ViewModel.PlaybackList.CurrentIndex, Mode=TwoWay}"
-                  IsItemClickEnabled="True"
+                  IsItemClickEnabled="False"
+                  SingleSelectionFollowsFocus="False"
                   ItemClick="NowPlayingList_ItemClick"
                   x:Load="{x:Bind ViewModel.IsPlayerVisible, Mode=OneWay}"
                   Loaded="NowPlayingList_Loaded">
@@ -78,76 +79,88 @@
             </ListView.ItemContainerStyle>
 
             <ListView.Header>
-                <RelativePanel Margin="30">
-                    <Border x:Name="AlbumArtContainer" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
-                            Height="128"
-                            Width="128">
-                        <Image Source="{x:Bind ViewModel.PlaybackList.CurrentItem.Art, Mode=OneWay}" />
-                    </Border>
+                <Grid x:Name="Header"
+                      Background="{ThemeResource SystemControlBaseHighAcrylicElementMediumHighBrush}">
 
-                    <TextBlock x:Name="TrackTitle"
-                               Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Title, Mode=OneWay}"
-                               Style="{ThemeResource TitleTextBlockStyle}"
-                               TextWrapping="NoWrap"
-                               TextTrimming="CharacterEllipsis"
-                               RelativePanel.RightOf="AlbumArtContainer"
-                               RelativePanel.AlignTopWith="AlbumArtContainer"
-                               Margin="20,0,0,5"/>
+                    <StackPanel Orientation="Vertical"
+                                Margin="30,70,30,0">
+                        <!-- Track info -->
+                        <StackPanel x:Name="TrackDetailsContainer"
+                                    Grid.Row="0"
+                                    Orientation="Horizontal">
 
-                    <TextBlock x:Name="TrackArtist"
-                               Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Artist, Mode=OneWay}"
-                               Style="{ThemeResource BodyTextBlockStyle}"
-                               TextWrapping="NoWrap"
-                               TextTrimming="CharacterEllipsis"
-                               RelativePanel.RightOf="AlbumArtContainer"
-                               RelativePanel.Below="TrackTitle"
-                               Margin="20,0,0,5"/>
+                            <!-- Album Art -->
+                            <Border x:Name="AlbumArtContainer"
+                                    Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                                    Height="128"
+                                    Width="128"
+                                    HorizontalAlignment="Left">
+                                <Image Source="{x:Bind ViewModel.PlaybackList.CurrentItem.Art, Mode=OneWay}" />
+                            </Border>
 
-                    <TextBlock x:Name="TrackAlbum"
-                               Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Album, Mode=OneWay}"
-                               Style="{ThemeResource BodyTextBlockStyle}"
-                               TextWrapping="NoWrap"
-                               TextTrimming="CharacterEllipsis"
-                               RelativePanel.RightOf="AlbumArtContainer"
-                               RelativePanel.Below="TrackArtist"
-                               Margin="20,0,0,5"/>
+                            <!-- Track details -->
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock x:Name="TrackTitle"
+                                           Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Title, Mode=OneWay}"
+                                           Style="{ThemeResource TitleTextBlockStyle}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="20,0,0,5" />
 
-                    <TextBlock x:Name="TrackAlbumYear"
-                               Text="{x:Bind ViewModel.PlaybackList.CurrentItem.ReleaseYear, Mode=OneWay}"
-                               Style="{ThemeResource BodyTextBlockStyle}"
-                               TextWrapping="NoWrap"
-                               TextTrimming="CharacterEllipsis"
-                               RelativePanel.RightOf="AlbumArtContainer"
-                               RelativePanel.Below="TrackAlbum"
-                               Margin="20,0,0,5" />
-                    
-                    <!-- Player -->
-                    <MediaPlayerElement x:Name="MediaPlayerControl"
-                                        AreTransportControlsEnabled="True"
-                                        RelativePanel.Below="AlbumArtContainer"
-                                        Margin="0,20,0,0"
-                                        VerticalContentAlignment="Center"
-                                        Stretch="UniformToFill">
-                        <MediaPlayerElement.TransportControls>
-                            <MediaTransportControls IsCompact="False"
-                                                    VerticalContentAlignment="Center"
-                                                    IsZoomButtonVisible="False"
-                                                    IsZoomEnabled="False"
-                                                    IsRepeatButtonVisible="True"
-                                                    IsRepeatEnabled="True"
-                                                    IsFullWindowEnabled="False"
-                                                    IsFullWindowButtonVisible="False"
-                                                    IsVolumeButtonVisible="True"
-                                                    IsVolumeEnabled="True"
-                                                    IsNextTrackButtonVisible="True"
-                                                    IsPreviousTrackButtonVisible="True"
-                                                    IsSeekBarVisible="True"
-                                                    IsStopButtonVisible="False"
-                                                    IsStopEnabled="False" />
-                        </MediaPlayerElement.TransportControls>
-                    </MediaPlayerElement>
+                                <TextBlock x:Name="TrackArtist"
+                                           Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Artist, Mode=OneWay}"
+                                           Style="{ThemeResource BodyTextBlockStyle}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="20,0,0,5" />
 
-                </RelativePanel>
+                                <TextBlock x:Name="TrackAlbum"
+                                           Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Album, Mode=OneWay}"
+                                           Style="{ThemeResource BodyTextBlockStyle}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="20,0,0,5" />
+
+                                <TextBlock x:Name="TrackAlbumYear"
+                                           Text="{x:Bind ViewModel.PlaybackList.CurrentItem.ReleaseYear, Mode=OneWay}"
+                                           Style="{ThemeResource BodyTextBlockStyle}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           Margin="20,0,0,5" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Media Player -->
+                        <StackPanel x:Name="PlayerContainer">
+                            <MediaPlayerElement x:Name="MediaPlayerControl"
+                                                AreTransportControlsEnabled="True"
+                                                RelativePanel.Below="AlbumArtContainer"
+                                                Margin="0,20,0,0"
+                                                VerticalContentAlignment="Center"
+                                                Stretch="UniformToFill">
+                                <MediaPlayerElement.TransportControls>
+                                    <MediaTransportControls IsCompact="False"
+                                                            VerticalContentAlignment="Center"
+                                                            IsZoomButtonVisible="False"
+                                                            IsZoomEnabled="False"
+                                                            IsRepeatButtonVisible="True"
+                                                            IsRepeatEnabled="True"
+                                                            IsFullWindowEnabled="False"
+                                                            IsFullWindowButtonVisible="False"
+                                                            IsVolumeButtonVisible="True"
+                                                            IsVolumeEnabled="True"
+                                                            IsNextTrackButtonVisible="True"
+                                                            IsPreviousTrackButtonVisible="True"
+                                                            IsSeekBarVisible="True"
+                                                            IsStopButtonVisible="False"
+                                                            IsStopEnabled="False" />
+                                </MediaPlayerElement.TransportControls>
+                            </MediaPlayerElement>
+                        </StackPanel>
+                    </StackPanel>
+
+                   
+                </Grid>
             </ListView.Header>
             
             <ListView.ItemTemplate>
