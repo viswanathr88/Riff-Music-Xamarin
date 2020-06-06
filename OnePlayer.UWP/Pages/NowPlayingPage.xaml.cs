@@ -77,7 +77,7 @@ namespace OnePlayer.UWP.Pages
             // Create a PropertySet that has values to be referenced in the ExpressionAnimations below
             _props = _compositor.CreatePropertySet();
             _props.InsertScalar("progress", 0);
-            _props.InsertScalar("clampSize", 200);
+            _props.InsertScalar("clampSize", 175);
             _props.InsertScalar("scaleFactor", 0.5f);
 
             // Get references to our property sets for use with ExpressionNodes
