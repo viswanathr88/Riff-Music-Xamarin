@@ -13,18 +13,13 @@
         <conv:BoolNegationConverter x:Key="BoolNegationConv" />
     </Page.Resources>
 
-    <RelativePanel>
-        <Image x:Name="SplashImage"
-               Source="/Assets/SplashScreen.png"
-               RelativePanel.AlignHorizontalCenterWithPanel="True"
-               RelativePanel.AlignVerticalCenterWithPanel="True"/>
+    <RelativePanel >
 
         <TextBlock x:Uid="LoginDescription"
                    x:Name="LoginDescription"
                    Text=""
                    Foreground="White"
                    Style="{StaticResource BaseTextBlockStyle}"
-                   RelativePanel.Below="SplashImage"
                    RelativePanel.AlignHorizontalCenterWithPanel="True"
                    Margin="0,0,0,20"
                    Visibility="{x:Bind ViewModel.LoginRequired, Mode=OneWay, FallbackValue=Collapsed}"/>

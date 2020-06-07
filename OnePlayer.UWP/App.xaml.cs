@@ -2,9 +2,11 @@
 using OnePlayer.UWP.Storage;
 using OnePlayer.UWP.ViewModel;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,6 +28,13 @@ namespace OnePlayer.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
+
+            if (DeviceFamily == DeviceFamily.Xbox)
+            {
+                Application.Current.FocusVisualKind = FocusVisualKind.Reveal;
+            }
+
             UpdateTheme(new AppPreferences().AppTheme);
         }
 
@@ -41,6 +50,8 @@ namespace OnePlayer.UWP
                 app.UpdateAppTheme(appTheme);
             }
         }
+
+        public static DeviceFamily DeviceFamily => DeviceFamilyHelper.DeviceFamily;
 
         private void UpdateAppTheme(Theme appTheme)
         {
@@ -84,7 +95,7 @@ namespace OnePlayer.UWP
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -106,27 +117,22 @@ namespace OnePlayer.UWP
 
             if (e.PrelaunchActivated == false)
             {
-                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(350, 300));
-                CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-                CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += async(sender, arg) =>
+                if (rootFrame.Content == null)
                 {
-                    if (rootFrame.Content == null)
+                    Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
+                    
+                    // On platforms that paint a titlebar, wait for it's height to be determined before initializing the app to prevent jumpy behavior
+                    if (DeviceFamily == DeviceFamily.Desktop)
                     {
-                        // When the navigation stack isn't restored navigate to the first page,
-                        // configuring the new page by passing required information as a navigation
-                        // parameter
-                        var locator = Resources["VMLocator"] as Locator;
-
-                        if (!await locator.LoginManager.LoginExistsAsync())
-                        {
-                            rootFrame.Navigate(typeof(FirstRunExperiencePage), e.Arguments, null);
-                        }
-                        else
-                        {
-                            rootFrame.Navigate(typeof(MainPage), null, new EntranceNavigationTransitionInfo());
-                        }
+                        ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(350, 300));
+                        CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                        CoreApplication.GetCurrentView().TitleBar.LayoutMetricsChanged += async (sender, arg) => await LoadInitialPageAsync(e, rootFrame);
                     }
-                };
+                    else
+                    {
+                        await LoadInitialPageAsync(e, rootFrame);
+                    }
+                }
             }
 
 
@@ -134,6 +140,41 @@ namespace OnePlayer.UWP
             Window.Current.Activate();
 
             UpdateTitlebarColors();
+        }
+
+        private async Task LoadInitialPageAsync(LaunchActivatedEventArgs e, Frame rootFrame)
+        {
+            // When the navigation stack isn't restored navigate to the first page,
+            // configuring the new page by passing required information as a navigation
+            // parameter
+            var locator = Resources["VMLocator"] as Locator;
+
+            if (!await locator.LoginManager.LoginExistsAsync())
+            {
+                rootFrame.Navigate(typeof(FirstRunExperiencePage), e.Arguments, null);
+            }
+            else
+            {
+                rootFrame.Navigate(typeof(MainPage), null, new EntranceNavigationTransitionInfo());
+            }
+        }
+
+        private void App_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (Window.Current.Content is Frame rootFrame)
+            {
+                if (rootFrame.Content is ShellPageBase shell)
+                {
+                    if (shell.CanGoBack)
+                    {
+                        shell.GoBack();
+                        e.Handled = true;
+                        return;
+                    }
+                }
+            }
+
+            e.Handled = false;
         }
 
         private void UpdateTitlebarColors()

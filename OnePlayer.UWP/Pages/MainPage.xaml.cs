@@ -21,7 +21,7 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : NavViewPageBase, ISupportViewModel<MainViewModel>, ISupportPlaying
+    public sealed partial class MainPage : ShellPageBase, ISupportViewModel<MainViewModel>, ISupportPlaying
     {
         private readonly IDictionary<string, Type> pages = new Dictionary<string, Type>()
         {
@@ -55,6 +55,8 @@ namespace OnePlayer.UWP.Pages
         public override IDataViewModel DataViewModel => ViewModel;
 
         public PlayerViewModel Player => Locator.Player;
+
+        public override bool CanGoBack => ContentFrame.CanGoBack;
 
         public MainPage()
         {
@@ -176,10 +178,7 @@ namespace OnePlayer.UWP.Pages
 
         private void Titlebar_BackRequested(object sender, EventArgs e)
         {
-            if (ContentFrame.CanGoBack)
-            {
-                ContentFrame.GoBack();
-            }
+            GoBack();
         }
 
         private async void NavViewSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -264,6 +263,14 @@ namespace OnePlayer.UWP.Pages
         private void MediaPlayerControl_Loaded(object sender, RoutedEventArgs e)
         {
             MediaPlayerControl.SetMediaPlayer(Player.MediaPlayer);
+        }
+
+        public override void GoBack()
+        {
+            if (ContentFrame.CanGoBack)
+            {
+                ContentFrame.GoBack();
+            }
         }
     }
 }

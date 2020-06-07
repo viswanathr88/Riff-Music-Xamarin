@@ -166,24 +166,37 @@ namespace OnePlayer.UWP.Authentication
         {
             var deferral = args.GetDeferral();
 
-            // Add consumer account provider
-            var msaProvider = await WebAuthenticationCoreManager.FindAccountProviderAsync(GetAuthorizeUrl(), "consumers");
-            args.WebAccountProviderCommands.Add(new WebAccountProviderCommand(msaProvider, GetMsaTokenAsync));
+            if (App.DeviceFamily == DeviceFamily.Xbox)
+            {
+                var provider = await WebAuthenticationCoreManager.FindAccountProviderAsync(GetAuthorizeUrl());
+                await GetMsaTokenFromProviderAsync(provider);
+            }
+            else
+            {
+                // Add consumer account provider
+                var msaProvider = await WebAuthenticationCoreManager.FindAccountProviderAsync(GetAuthorizeUrl(), "consumers");
+                args.WebAccountProviderCommands.Add(new WebAccountProviderCommand(msaProvider, GetMsaTokenAsync));
+            }
 
             deferral.Complete();
         }
 
         private async void GetMsaTokenAsync(WebAccountProviderCommand providerCommand)
         {
+            await GetMsaTokenFromProviderAsync(providerCommand.WebAccountProvider);
+        }
+
+        private async Task GetMsaTokenFromProviderAsync(WebAccountProvider provider)
+        {
             try
             {
-                WebTokenRequest request = new WebTokenRequest(providerCommand.WebAccountProvider, string.Join(" ", scopes), appId);
+                WebTokenRequest request = new WebTokenRequest(provider, string.Join(" ", scopes), appId);
                 request.Properties.Add("resource", "https://graph.microsoft.com");
                 WebTokenRequestResult result = await WebAuthenticationCoreManager.RequestTokenAsync(request);
 
                 if (result.ResponseStatus == WebTokenRequestStatus.Success)
                 {
-                    StoreLoginProfile(new LoginProfile(providerCommand.WebAccountProvider, result.ResponseData[0].WebAccount));
+                    StoreLoginProfile(new LoginProfile(provider, result.ResponseData[0].WebAccount));
                     LoginCompleted?.Invoke(this, new Token() { AccessToken = result.ResponseData[0].Token });
                 }
 

@@ -1,4 +1,4 @@
-﻿<local:NavViewPageBase x:Class="OnePlayer.UWP.Pages.MainPage"
+﻿<local:ShellPageBase x:Class="OnePlayer.UWP.Pages.MainPage"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:local="using:OnePlayer.UWP.Pages"
@@ -277,7 +277,9 @@
                                     AreTransportControlsEnabled="True"
                                     Grid.Row="1"
                                     x:Load="{x:Bind Player.IsPlayerVisible, Mode=OneWay}"
-                                    Loaded="MediaPlayerControl_Loaded">
+                                    Loaded="MediaPlayerControl_Loaded"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Stretch">
                     <MediaPlayerElement.TransportControls>
                         <MediaTransportControls IsCompact="False"
                                                 IsZoomButtonVisible="False"
@@ -293,6 +295,8 @@
                                                 IsSeekBarVisible="True"
                                                 IsStopButtonVisible="False"
                                                 IsStopEnabled="False"
+                                                HorizontalContentAlignment="Stretch"
+                                                HorizontalAlignment="Stretch"
                                                 />
                     </MediaPlayerElement.TransportControls>
                 </MediaPlayerElement>
@@ -335,4 +339,4 @@
         </VisualStateManager.VisualStateGroups>
 
     </Grid>
-</local:NavViewPageBase>
+</local:ShellPageBase>

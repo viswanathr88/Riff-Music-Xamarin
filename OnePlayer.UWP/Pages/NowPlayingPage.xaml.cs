@@ -1,8 +1,6 @@
 ﻿using ExpressionBuilder;
 using OnePlayer.UWP.ViewModel;
 using System;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,7 +15,7 @@ namespace OnePlayer.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NowPlayingPage : NavViewPageBase, ISupportViewModel<PlayerViewModel>
+    public sealed partial class NowPlayingPage : ShellPageBase, ISupportViewModel<PlayerViewModel>
     {
         CompositionPropertySet _props;
         CompositionPropertySet _scrollerPropertySet;
@@ -26,14 +24,20 @@ namespace OnePlayer.UWP.Pages
         public NowPlayingPage()
         {
             this.InitializeComponent();
-            HeaderText = ResourceLoader.GetForCurrentView().GetString("NowPlayingPageHeader");
         }
 
         public override IDataViewModel DataViewModel => ViewModel;
 
         public PlayerViewModel ViewModel => Locator.Player;
 
+        public override bool CanGoBack => Frame.CanGoBack;
+
         private void Titlebar_BackRequested(object sender, EventArgs e)
+        {
+            GoBack();
+        }
+
+        public override void GoBack()
         {
             if (Frame.CanGoBack)
             {
