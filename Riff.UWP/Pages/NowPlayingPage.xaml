@@ -1,0 +1,319 @@
+﻿<local:ShellPageBase x:Class="Riff.UWP.Pages.NowPlayingPage"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:local="using:Riff.UWP.Pages"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:playback="using:Windows.Media.Playback"
+                       xmlns:viewmodel="using:Riff.UWP.ViewModel"
+                       xmlns:controls="using:Riff.UWP.Controls"
+                       xmlns:conv="using:Riff.UWP.Converters"
+                       mc:Ignorable="d"
+                       Background="{ThemeResource SystemControlAcrylicElementBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="MediaTransportControlsPanelBackground"
+                             Color="Transparent" />
+            <conv:BoolNegationConverter x:Key="BoolNegationConverter" />
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+
+        </Grid.RowDefinitions>
+
+        <Grid.Resources>
+            <ResourceDictionary>
+                <SolidColorBrush x:Key="SystemControlHighlightListAccentLowBrush"
+                                 Color="Transparent" />
+                <SolidColorBrush x:Key="SystemControlHighlightAltBaseHighBrush"
+                                 Color="{ThemeResource SystemAccentColor}" />
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <!-- Titlebar -->
+        <controls:Titlebar x:Name="Titlebar"
+                           IsBackButtonVisible="{x:Bind Frame.CanGoBack}"
+                           BackRequested="Titlebar_BackRequested"
+                           VerticalAlignment="Top"
+                           Canvas.ZIndex="2"
+                           Grid.Row="0"/>
+
+        <ListView x:Name="NowPlayingList"
+                  ItemsSource="{x:Bind ViewModel.PlaybackList, Mode=OneWay}"
+                  Grid.Row="2"
+                  ShowsScrollingPlaceholders="False"
+                  SelectionMode="Single"
+                  SelectedIndex="{x:Bind ViewModel.PlaybackList.CurrentIndex, Mode=TwoWay}"
+                  IsItemClickEnabled="False"
+                  SingleSelectionFollowsFocus="False"
+                  ItemClick="NowPlayingList_ItemClick"
+                  x:Load="{x:Bind ViewModel.IsPlayerVisible, Mode=OneWay}"
+                  Loaded="NowPlayingList_Loaded">
+
+            <ListView.Resources>
+                <SolidColorBrush x:Key="ListViewItemBackgroundSelected"
+                                 Color="Transparent" />
+                <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver"
+                                 Color="Transparent" />
+                <SolidColorBrush x:Key="ListViewItemForegroundSelected"
+                                 Color="{ThemeResource SystemAccentColor}" />
+                <SolidColorBrush x:Key="ListViewItemForegroundSelectedPointerOver"
+                                 Color="{ThemeResource SystemAccentColor}" />
+            </ListView.Resources>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment"
+                            Value="Stretch" />
+                    <Setter Property="Padding"
+                            Value="10" />
+                    <Setter Property="Margin"
+                            Value="20,0,20,0" />
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            <ListView.Header>
+                <Grid x:Name="Header"
+                      Background="{ThemeResource SystemControlBaseHighAcrylicElementMediumHighBrush}"
+                      Padding="30,30,30,0">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Track info -->
+                    <Grid x:Name="TrackDetailsContainer"
+                                Grid.Row="0"
+                                HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Album Art -->
+                        <Border x:Name="AlbumArtContainer"
+                                Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                                Height="128"
+                                Width="128"
+                                Grid.Row="0"
+                                Grid.RowSpan="4"
+                                Grid.Column="0"
+                                HorizontalAlignment="Left">
+                            <Image Source="{x:Bind ViewModel.PlaybackList.CurrentItem.Art, Mode=OneWay}" />
+                        </Border>
+
+                        <!-- Track details -->
+                        <TextBlock x:Name="TrackTitle"
+                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Title, Mode=OneWay}"
+                                   Style="{ThemeResource TitleTextBlockStyle}"
+                                   TextWrapping="NoWrap"
+                                   Grid.Column="1"
+                                   Grid.Row="0"
+                                   TextTrimming="CharacterEllipsis"
+                                   Margin="20,0,0,5" />
+
+                        <TextBlock x:Name="TrackArtist"
+                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Artist, Mode=OneWay}"
+                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                   TextWrapping="NoWrap"
+                                   Grid.Column="1"
+                                   Grid.Row="1"
+                                   TextTrimming="CharacterEllipsis"
+                                   Margin="20,0,0,5" />
+
+                        <TextBlock x:Name="TrackAlbum"
+                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Album, Mode=OneWay}"
+                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                   TextWrapping="NoWrap"
+                                   Grid.Column="1"
+                                   Grid.Row="2"
+                                   TextTrimming="CharacterEllipsis"
+                                   Margin="20,0,0,5" />
+
+                        <TextBlock x:Name="TrackAlbumYear"
+                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.ReleaseYear, Mode=OneWay}"
+                                   Style="{ThemeResource BodyTextBlockStyle}"
+                                   TextWrapping="NoWrap"
+                                   Grid.Column="1"
+                                   Grid.Row="3"
+                                   TextTrimming="CharacterEllipsis"
+                                   Margin="20,0,0,5" />
+                    </Grid>
+
+                    <!-- Media Player -->
+                    <StackPanel x:Name="PlayerContainer"
+                                Grid.Row="1">
+                        <MediaPlayerElement x:Name="MediaPlayerControl"
+                                            AreTransportControlsEnabled="True"
+                                            RelativePanel.Below="AlbumArtContainer"
+                                            Margin="0,20,0,0"
+                                            VerticalContentAlignment="Center"
+                                            Stretch="UniformToFill">
+                            <MediaPlayerElement.TransportControls>
+                                <MediaTransportControls IsCompact="False"
+                                                        VerticalContentAlignment="Center"
+                                                        IsZoomButtonVisible="False"
+                                                        IsZoomEnabled="False"
+                                                        IsRepeatButtonVisible="True"
+                                                        IsRepeatEnabled="True"
+                                                        IsFullWindowEnabled="False"
+                                                        IsFullWindowButtonVisible="False"
+                                                        IsVolumeButtonVisible="True"
+                                                        IsVolumeEnabled="True"
+                                                        IsNextTrackButtonVisible="True"
+                                                        IsPreviousTrackButtonVisible="True"
+                                                        IsSeekBarVisible="True"
+                                                        IsStopButtonVisible="False"
+                                                        IsStopEnabled="False" />
+                            </MediaPlayerElement.TransportControls>
+                        </MediaPlayerElement>
+                    </StackPanel>
+
+                </Grid>
+            </ListView.Header>
+            
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="viewmodel:MediaListItem">
+                    <UserControl>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Track Title -->
+                            <TextBlock x:Name="TrackItemTitle"
+                                       Text="{x:Bind Title}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       Grid.Column="0"
+                                       Grid.Row="0"
+                                       Grid.ColumnSpan="3"
+                                       FontSize="13"
+                                       Margin="0,0,20,0"
+                                       VerticalAlignment="Top"/>
+
+                            <!-- Track Artist -->
+                            <TextBlock x:Name="TrackItemArtist" 
+                                       Text="{x:Bind Artist}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       x:Phase="1"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="3"
+                                       FontSize="12"
+                                       Margin="0,0,20,0" />
+
+                            <!-- Track Album -->
+                            <TextBlock x:Name="TrackItemAlbum" 
+                                       Text="{x:Bind Album}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       x:Phase="1"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       Grid.Row="1"
+                                       Grid.Column="1"
+                                       FontSize="12"
+                                       Margin="0,0,20,0"
+                                       Visibility="Collapsed"/>
+
+                            <!-- Track Year -->
+                            <TextBlock x:Name="TrackItemReleaseYear" 
+                                       Text="{x:Bind ReleaseYear}"
+                                       Style="{StaticResource BodyTextBlockStyle}"
+                                       x:Phase="2"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextLineBounds="TrimToBaseline"
+                                       Grid.Row="0"
+                                       Grid.Column="3"
+                                       FontSize="12"
+                                       Margin="0,0,20,0"
+                                       VerticalAlignment="Top"/>
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState x:Name="Wide">
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="641" />
+                                        </VisualState.StateTriggers>
+
+                                        <VisualState.Setters>
+                                            <!-- Track Title -->
+                                            <Setter Target="TrackItemTitle.(Grid.ColumnSpan)"
+                                                    Value="3" />
+                                            <Setter Target="TrackItemTitle.(Grid.Column)"
+                                                    Value="0" />
+                                            <Setter Target="TrackItemTitle.(Grid.Row)"
+                                                    Value="0" />
+                                            
+                                            <!-- Track Artist -->
+                                            <Setter Target="TrackItemArtist.(Grid.ColumnSpan)"
+                                                    Value="1" />
+                                            <Setter Target="TrackItemArtist.(Grid.Column)"
+                                                    Value="1" />
+                                            <Setter Target="TrackItemArtist.(Grid.Row)"
+                                                    Value="0" />
+
+                                            <!-- Track Album -->
+                                            <Setter Target="TrackItemAlbum.Visibility"
+                                                    Value="Visible" />
+                                            <Setter Target="TrackItemAlbum.(Grid.ColumnSpan)"
+                                                    Value="1" />
+                                            <Setter Target="TrackItemAlbum.(Grid.Column)"
+                                                    Value="2" />
+                                            <Setter Target="TrackItemAlbum.(Grid.Row)"
+                                                    Value="0" />
+
+                                            <!-- Track Release Year -->
+                                            <Setter Target="TrackItemReleaseYear.(Grid.ColumnSpan)"
+                                                    Value="1" />
+                                            <Setter Target="TrackItemReleaseYear.(Grid.Column)"
+                                                    Value="3" />
+                                            <Setter Target="TrackItemReleaseYear.(Grid.Row)"
+                                                    Value="0" />
+
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                        </Grid>
+                    </UserControl>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        
+        <!-- Default message -->
+        <TextBlock x:Name="NowPlayingPageDefaultMessage"
+                   x:Uid="NowPlayingPageDefaultMessage"
+                   Text=""
+                   Grid.Row="2"
+                   Margin="20"
+                   Style="{StaticResource TitleTextBlockStyle}"
+                   x:Load="{x:Bind ViewModel.IsPlayerVisible, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}" />
+    </Grid>
+</local:ShellPageBase>
