@@ -85,10 +85,10 @@ namespace OnePlayer.UWP.ViewModel
             PlaybackList = new MediaList(library, syncEngine);
             MediaPlayer.Source = PlaybackList.InnerList;
 
-            await Task.Run(() =>
+            await Task.Run(async() =>
             {
                 var items = library.Metadata.DriveItems.Get(options);
-                PlaybackList.SetItems(items, startIndex, MediaPlayer);
+                await PlaybackList.SetItems(items, startIndex, MediaPlayer);
             });
         }
 
