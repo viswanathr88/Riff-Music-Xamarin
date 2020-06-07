@@ -3,6 +3,7 @@ using OnePlayer.Data;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 namespace OnePlayer.UWP.ViewModel
 {
@@ -24,6 +25,10 @@ namespace OnePlayer.UWP.ViewModel
         public override async Task LoadAsync()
         {
             LoginRequired = !(await loginManager.LoginExistsAsync());
+            if (LoginRequired)
+            {
+                await LoginAsync();
+            }
         }
 
         public bool LoginRequired
@@ -83,14 +88,23 @@ namespace OnePlayer.UWP.ViewModel
             }
         }
 
-        public async void LoginAsync()
+        public async Task LoginAsync()
         {
             IsLoading = true;
-            await this.loginManager.LoginAsync(null);
-            LoginRequired = false;
-            Profile = await this.loginManager.GetUserAsync();
-            Photo = await this.loginManager.GetUserPhotoAsync();
-            ProfileAndPhotoFetched = true;
+            var token = await this.loginManager.LoginAsync(null);
+
+            if (token != null)
+            {
+                LoginRequired = false;
+                Profile = await this.loginManager.GetUserAsync();
+                Photo = await this.loginManager.GetUserPhotoAsync();
+                ProfileAndPhotoFetched = true;
+            }
+            else
+            {
+                Application.Current.Exit();
+            }
+
             IsLoading = false;
         }
     }

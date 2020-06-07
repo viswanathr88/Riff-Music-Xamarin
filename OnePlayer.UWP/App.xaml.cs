@@ -10,6 +10,7 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -103,7 +104,9 @@ namespace OnePlayer.UWP
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
+                rootFrame.Background = new SolidColorBrush(new Windows.UI.Color() { R = 80, G = 102, B = 88, A = 255 });
 
+                rootFrame.Navigated += RootFrame_Navigated;
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -140,6 +143,16 @@ namespace OnePlayer.UWP
             Window.Current.Activate();
 
             UpdateTitlebarColors();
+        }
+
+        private void RootFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            if (e.SourcePageType == typeof(MainPage) || e.SourcePageType == typeof(FirstRunExperiencePage))
+            {
+                Frame frame = sender as Frame;
+                frame.Background = null;
+                frame.Navigated -= RootFrame_Navigated;
+            }
         }
 
         private async Task LoadInitialPageAsync(LaunchActivatedEventArgs e, Frame rootFrame)

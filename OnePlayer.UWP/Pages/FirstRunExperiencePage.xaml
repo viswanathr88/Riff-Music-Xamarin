@@ -13,34 +13,27 @@
         <conv:BoolNegationConverter x:Key="BoolNegationConv" />
     </Page.Resources>
 
-    <RelativePanel >
+    <Grid VerticalAlignment="Center"
+          HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height='Auto' />
+        </Grid.RowDefinitions>
 
-        <TextBlock x:Uid="LoginDescription"
-                   x:Name="LoginDescription"
-                   Text=""
+        <TextBlock Text="OnePlayer"
+                   Style="{StaticResource HeaderTextBlockStyle}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
                    Foreground="White"
-                   Style="{StaticResource BaseTextBlockStyle}"
-                   RelativePanel.AlignHorizontalCenterWithPanel="True"
-                   Margin="0,0,0,20"
-                   Visibility="{x:Bind ViewModel.LoginRequired, Mode=OneWay, FallbackValue=Collapsed}"/>
-
-        <Button x:Uid="LoginButton"
-                x:Name="LoginButton"
-                Content=""
-                RelativePanel.Below="LoginDescription"
-                Foreground="White"
-                RelativePanel.AlignHorizontalCenterWithPanel="True"
-                Click="{x:Bind ViewModel.LoginAsync}"
-                Margin="0,0,0,20"
-                IsEnabled="{x:Bind ViewModel.IsLoading, Converter={StaticResource BoolNegationConv}}"
-                Visibility="{x:Bind ViewModel.LoginRequired, Mode=OneWay, FallbackValue=Collapsed}"/>
+                   Margin="0,0,0,20" />
 
         <ProgressRing x:Name="LoginProgress"
+                      Grid.Row="1"
+                      Width="30"
+                      Height="30"
+                      Foreground="White"
                       Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay, FallbackValue=Collapsed}"
-                      RelativePanel.Below="LoginButton"
-                      Margin="0,0,0,20"
                       IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
-                      RelativePanel.AlignHorizontalCenterWithPanel="True"/>
-
-    </RelativePanel>
+                      RelativePanel.AlignHorizontalCenterWithPanel="True" />
+    </Grid>
 </Page>

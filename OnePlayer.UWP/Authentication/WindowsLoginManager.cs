@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Windows.Security.Authentication.Web.Core;
 using Windows.Security.Credentials;
@@ -43,16 +44,19 @@ namespace OnePlayer.UWP.Authentication
         private const string profilePhotoUri = @"https://graph.microsoft.com/beta/me/photo/$value";
         private const string currentProviderIdKey = "CurrentUserProviderId";
         private const string currentUserIdKey = "CurrentUserId";
-
+        private bool webCommandInvoked = false;
 
         private readonly HttpClient webClient;
 
         private event EventHandler<Token> LoginCompleted;
 
-        public WindowsLoginManager(HttpClient client)
+        public WindowsLoginManager(HttpClient client, string headerText)
         {
             this.webClient = client ?? throw new ArgumentNullException(nameof(client));
+            HeaderText = headerText;
         }
+
+        public string HeaderText { get; private set; }
 
         public async Task<Token> AcquireTokenSilentAsync()
         {
@@ -71,22 +75,34 @@ namespace OnePlayer.UWP.Authentication
             }
         }
 
-        public Task<Token> LoginAsync(object data)
+        public async Task<Token> LoginAsync(object data)
         {
             AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested += BuildPaneAsync;
-            AccountsSettingsPane.Show();
+            await AccountsSettingsPane.ShowAddAccountAsync();
 
-            TaskCompletionSource<Token> tcs = new TaskCompletionSource<Token>();
-
-            void callback(object sender, Token token)
+            if (webCommandInvoked)
             {
-                LoginCompleted -= callback;
+                // Reset flag
+                webCommandInvoked = false;
+
+                TaskCompletionSource<Token> tcs = new TaskCompletionSource<Token>();
+
+                void callback(object sender, Token token)
+                {
+                    LoginCompleted -= callback;
+                    AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested -= BuildPaneAsync;
+                    tcs.SetResult(token);
+                }
+
+                LoginCompleted += callback;
+                return await tcs.Task;
+            }
+            else
+            {
                 AccountsSettingsPane.GetForCurrentView().AccountCommandsRequested -= BuildPaneAsync;
-                tcs.SetResult(token);
             }
 
-            LoginCompleted += callback;
-            return tcs.Task;
+            return null;
         }
 
         public string GetAuthorizeUrl()
@@ -166,6 +182,11 @@ namespace OnePlayer.UWP.Authentication
         {
             var deferral = args.GetDeferral();
 
+            if (!string.IsNullOrEmpty(HeaderText))
+            {
+                args.HeaderText = HeaderText;
+            }
+
             if (App.DeviceFamily == DeviceFamily.Xbox)
             {
                 var provider = await WebAuthenticationCoreManager.FindAccountProviderAsync(GetAuthorizeUrl());
@@ -183,6 +204,7 @@ namespace OnePlayer.UWP.Authentication
 
         private async void GetMsaTokenAsync(WebAccountProviderCommand providerCommand)
         {
+            webCommandInvoked = true;
             await GetMsaTokenFromProviderAsync(providerCommand.WebAccountProvider);
         }
 
