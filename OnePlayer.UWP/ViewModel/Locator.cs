@@ -7,6 +7,7 @@ using OnePlayer.UWP.Storage;
 using System;
 using System.IO;
 using System.Net.Http;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 
 namespace OnePlayer.UWP.ViewModel
@@ -33,7 +34,7 @@ namespace OnePlayer.UWP.ViewModel
         {
             preferences = new Lazy<IAppPreferences>(() => new AppPreferences());
             httpClient = new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler() { AllowAutoRedirect = false }));
-            loginManager = new Lazy<ILoginManager>(() => new CacheReadyLoginManager(new WindowsLoginManager(WebClient), DefaultPath));
+            loginManager = new Lazy<ILoginManager>(() => new CacheReadyLoginManager(new WindowsLoginManager(WebClient, ResourceLoader.GetForCurrentView().GetString("LoginDescription")), DefaultPath));
             syncEngine = new Lazy<SyncEngine>(() => new SyncEngine(new AppPreferences(), LoginManager, WebClient, Library));
             musicMetadata = new Lazy<IMusicMetadata>(() => new MusicMetadata(Path.Combine(DefaultPath, "OnePlayer.db")));
             musicLibrary = new Lazy<MusicLibrary>(() => new MusicLibrary(DefaultPath, MusicMetadata, WebClient));

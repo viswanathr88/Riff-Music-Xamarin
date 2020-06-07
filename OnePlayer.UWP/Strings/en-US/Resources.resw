@@ -168,7 +168,7 @@
   <data name="LoginButton.Content" xml:space="preserve">
     <value>Log in to OneDrive</value>
   </data>
-  <data name="LoginDescription.Text" xml:space="preserve">
+  <data name="LoginDescription" xml:space="preserve">
     <value>In order to access your music stored on OneDrive, please login using your Microsoft Account</value>
   </data>
   <data name="MusicLibraryPageHeader" xml:space="preserve">
