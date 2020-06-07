@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.Storage.Streams;
 
 namespace OnePlayer.UWP.ViewModel
@@ -56,7 +58,7 @@ namespace OnePlayer.UWP.ViewModel
             }
         }
 
-        public void SetItems(IEnumerable<DriveItem> items, uint startIndex, MediaPlayer player)
+        public async Task SetItems(IEnumerable<DriveItem> items, uint startIndex, MediaPlayer player)
         {
             uint currentIndex = 0;
             foreach (var item in items)
@@ -66,17 +68,21 @@ namespace OnePlayer.UWP.ViewModel
                 binder.Binding += Binder_Binding;
                 var playbackSource = Windows.Media.Core.MediaSource.CreateFromMediaBinder(binder);
                 var playbackItem = new Windows.Media.Playback.MediaPlaybackItem(playbackSource);
+
+                // Set metadata
+                var albumId = item.Track.Album.Id.Value;
                 var props = playbackItem.GetDisplayProperties();
                 props.Type = Windows.Media.MediaPlaybackType.Music;
                 props.MusicProperties.Title = item.Track.Title;
                 props.MusicProperties.Artist = item.Track.Artist;
                 props.MusicProperties.AlbumTitle = item.Track.Album.Name;
                 props.MusicProperties.TrackNumber = Convert.ToUInt32(item.Track.Number);
-                props.Thumbnail = library.AlbumArts.Exists(item.Track.Album.Id.Value) ? RandomAccessStreamReference.CreateFromUri(new Uri(library.AlbumArts.GetPath(item.Track.Album.Id.Value), UriKind.Absolute)) : null;
-                playbackSource.CustomProperties.Add("AlbumId", item.Track.Album.Id.Value);
+                props.Thumbnail = library.AlbumArts.Exists(albumId) ? RandomAccessStreamReference.CreateFromFile(await library.AlbumArts.GetStorageFile(albumId)) : null;
+                playbackSource.CustomProperties.Add("AlbumId", albumId);
                 playbackSource.CustomProperties.Add("Year", item.Track.Album.ReleaseYear);
-                playbackSource.CustomProperties.Add("AlbumArtPath", library.AlbumArts.Exists(item.Track.Album.Id.Value) ? library.AlbumArts.GetPath(item.Track.Album.Id.Value) : "");
+                playbackSource.CustomProperties.Add("AlbumArtPath", library.AlbumArts.Exists(albumId) ? library.AlbumArts.GetPath(albumId) : "");
                 playbackItem.ApplyDisplayProperties(props);
+                
                 list.Items.Add(playbackItem);
 
                 if (currentIndex == startIndex)

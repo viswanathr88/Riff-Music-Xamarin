@@ -132,7 +132,8 @@
     <Compile Include="Converters\AlbumSortTypeConverter.cs" />
     <Compile Include="Converters\BoolNegationConverter.cs" />
     <Compile Include="Converters\ImageStreamConverter.cs" />
-    <Compile Include="DeviceFamilyHelper.cs" />
+    <Compile Include="Extensions\DeviceFamilyHelper.cs" />
+    <Compile Include="Extensions\ThumbnailCacheExtensions.cs" />
     <Compile Include="Pages\AlbumPage.xaml.cs">
       <DependentUpon>AlbumPage.xaml</DependentUpon>
     </Compile>
@@ -205,7 +206,7 @@
     <Compile Include="ViewModel\SyncViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\VoidType.cs" />
-    <Compile Include="VisualTreeHelperExtensions.cs" />
+    <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
