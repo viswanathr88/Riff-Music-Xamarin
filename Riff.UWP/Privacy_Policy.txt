@@ -1,0 +1,38 @@
+                                    ===========================
+                                    Riff Music Privacy Policy
+                                    ===========================
+
+                 The Riff Music project is committed to protecting your privacy.
+This privacy & disclaimer statement applies only to the services made available by the Riff Music application.
+
+----------------------
+# Personal information
+----------------------
+This application does not collect or transmit any user's personally identifiable information. 
+No personal information is used, stored, secured or disclosed by services this application works with.
+
+--------------------------------------------------
+# Riff Music needs to access your OneDrive storage
+--------------------------------------------------
+Riff Music downloads metadata from the Music folder in your OneDrive storage. The app does not access any other folder in your storage.
+Metadata about your music is stored in your local disk and is never roamed. It is stored on a folder that only this app has access to.
+If you uninstall the app from your device, all cached metadata will be deleted.
+
+----------------------------------------
+# Riff needs Internet Connection
+----------------------------------------
+Riff application uses internet for:
+- Logging in the user to OneDrive using Microsoft Account
+- Download metadata about Music stored on OneDrive
+- To play music stored on OneDrive
+
+Riff Music application does not sell, lease, rent or otherwise disclose any data to third parties.
+
+-------------------------------------------
+# Report violations or get more information
+-------------------------------------------
+If you would like to report any violations of this policy or get more information on any app, 
+please contact me using email: viswanath@outlook.com
+
+This policy is subject to change without notice. Please check this page for the latest privacy policy. 
+If you disagree with this policy, please discontinue use of the application.
