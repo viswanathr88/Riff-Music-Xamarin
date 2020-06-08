@@ -2,11 +2,14 @@
 using Riff.UWP.Storage;
 using Riff.UWP.ViewModel;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,6 +19,11 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Riff.UWP
 {
+    public enum ErrorCommand
+    {
+        CopyErrorInfo
+    };
+
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
@@ -29,6 +37,8 @@ namespace Riff.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            UnhandledException += App_UnhandledException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
             if (DeviceFamily == DeviceFamily.Xbox)
@@ -220,6 +230,45 @@ namespace Riff.UWP
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        private async void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            e.SetObserved();
+            await ShowErrorDialog(e.Exception, string.Empty);
+        }
+
+        private async void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            await ShowErrorDialog(e.Exception, e.Message);
+        }
+
+        private async Task ShowErrorDialog(Exception ex, string message)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("Please file an issue with the following diagnostic data:");
+            builder.AppendLine("Message: ");
+            builder.AppendLine(ex.Message);
+            builder.AppendLine("Exception:");
+            builder.AppendLine(ex.StackTrace?.ToString());
+            builder.AppendLine("Inner Exception:");
+            builder.AppendLine(ex.InnerException?.ToString());
+
+            // Create a command for copying error information
+            var command = new UICommand("Copy error info", CopyErrorInfoInvoked, builder.ToString());
+
+            MessageDialog dialog = new MessageDialog(builder.ToString(), "Oops. Something went wrong");
+            dialog.Commands.Add(command);
+            await dialog.ShowAsync();
+        }
+
+        private void CopyErrorInfoInvoked(IUICommand command)
+        {
+            DataPackage package = new DataPackage();
+            package.RequestedOperation = DataPackageOperation.Copy;
+            package.SetText(command.Id.ToString());
+            Clipboard.SetContent(package);
         }
     }
 }
