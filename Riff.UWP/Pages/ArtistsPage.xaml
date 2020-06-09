@@ -26,7 +26,7 @@
             <DataTemplate x:DataType="vm:ArtistItemViewModel">
                 <Grid Height="120"
                       Width="220"
-                      AutomationProperties.Name="{x:Bind Name}"
+                      AutomationProperties.Name="{x:Bind Name, TargetNullValue='Unknown Artist'}"
                       Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
                     <ParallaxView Source="{Binding ElementName=ArtistList}"
                                   VerticalShift="100">
@@ -40,7 +40,7 @@
                                 VerticalAlignment="Bottom"
                                 Background="{ThemeResource SystemControlBaseHighAcrylicElementBrush}"
                                 Padding="12">
-                        <TextBlock Text="{x:Bind Name}" />
+                        <TextBlock Text="{x:Bind Name, TargetNullValue='Unknown Artist'}" />
                         <TextBlock Text="{x:Bind local:ArtistsPage.FormatAlbumsCount(AlbumsCount)}"
                                    Style="{ThemeResource CaptionTextBlockStyle}"
                                    Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}" />

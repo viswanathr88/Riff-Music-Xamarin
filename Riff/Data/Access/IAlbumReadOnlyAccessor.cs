@@ -15,7 +15,7 @@ namespace Riff.Data.Access
         public long? ArtistFilter { get; set; }
         public long? GenreFilter { get; set; }
         public long? AlbumFilter { get; set; }
-        public string AlbumNameFilter { get; set; } = string.Empty;
+        public string AlbumNameFilter { get; set; } = null;
         public long? StartPosition { get; set; }
         public long? Count { get; set; }
         public bool IncludeArtist { get; set; } = false;

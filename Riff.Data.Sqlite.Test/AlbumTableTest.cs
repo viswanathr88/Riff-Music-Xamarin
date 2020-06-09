@@ -211,10 +211,47 @@ namespace Riff.Data.Sqlite.Test
         }
 
         [Fact]
-        public void FindByArtist_EmptyAlbumName_Throw()
+        public void FindByArtist_EmptyAlbumName_Validate()
         {
-            Assert.Throws<ArgumentNullException>(() => albumTable.FindByArtist(1, string.Empty));
-            Assert.Throws<ArgumentNullException>(() => albumTable.FindByArtist(1, null));
+            var artist = artistTable.Add(new Artist() { Name = "TestArtist" });
+            var genre = genreTable.Add(new Genre() { Name = "TestGenre" });
+            var album = albumTable.Add(new Album()
+            {
+                Artist = new Artist() { Id = artist.Id },
+                Genre = new Genre() { Id = genre.Id },
+                ReleaseYear = 2000
+            });
+
+            var actualAlbum = albumTable.FindByArtist(artist.Id.Value, string.Empty);
+            CompareAndAssert(actualAlbum, album);
+        }
+
+        [Fact]
+        public void FindByArtist_TwoDifferentArtistsWithEmptyAlbums_Validate()
+        {
+            var artist = artistTable.Add(new Artist() { Name = "TestArtist" });
+            var artist2 = artistTable.Add(new Artist() { Name = "TestArtist2" });
+
+            var genre = genreTable.Add(new Genre() { Name = "TestGenre" });
+            var album = albumTable.Add(new Album()
+            {
+                Artist = new Artist() { Id = artist.Id },
+                Genre = new Genre() { Id = genre.Id },
+                ReleaseYear = 2000
+            });
+
+            var album2 = albumTable.Add(new Album()
+            {
+                Artist = new Artist() { Id = artist2.Id },
+                Genre = new Genre() { Id = genre.Id },
+                ReleaseYear = 1999
+            });
+
+            var actualAlbum = albumTable.FindByArtist(artist.Id.Value, string.Empty);
+            CompareAndAssert(actualAlbum, album);
+
+            actualAlbum = albumTable.FindByArtist(artist2.Id.Value, null);
+            CompareAndAssert(actualAlbum, album2);
         }
 
         [Fact]

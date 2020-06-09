@@ -140,9 +140,15 @@ namespace Riff.Authentication
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
             var response = await this.httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStreamAsync();
+            
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStreamAsync();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private async Task<Token> GetCachedTokenAsync()

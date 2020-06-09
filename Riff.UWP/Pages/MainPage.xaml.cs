@@ -197,7 +197,7 @@ namespace Riff.UWP.Pages
         public static string FormatSearchItemDescription(string description, SearchItemType type)
         {
             string format = searchItemDescriptionFormatMap[type];
-            return string.Format(ResourceLoader.GetForCurrentView().GetString(format), description);
+            return string.Format(ResourceLoader.GetForCurrentView().GetString(format), description ?? "Unknown");
         }
 
         public static string FormatSearchItemIcon(SearchItemType type)

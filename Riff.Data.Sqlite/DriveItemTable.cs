@@ -30,6 +30,8 @@ namespace Riff.Data.Sqlite
                     builder.AppendLine($"CREATE TABLE {Name}");
                     builder.AppendLine("(");
                     builder.AppendLine("Id VARCHAR PRIMARY KEY,");
+                    builder.AppendLine("Name VARCHAR,");
+                    builder.AppendLine("Description VARCHAR,");
                     builder.AppendLine("CTag VARCHAR,");
                     builder.AppendLine("ETag VARCHAR,");
                     builder.AppendLine("AddedDate INTEGER,");
@@ -81,8 +83,8 @@ namespace Riff.Data.Sqlite
             {
                 var builder = new StringBuilder();
                 builder.AppendLine($"INSERT INTO {Name}");
-                builder.AppendLine("(Id, CTag, ETag, AddedDate, LastModified, DownloadUrl, Size, Source, TrackId)");
-                builder.AppendLine("VALUES(@Id, @CTag, @ETag, @AddedDate, @LastModified, @DownloadUrl, @Size, @Source, @TrackId);");
+                builder.AppendLine("(Id, Name, Description, CTag, ETag, AddedDate, LastModified, DownloadUrl, Size, Source, TrackId)");
+                builder.AppendLine("VALUES(@Id, @Name, @Description, @CTag, @ETag, @AddedDate, @LastModified, @DownloadUrl, @Size, @Source, @TrackId);");
 
                 command.CommandText = builder.ToString();
                 AddParameters(item, command, builder);
@@ -175,11 +177,23 @@ namespace Riff.Data.Sqlite
                 throw new ArgumentNullException(nameof(item.Track.Id));
             }
 
+            if (string.IsNullOrEmpty(item.Name))
+            {
+                item.Name = null;
+            }
+
+            if (string.IsNullOrEmpty(item.Description))
+            {
+                item.Description = null;
+            }
+
             using (var command = connection.CreateCommand())
             {
                 var builder = new StringBuilder();
                 builder.AppendLine($"UPDATE {Name}");
-                builder.AppendLine("SET CTag = @CTag,");
+                builder.AppendLine("SET Name = @Name,");
+                builder.AppendLine("Description= @Description,");
+                builder.AppendLine("CTag = @CTag,");
                 builder.AppendLine("ETag = @ETag,");
                 builder.AppendLine("AddedDate = @AddedDate,");
                 builder.AppendLine("LastModified = @LastModified,");
@@ -198,7 +212,7 @@ namespace Riff.Data.Sqlite
 
         private static void ApplySelect(DriveItemAccessOptions options, StringBuilder builder)
         {
-            IList<string> fields = new List<string>() { "item.Id AS DriveItemId", "item.CTag AS DriveItemCTag", "item.ETag AS DriveItemETag", "item.AddedDate AS DriveItemAddedDate", "item.LastModified AS DriveItemLastModified", "item.DownloadUrl AS DriveItemDownloadUrl", "item.Size AS DriveItemSize", "item.Source AS DriveItemSource" };
+            IList<string> fields = new List<string>() { "item.Id AS DriveItemId", "item.Name AS DriveItemName", "item.Description AS DriveItemDescription", "item.CTag AS DriveItemCTag", "item.ETag AS DriveItemETag", "item.AddedDate AS DriveItemAddedDate", "item.LastModified AS DriveItemLastModified", "item.DownloadUrl AS DriveItemDownloadUrl", "item.Size AS DriveItemSize", "item.Source AS DriveItemSource" };
             IList<string> joins = new List<string>();
 
             if (options.IncludeTrack)
@@ -312,6 +326,8 @@ namespace Riff.Data.Sqlite
         {
             command.CommandText = builder.ToString();
             command.Parameters.AddWithValue("@Id", item.Id);
+            command.Parameters.AddWithNullableValue("@Name", item.Name);
+            command.Parameters.AddWithNullableValue("@Description", item.Description);
             command.Parameters.AddWithValue("@CTag", item.CTag);
             command.Parameters.AddWithValue("@ETag", item.ETag);
             command.Parameters.AddWithValue("@AddedDate", item.AddedDate.Ticks);

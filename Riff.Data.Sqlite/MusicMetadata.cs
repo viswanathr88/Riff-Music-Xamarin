@@ -39,14 +39,14 @@ namespace Riff.Data.Sqlite
             this.connection.Open();
 
             // Enable object cache
-            extractor.DisableCache = false;
+            extractor.DisableCache = true;
 
             artistTable = new ArtistTable(connection, extractor);
             genreTable = new GenreTable(connection, extractor);
             albumTable = new AlbumTable(connection, extractor);
             tracksTable = new TrackTable(connection, extractor);
             driveItemTable = new DriveItemTable(connection, extractor);
-            indexedTrackTable = new IndexedTrackTable(connection);
+            indexedTrackTable = new IndexedTrackTable(connection, extractor);
             thumbnailInfoTable = new ThumbnailInfoTable(connection);
 
             Version version = GetVersion();

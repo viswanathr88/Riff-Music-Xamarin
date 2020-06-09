@@ -87,6 +87,21 @@ namespace Riff.Data.Sqlite
                 throw new ArgumentNullException(nameof(track.Genre));
             }
 
+            if (string.IsNullOrEmpty(track.Title))
+            {
+                track.Title = null;
+            }
+
+            if (string.IsNullOrEmpty(track.Artist))
+            {
+                track.Artist = null;
+            }
+
+            if (string.IsNullOrEmpty(track.Composers))
+            {
+                track.Composers = null;
+            }
+
             using (var command = connection.CreateCommand())
             {
                 var builder = new StringBuilder();
@@ -163,6 +178,21 @@ namespace Riff.Data.Sqlite
             if (track.Genre == null || !track.Genre.Id.HasValue)
             {
                 throw new ArgumentNullException(nameof(track.Genre));
+            }
+
+            if (string.IsNullOrEmpty(track.Title))
+            {
+                track.Title = null;
+            }
+
+            if (string.IsNullOrEmpty(track.Artist))
+            {
+                track.Artist = null;
+            }
+
+            if (string.IsNullOrEmpty(track.Composers))
+            {
+                track.Composers = null;
             }
 
             using (var command = connection.CreateCommand())
@@ -327,7 +357,7 @@ namespace Riff.Data.Sqlite
 
         private static void AddParameters(Track track, SqliteCommand command)
         {
-            command.Parameters.AddWithValue("@Title", track.Title);
+            command.Parameters.AddWithNullableValue("@Title", track.Title);
             command.Parameters.AddWithValue("@Number", track.Number);
             command.Parameters.AddWithNullableValue("@Artist", track.Artist);
             command.Parameters.AddWithValue("@Bitrate", track.Bitrate);

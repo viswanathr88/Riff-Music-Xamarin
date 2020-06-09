@@ -54,6 +54,26 @@ namespace Riff.Data.Sqlite.Test
         }
 
         [Fact]
+        public void Add_NullArtistName_ReturnDbNull()
+        {
+            string artistName = null;
+            artistTable.Add(new Artist() { Name = artistName });
+            
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = $"SELECT * FROM {artistTable.Name}";
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Assert.Equal(1, reader.GetInt64(0));
+                        Assert.True(reader.IsDBNull(1));
+                    }
+                }
+            }
+        }
+
+        [Fact]
         public void Add_MultipleArtists_ValidateNames()
         {
             var artistIds = new List<long>() { 1, 2, 3 };
@@ -89,13 +109,6 @@ namespace Riff.Data.Sqlite.Test
         }
 
         [Fact]
-        public void Find_NullParameter_Throw()
-        {
-            Assert.Throws<ArgumentNullException>(() => artistTable.Find(string.Empty));
-            Assert.Throws<ArgumentNullException>(() => artistTable.Find(null));
-        }
-
-        [Fact]
         public void Find_ArtistNotFound_ReturnNull()
         {
             Assert.Null(artistTable.Find("TestArtist"));
@@ -107,6 +120,16 @@ namespace Riff.Data.Sqlite.Test
             var artist = artistTable.Add(new Artist() { Name = "TestArtist" });
             var foundArtist = artistTable.Find("TestArtist");
             CompareAndAssert(artist, foundArtist);
+        }
+
+        [Fact]
+        public void Find_ArtistNameNull_EnsureIdMatches()
+        {
+            var artist = new Artist();
+            artistTable.Add(artist);
+
+            var actualArtist = artistTable.Find(null);
+            CompareAndAssert(actualArtist, artist);
         }
 
         [Fact]

@@ -293,18 +293,22 @@ namespace Riff.Sync
 
         private void ProcessAndSaveItem(Data.Json.DriveItem item, IEditSession session)
         {
+            string genreName = item.audio.genre?.Trim();
+            string albumArtistName = item.audio.albumArtist?.Trim();
+            string albumName = item.audio.album?.Trim();
+
             DriveItem driveItem = session.DriveItems.Get(item.id);
 
             Track track = (driveItem != null) ? session.Tracks.Get(driveItem.Track.Id.Value) : null;
             IndexedTrack indexedTrack = (track != null) ? session.Index.Get(track.Id.Value) : null;
-            Artist artist = session.Artists.Find(item.audio.albumArtist);
-            Album album = artist != null ? session.Albums.FindByArtist(artist.Id.Value, item.audio.album) : null;
+            Artist artist = session.Artists.Find(albumArtistName);
+            Album album = artist != null ? session.Albums.FindByArtist(artist.Id.Value, albumName) : null;
             ThumbnailInfo thumbnailInfo = (album != null) ? session.Thumbnails.Get(album.Id.Value) : null;
-            Genre genre = session.Genres.Find(item.audio.genre);
+            Genre genre = session.Genres.Find(genreName);
 
             // If we already have a genre, do nothing. If not create a new one
             bool isGenreNew = (genre == null);
-            genre = genre ?? new Genre() { Name = item.audio.genre };
+            genre = genre ?? new Genre() { Name = genreName };
             if (isGenreNew)
             {
                 session.Genres.Add(genre);
@@ -312,7 +316,7 @@ namespace Riff.Sync
 
             // If we already have an artist, do nothing. If not create a new one
             bool isArtistNew = (artist == null);
-            artist = artist ?? new Artist() { Name = item.audio.albumArtist };
+            artist = artist ?? new Artist() { Name = albumArtistName };
             if (isArtistNew)
             {
                 session.Artists.Add(artist);
@@ -322,7 +326,7 @@ namespace Riff.Sync
             bool isAlbumNew = (album == null);
             album = album ?? new Album()
             {
-                Name = item.audio.album,
+                Name = albumName,
                 Artist = new Artist() { Id = artist.Id },
                 Genre = new Genre() { Id = genre.Id }
             };
@@ -334,35 +338,23 @@ namespace Riff.Sync
             // If we have a track, update its properties. If not create a new one
             bool isTrackNew = (track == null);
             track = track ?? new Track();
-            track.Title = item.audio.title;
+            track.Title = item.audio.title?.Trim();
             track.Number = item.audio.track;
-            track.Artist = item.audio.artist;
+            track.Artist = item.audio.artist?.Trim();
             track.Bitrate = item.audio.bitrate;
-            track.Composers = item.audio.composers;
+            track.Composers = item.audio.composers?.Trim();
             track.Duration = TimeSpan.FromMilliseconds(item.audio.duration);
             track.ReleaseYear = item.audio.year;
             track.Genre = new Genre() { Id = genre.Id };
             track.Album = new Album() { Id = album.Id };
             _ = isTrackNew ? session.Tracks.Add(track) : session.Tracks.Update(track);
 
-            // Replicate whatever changes had to be done to the Track to IndexedTrack
-            bool isIndexedTrackNew = (indexedTrack == null);
-            indexedTrack = indexedTrack ?? new IndexedTrack();
-            indexedTrack.Id = track.Id;
-            indexedTrack.AlbumName = album.Name;
-            indexedTrack.SetAlbumId(album.Id.Value);
-            indexedTrack.ArtistName = artist.Name;
-            indexedTrack.SetArtistId(artist.Id.Value);
-            indexedTrack.GenreName = genre.Name;
-            indexedTrack.SetGenreId(genre.Id.Value);
-            indexedTrack.TrackArtist = track.Artist;
-            indexedTrack.TrackName = track.Title;
-            _ = isIndexedTrackNew ? session.Index.Add(indexedTrack) : session.Index.Update(indexedTrack);
-
             // If we have a driveItem already, update its properties. If not create a new one
             bool isDriveItemNew = (driveItem == null);
             driveItem = driveItem ?? new DriveItem();
             driveItem.Id = item.id;
+            driveItem.Name = item.name?.Trim();
+            driveItem.Description = item.description?.Trim();
             driveItem.CTag = item.cTag;
             driveItem.ETag = item.eTag;
             driveItem.AddedDate = item.createdDateTime;
@@ -372,6 +364,21 @@ namespace Riff.Sync
             driveItem.Track = new Track() { Id = track.Id };
             driveItem.Source = DriveItemSource.OneDrive;
             _ = isDriveItemNew ? session.DriveItems.Add(driveItem) : session.DriveItems.Update(driveItem);
+
+            // Replicate whatever changes had to be done to the Track to IndexedTrack
+            bool isIndexedTrackNew = (indexedTrack == null);
+            indexedTrack = indexedTrack ?? new IndexedTrack();
+            indexedTrack.Id = track.Id;
+            indexedTrack.FileName = driveItem.Name;
+            indexedTrack.AlbumName = album.Name;
+            indexedTrack.SetAlbumId(album.Id.Value);
+            indexedTrack.ArtistName = artist.Name;
+            indexedTrack.SetArtistId(artist.Id.Value);
+            indexedTrack.GenreName = genre.Name;
+            indexedTrack.SetGenreId(genre.Id.Value);
+            indexedTrack.TrackArtist = track.Artist;
+            indexedTrack.TrackName = track.Title;
+            _ = isIndexedTrackNew ? session.Index.Add(indexedTrack) : session.Index.Update(indexedTrack);
 
             // Add or update thumbnail
             bool isThumbnailInfoNew = (thumbnailInfo == null);

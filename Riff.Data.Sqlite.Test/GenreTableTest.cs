@@ -33,6 +33,46 @@ namespace Riff.Data.Sqlite.Test
         }
 
         [Fact]
+        public void Add_NullGenreName_ReturnDbNull()
+        {
+            string genreName = null;
+            genreTable.Add(new Genre() { Name = genreName });
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = $"SELECT * FROM {genreTable.Name}";
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Assert.Equal(1, reader.GetInt64(0));
+                        Assert.True(reader.IsDBNull(1));
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public void Add_EmptyStringGenreName_ReturnDbNull()
+        {
+            string genreName = string.Empty;
+            genreTable.Add(new Genre() { Name = genreName });
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = $"SELECT * FROM {genreTable.Name}";
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Assert.Equal(1, reader.GetInt64(0));
+                        Assert.True(reader.IsDBNull(1));
+                    }
+                }
+            }
+        }
+
+        [Fact]
         public void Add_Success_ValidateName()
         {
             var genreName = "TestGenre";
@@ -88,13 +128,6 @@ namespace Riff.Data.Sqlite.Test
         }
 
         [Fact]
-        public void Find_NullParameter_Throw()
-        {
-            Assert.Throws<ArgumentNullException>(() => genreTable.Find(string.Empty));
-            Assert.Throws<ArgumentNullException>(() => genreTable.Find(null));
-        }
-
-        [Fact]
         public void Find_GenreNotFound_ReturnNull()
         {
             Assert.Null(genreTable.Find("TestGenre"));
@@ -106,6 +139,29 @@ namespace Riff.Data.Sqlite.Test
             var genre = genreTable.Add(new Genre() { Name = "TestGenre" });
             var foundGenre = genreTable.Find("TestGenre");
             CompareAndAssert(genre, foundGenre);
+        }
+
+        [Fact]
+        public void Find_GenreNameNull_Validate()
+        {
+            var genre = new Genre();
+            genreTable.Add(genre);
+
+            var actualGenre = genreTable.Find(null);
+            CompareAndAssert(actualGenre, genre);
+        }
+
+        [Fact]
+        public void Find_GenreNameEmpty_Validate()
+        {
+            var genre = new Genre() { Name = string.Empty };
+            genreTable.Add(genre);
+
+            var actualGenre = genreTable.Find(null);
+            CompareAndAssert(actualGenre, genre);
+
+            actualGenre = genreTable.Find(string.Empty);
+            CompareAndAssert(actualGenre, genre);
         }
 
         [Fact]
@@ -173,14 +229,6 @@ namespace Riff.Data.Sqlite.Test
         public void Update_NullId_Throw()
         {
             Assert.Throws<ArgumentNullException>(() => genreTable.Update(new Genre() { Name = "TestGenre" }));
-        }
-
-        [Fact]
-        public void Update_NullName_Throw()
-        {
-            Assert.Throws<ArgumentNullException>(() => genreTable.Update(new Genre()));
-            Assert.Throws<ArgumentNullException>(() => genreTable.Update(new Genre() { Name = null }));
-            Assert.Throws<ArgumentNullException>(() => genreTable.Update(new Genre() { Name = string.Empty }));
         }
 
         [Fact]
