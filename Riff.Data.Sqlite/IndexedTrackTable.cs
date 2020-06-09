@@ -9,10 +9,12 @@ namespace Riff.Data.Sqlite
     public sealed class IndexedTrackTable : IIndexAccessor, ITable
     {
         private readonly SqliteConnection connection;
+        private readonly DataExtractor extractor;
 
-        public IndexedTrackTable(SqliteConnection connection)
+        public IndexedTrackTable(SqliteConnection connection, DataExtractor extractor)
         {
             this.connection = connection ?? throw new ArgumentNullException(nameof(connection));
+            this.extractor = extractor;
         }
 
         public string Name { get; } = "IndexedTrack";
@@ -26,6 +28,7 @@ namespace Riff.Data.Sqlite
                     var builder = new StringBuilder();
                     builder.AppendLine($"CREATE VIRTUAL TABLE {Name} USING FTS4");
                     builder.AppendLine("(");
+                    builder.AppendLine("FileName VARCHAR,");
                     builder.AppendLine("ArtistName VARCHAR,");
                     builder.AppendLine("AlbumName VARCHAR,");
                     builder.AppendLine("TrackName VARCHAR,");
@@ -57,8 +60,8 @@ namespace Riff.Data.Sqlite
             using (var command = connection.CreateCommand())
             {
                 var builder = new StringBuilder();
-                builder.AppendLine($"INSERT INTO {Name} (docid, ArtistName, AlbumName, TrackName, TrackArtist, GenreName, AlbumId, ArtistId, GenreId)");
-                builder.AppendLine("VALUES (@Id, @ArtistName, @AlbumName, @TrackName, @TrackArtist, @GenreName, @AlbumId, @ArtistId, @GenreId);");
+                builder.AppendLine($"INSERT INTO {Name} (docid, FileName, ArtistName, AlbumName, TrackName, TrackArtist, GenreName, AlbumId, ArtistId, GenreId)");
+                builder.AppendLine("VALUES (@Id, @FileName, @ArtistName, @AlbumName, @TrackName, @TrackArtist, @GenreName, @AlbumId, @ArtistId, @GenreId);");
                 builder.AppendLine("select last_insert_rowid();");
 
                 command.CommandText = builder.ToString();
@@ -76,14 +79,14 @@ namespace Riff.Data.Sqlite
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT docid AS Id, ArtistName, AlbumName, TrackName, TrackArtist, GenreName, AlbumId, ArtistId, GenreId FROM {Name} WHERE Id = @Id";
+                command.CommandText = $"SELECT docid AS Id, FileName, ArtistName, AlbumName, TrackName, TrackArtist, GenreName, AlbumId, ArtistId, GenreId FROM {Name} WHERE Id = @Id";
                 command.Parameters.AddWithValue("@Id", id);
 
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        track = ExtractIndexedTrack(reader);
+                        track = extractor.ExtractIndexedTrack(reader);
                     }
                 }
             }
@@ -107,7 +110,8 @@ namespace Riff.Data.Sqlite
             {
                 var builder = new StringBuilder();
                 builder.AppendLine($"UPDATE {Name}");
-                builder.AppendLine("SET ArtistName = @ArtistName,");
+                builder.AppendLine("SET FileName = @FileName,");
+                builder.AppendLine("ArtistName = @ArtistName,");
                 builder.AppendLine("AlbumName = @AlbumName,");
                 builder.AppendLine("TrackName = @TrackName,");
                 builder.AppendLine("TrackArtist = @TrackArtist,");
@@ -164,7 +168,7 @@ namespace Riff.Data.Sqlite
                     {
                         while (reader.Read())
                         {
-                            albums.Add(ExtractAlbumQueryItem(reader));
+                            albums.Add(extractor.ExtractAlbumQueryItem(reader));
                         }
                     }
                 }
@@ -204,7 +208,7 @@ namespace Riff.Data.Sqlite
                     {
                         while (reader.Read())
                         {
-                            artist.Add(ExtractArtistQueryItem(reader));
+                            artist.Add(extractor.ExtractArtistQueryItem(reader));
                         }
                     }
                 }
@@ -244,7 +248,7 @@ namespace Riff.Data.Sqlite
                     {
                         while (reader.Read())
                         {
-                            genres.Add(ExtractGenreQueryItem(reader));
+                            genres.Add(extractor.ExtractGenreQueryItem(reader));
                         }
                     }
                 }
@@ -279,7 +283,7 @@ namespace Riff.Data.Sqlite
                     {
                         while (reader.Read())
                         {
-                            tracks.Add(ExtractTrackQueryItem(reader));
+                            tracks.Add(extractor.ExtractTrackQueryItem(reader));
                         }
                     }
                 }
@@ -314,7 +318,7 @@ namespace Riff.Data.Sqlite
                     {
                         while (reader.Read())
                         {
-                            tracks.Add(ExtractTrackQueryItem(reader));
+                            tracks.Add(extractor.ExtractTrackQueryItem(reader));
                         }
                     }
                 }
@@ -323,71 +327,10 @@ namespace Riff.Data.Sqlite
             return tracks;
         }
 
-        private IndexedTrack ExtractIndexedTrack(SqliteDataReader reader)
-        {
-            int index = 0;
-            return new IndexedTrack()
-            {
-                Id = reader.GetInt64(index++),
-                ArtistName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                AlbumName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                TrackName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                TrackArtist = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                GenreName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                AlbumId = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                ArtistId = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
-                GenreId = reader.IsDBNull(index++) ? null : reader.GetString(index - 1)
-            };
-        }
-
-        private AlbumQueryItem ExtractAlbumQueryItem(SqliteDataReader reader)
-        {
-            return new AlbumQueryItem()
-            {
-                Id = reader.GetInt64(0),
-                AlbumName = reader.GetString(1),
-                ArtistName = reader.GetString(2),
-                Rank = reader.GetInt32(3)
-            };
-        }
-
-        private ArtistQueryItem ExtractArtistQueryItem(SqliteDataReader reader)
-        {
-            return new ArtistQueryItem()
-            {
-                Id = reader.GetInt64(0),
-                ArtistName = reader.GetString(1),
-                TrackCount = reader.GetInt32(2),
-                Rank = reader.GetInt32(3)
-            };
-        }
-
-        private GenreQueryItem ExtractGenreQueryItem(SqliteDataReader reader)
-        {
-            return new GenreQueryItem()
-            {
-                Id = reader.GetInt64(0),
-                GenreName = reader.GetString(1),
-                TrackCount = reader.GetInt32(2),
-                Rank = reader.GetInt32(3)
-            };
-        }
-
-        private TrackQueryItem ExtractTrackQueryItem(SqliteDataReader reader)
-        {
-            return new TrackQueryItem()
-            {
-                Id = reader.GetInt64(0),
-                TrackName = reader.GetString(1),
-                TrackArtist = reader.GetString(2),
-                Rank = reader.GetInt32(3),
-                AlbumId = reader.GetInt64(4)
-            };
-        }
-
         private static void AddParameters(IndexedTrack track, SqliteCommand command)
         {
             command.Parameters.AddWithValue("@Id", track.Id.Value);
+            command.Parameters.AddWithNullableValue("@FileName", track.FileName);
             command.Parameters.AddWithNullableValue("@ArtistName", track.ArtistName);
             command.Parameters.AddWithNullableValue("@AlbumName", track.AlbumName);
             command.Parameters.AddWithNullableValue("@TrackName", track.TrackName);

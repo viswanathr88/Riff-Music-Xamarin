@@ -24,7 +24,7 @@ namespace Riff.Data.Sqlite
             {
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"CREATE TABLE {Name} (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name VARCHAR)";
+                    command.CommandText = $"CREATE TABLE {Name} (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name VARCHAR UNIQUE)";
                     command.ExecuteNonQuery();
                 }
             }
@@ -46,10 +46,15 @@ namespace Riff.Data.Sqlite
                 throw new ArgumentException(nameof(genre.Id));
             }
 
+            if (string.IsNullOrEmpty(genre.Name))
+            {
+                genre.Name = null;
+            }
+
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = $"INSERT INTO {Name} (Name) VALUES(@Name)";
-                command.Parameters.AddWithValue("@Name", genre.Name);
+                command.Parameters.AddWithNullableValue("@Name", genre.Name);
 
                 command.ExecuteNonQuery();
             }
@@ -65,17 +70,17 @@ namespace Riff.Data.Sqlite
 
         public Genre Find(string genreName)
         {
+            Genre genre = null;
+
             if (string.IsNullOrEmpty(genreName))
             {
-                throw new ArgumentNullException(nameof(genreName));
+                genreName = null;
             }
-
-            Genre genre = null;
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT Id AS GenreId, Name AS GenreName FROM {Name} WHERE Name = @Name LIMIT 1";
-                command.Parameters.AddWithValue("@Name", genreName);
+                command.CommandText = $"SELECT Id AS GenreId, Name AS GenreName FROM {Name} WHERE Name = @Name OR @Name IS NULL LIMIT 1";
+                command.Parameters.AddWithNullableValue("@Name", genreName);
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -139,13 +144,13 @@ namespace Riff.Data.Sqlite
 
             if (string.IsNullOrEmpty(genre.Name))
             {
-                throw new ArgumentNullException(nameof(genre.Name));
+                genre.Name = null;
             }
 
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = $"UPDATE {Name} SET Name = @Name WHERE Id = @Id";
-                command.Parameters.AddWithValue("@Name", genre.Name);
+                command.Parameters.AddWithNullableValue("@Name", genre.Name);
                 command.Parameters.AddWithValue("@Id", genre.Id.Value);
 
                 command.ExecuteNonQuery();

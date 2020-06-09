@@ -75,6 +75,11 @@ namespace Riff.Data.Sqlite
                 throw new ArgumentNullException(nameof(album.Genre));
             }
 
+            if (string.IsNullOrEmpty(album.Name))
+            {
+                album.Name = null;
+            }
+
             using (var command = connection.CreateCommand())
             {
                 var builder = new StringBuilder();
@@ -94,11 +99,6 @@ namespace Riff.Data.Sqlite
 
         public Album FindByArtist(long artistId, string albumName)
         {
-            if (string.IsNullOrEmpty(albumName))
-            {
-                throw new ArgumentNullException(nameof(albumName));
-            }
-
             return Get(new AlbumAccessOptions()
             {
                 AlbumNameFilter = albumName,
@@ -129,6 +129,11 @@ namespace Riff.Data.Sqlite
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
+            }
+
+            if (string.IsNullOrEmpty(options.AlbumNameFilter))
+            {
+                options.AlbumNameFilter = null;
             }
 
             IList<Album> albums = new List<Album>();
@@ -297,8 +302,8 @@ namespace Riff.Data.Sqlite
 
             if (!string.IsNullOrEmpty(options.AlbumNameFilter))
             {
-                filters.Add("album.Name = @AlbumName");
-                command.Parameters.AddWithValue("@AlbumName", options.AlbumNameFilter);
+                filters.Add("(album.Name = @AlbumName OR @AlbumName IS NULL)");
+                command.Parameters.AddWithNullableValue("@AlbumName", options.AlbumNameFilter);
             }
 
             if (options.ArtistFilter.HasValue)

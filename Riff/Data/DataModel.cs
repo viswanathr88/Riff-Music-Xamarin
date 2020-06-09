@@ -62,6 +62,8 @@ namespace Riff.Data
     public sealed class DriveItem
     {
         public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public string CTag { get; set; }
         public string ETag { get; set; }
         public DateTime AddedDate { get; set; }
@@ -84,6 +86,7 @@ namespace Riff.Data
     public class IndexedTrack
     {
         public long? Id { get; set; }
+        public string FileName { get; set; }
         public string ArtistName { get; set; }
         public string AlbumName { get; set; }
         public string ArtistId { get; set; }

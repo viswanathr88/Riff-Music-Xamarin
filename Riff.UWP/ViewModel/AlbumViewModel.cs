@@ -2,6 +2,7 @@
 using Riff.Data.Access;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Riff.UWP.ViewModel
@@ -33,8 +34,19 @@ namespace Riff.UWP.ViewModel
         {
             AlbumInfo = album ?? throw new ArgumentNullException(nameof(album));
 
-            var tracks = await Task.Run(() =>
+            var tracks = await Task.Run(async() =>
             {
+                var albumOptions = new AlbumAccessOptions()
+                {
+                    IncludeArtist = true,
+                    IncludeGenre = true,
+                    AlbumFilter = album.Id
+                };
+
+                var a = this.metadata.Albums.Get(albumOptions).First();
+                await RunUISafe(() => AlbumInfo = a);
+
+                // Get tracks for album
                 var options = new TrackAccessOptions()
                 {
                     SortType = TrackSortType.Number,

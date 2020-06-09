@@ -171,6 +171,8 @@ namespace Riff.Data.Sqlite
             var item = new DriveItem()
             {
                 Id = (index < reader.FieldCount && reader.GetName(index) == "DriveItemId") ? reader.GetString(index++) : null,
+                Name = (index < reader.FieldCount && reader.GetName(index) == "DriveItemName" && !reader.IsDBNull(index++)) ? reader.GetString(index - 1) : null,
+                Description = (index < reader.FieldCount && reader.GetName(index) == "DriveItemDescription" && !reader.IsDBNull(index++)) ? reader.GetString(index - 1) : null,
                 CTag = (index < reader.FieldCount && reader.GetName(index) == "DriveItemCTag" && !reader.IsDBNull(index++)) ? reader.GetString(index-1) : null,
                 ETag = (index < reader.FieldCount && reader.GetName(index) == "DriveItemETag" && !reader.IsDBNull(index++)) ? reader.GetString(index-1) : null,
                 AddedDate = (index < reader.FieldCount && reader.GetName(index) == "DriveItemAddedDate") ? new DateTime(reader.GetInt64(index++)) : DateTime.MinValue,
@@ -182,6 +184,73 @@ namespace Riff.Data.Sqlite
             };
 
             return item;
+        }
+
+        public IndexedTrack ExtractIndexedTrack(SqliteDataReader reader)
+        {
+            int index = 0;
+            return new IndexedTrack()
+            {
+                Id = reader.GetInt64(index++),
+                FileName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                ArtistName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                AlbumName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                TrackName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                TrackArtist = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                GenreName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                AlbumId = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                ArtistId = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                GenreId = reader.IsDBNull(index++) ? null : reader.GetString(index - 1)
+            };
+        }
+
+        public AlbumQueryItem ExtractAlbumQueryItem(SqliteDataReader reader)
+        {
+            int index = 0;
+            return new AlbumQueryItem()
+            {
+                Id = reader.GetInt64(index++),
+                AlbumName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                ArtistName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                Rank = reader.GetInt32(index++)
+            };
+        }
+
+        public ArtistQueryItem ExtractArtistQueryItem(SqliteDataReader reader)
+        {
+            int index = 0;
+            return new ArtistQueryItem()
+            {
+                Id = reader.GetInt64(index++),
+                ArtistName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                TrackCount = reader.GetInt32(index++),
+                Rank = reader.GetInt32(index++)
+            };
+        }
+
+        public GenreQueryItem ExtractGenreQueryItem(SqliteDataReader reader)
+        {
+            int index = 0;
+            return new GenreQueryItem()
+            {
+                Id = reader.GetInt64(index++),
+                GenreName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                TrackCount = reader.GetInt32(index++),
+                Rank = reader.GetInt32(index++)
+            };
+        }
+
+        public TrackQueryItem ExtractTrackQueryItem(SqliteDataReader reader)
+        {
+            int index = 0;
+            return new TrackQueryItem()
+            {
+                Id = reader.GetInt64(index++),
+                TrackName = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                TrackArtist = reader.IsDBNull(index++) ? null : reader.GetString(index - 1),
+                Rank = reader.GetInt32(index++),
+                AlbumId = reader.GetInt64(index++)
+            };
         }
 
     }

@@ -24,7 +24,7 @@ namespace Riff.Data.Sqlite
             {
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = $"CREATE TABLE {Name} (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name VARCHAR)";
+                    command.CommandText = $"CREATE TABLE {Name} (Id INTEGER PRIMARY KEY AUTOINCREMENT, Name VARCHAR UNIQUE)";
                     command.ExecuteNonQuery();
                 }
             }
@@ -59,16 +59,11 @@ namespace Riff.Data.Sqlite
 
         public Artist Find(string artistName)
         {
-            if (string.IsNullOrEmpty(artistName))
-            {
-                throw new ArgumentNullException(nameof(artistName));
-            }
-
             Artist artist = null;
 
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"SELECT Id AS ArtistId, Name AS ArtistName FROM {Name} WHERE Name = @Name LIMIT 1";
+                command.CommandText = $"SELECT Id AS ArtistId, Name AS ArtistName FROM {Name} WHERE Name = @Name OR @Name IS NULL LIMIT 1";
                 command.Parameters.AddWithNullableValue("@Name", artistName);
 
                 using (var reader = command.ExecuteReader())
@@ -133,7 +128,7 @@ namespace Riff.Data.Sqlite
 
             if (string.IsNullOrEmpty(artist.Name))
             {
-                throw new ArgumentNullException(nameof(artist.Name));
+                artist.Name = null;
             }
 
             using (var command = connection.CreateCommand())

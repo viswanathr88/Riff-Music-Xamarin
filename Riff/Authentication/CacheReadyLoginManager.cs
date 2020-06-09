@@ -72,7 +72,10 @@ namespace Riff.Authentication
             {
                 using (var photostream = await this.loginManagerImpl.GetUserPhotoAsync())
                 {
-                    await this.profileCache.SetPhotoAsync(photostream);
+                    if (photostream != null)
+                    {
+                        await this.profileCache.SetPhotoAsync(photostream);
+                    }
                 }
 
                 stream = await this.profileCache.GetPhotoAsync();

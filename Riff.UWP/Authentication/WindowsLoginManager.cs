@@ -137,9 +137,14 @@ namespace Riff.UWP.Authentication
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
 
             var response = await this.webClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStreamAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadAsStreamAsync();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<bool> LoginExistsAsync()
