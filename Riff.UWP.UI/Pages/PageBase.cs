@@ -1,17 +1,18 @@
 ﻿using Riff.UWP.ViewModel;
+using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using System;
 
 namespace Riff.UWP.Pages
 {
     public abstract class PageBase : Page
     {
-        private static readonly string LocatorKey = "VMLocator";
         public bool RegisterForChanges { get; protected set; } = false;
         public bool PreferViewUpdateBeforeLoad { get; protected set; } = false;
-        public static Locator Locator => Windows.UI.Xaml.Application.Current.Resources[LocatorKey] as Locator;
         public abstract IDataViewModel DataViewModel { get; }
+
+        public static Locator Locator => Application.Current.Resources["VMLocator"] as Locator;
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {

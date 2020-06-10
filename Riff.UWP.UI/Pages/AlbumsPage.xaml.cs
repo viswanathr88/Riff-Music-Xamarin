@@ -31,7 +31,6 @@ namespace Riff.UWP.Pages
         private MusicLibrary Library => Locator.Library;
 
         public AlbumsViewModel ViewModel => Locator.MusicLibrary.Albums;
-
         public override IDataViewModel DataViewModel => ViewModel;
 
         protected async override void HandleViewModelPropertyChanged(string propertyName)

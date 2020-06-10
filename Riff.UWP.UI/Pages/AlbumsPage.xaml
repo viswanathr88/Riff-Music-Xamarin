@@ -10,8 +10,8 @@
                        xmlns:conv="using:Riff.UWP.Converters"
                        xmlns:sys="using:System"
                        mc:Ignorable="d"
-                       Background="Transparent">
-    <local:LibraryPageBase.Resources>
+                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Resources/BorderlessGridViewItem.xaml" />
@@ -20,7 +20,7 @@
             <conv:SortOrderConverter x:Key="SortOrderConverter" />
         </ResourceDictionary>
 
-    </local:LibraryPageBase.Resources>
+    </Page.Resources>
 
     <local:LibraryPageBase.SortMenu>
         <MenuFlyout Placement="Bottom"

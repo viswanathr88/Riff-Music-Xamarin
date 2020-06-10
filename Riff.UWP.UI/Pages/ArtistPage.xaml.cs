@@ -18,7 +18,7 @@ namespace Riff.UWP.Pages
             HeaderText = ResourceLoader.GetForCurrentView().GetString("ArtistPageHeader");
         }
 
-        public ArtistViewModel ViewModel { get; } = new ArtistViewModel(Locator.Library);
+        public ArtistViewModel ViewModel => new ArtistViewModel(Locator.Library);
 
         public override IDataViewModel DataViewModel => ViewModel;
 

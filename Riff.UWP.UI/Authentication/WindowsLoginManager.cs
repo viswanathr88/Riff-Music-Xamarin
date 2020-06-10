@@ -192,7 +192,7 @@ namespace Riff.UWP.Authentication
                 args.HeaderText = HeaderText;
             }
 
-            if (App.DeviceFamily == DeviceFamily.Xbox)
+            if (Device.Family == DeviceFamily.Xbox)
             {
                 var provider = await WebAuthenticationCoreManager.FindAccountProviderAsync(GetAuthorizeUrl());
                 await GetMsaTokenFromProviderAsync(provider);

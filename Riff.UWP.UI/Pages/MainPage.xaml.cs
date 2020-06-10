@@ -241,7 +241,7 @@ namespace Riff.UWP.Pages
         {
             if (preference == nameof(IAppPreferences.AppTheme))
             {
-                App.UpdateTheme(Locator.Preferences.AppTheme);
+                Device.UpdateTheme(Locator.Preferences.AppTheme);
             }
         }
 

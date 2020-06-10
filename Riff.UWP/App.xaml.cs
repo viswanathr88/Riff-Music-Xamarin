@@ -41,64 +41,12 @@ namespace Riff.UWP
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
             RequiresPointerMode = ApplicationRequiresPointerMode.WhenRequested;
 
-            if (DeviceFamily == DeviceFamily.Xbox)
+            if (Device.Family == DeviceFamily.Xbox)
             {
                 Application.Current.FocusVisualKind = FocusVisualKind.Reveal;
             }
 
-            UpdateTheme(new AppPreferences().AppTheme);
-        }
-
-        public static void UpdateTheme(Theme appTheme)
-        {
-            App app = Application.Current as App;
-            if (Window.Current.Content is FrameworkElement frameworkElement)
-            {
-                app.UpdateContentTheme(appTheme);
-            }
-            else
-            {
-                app.UpdateAppTheme(appTheme);
-            }
-        }
-
-        public static DeviceFamily DeviceFamily => DeviceFamilyHelper.DeviceFamily;
-
-        private void UpdateAppTheme(Theme appTheme)
-        {
-            switch (appTheme)
-            {
-                case Theme.Dark:
-                    Application.Current.RequestedTheme = ApplicationTheme.Dark;
-                    break;
-                case Theme.Light:
-                    Application.Current.RequestedTheme = ApplicationTheme.Light;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void UpdateContentTheme(Theme appTheme)
-        {
-            if (Window.Current.Content is FrameworkElement frameworkElement)
-            {
-                var elementTheme = ElementTheme.Default;
-                switch (appTheme)
-                {
-                    case Theme.Default:
-                        elementTheme = ElementTheme.Default;
-                        break;
-                    case Theme.Light:
-                        elementTheme = ElementTheme.Light;
-                        break;
-                    case Theme.Dark:
-                        elementTheme = ElementTheme.Dark;
-                        break;
-                }
-
-                frameworkElement.RequestedTheme = elementTheme;
-            }
+            Device.UpdateTheme(new AppPreferences().AppTheme);
         }
 
         /// <summary>
@@ -135,7 +83,7 @@ namespace Riff.UWP
                     Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
                     
                     // On platforms that paint a titlebar, wait for it's height to be determined before initializing the app to prevent jumpy behavior
-                    if (DeviceFamily == DeviceFamily.Desktop)
+                    if (Device.Family == DeviceFamily.Desktop)
                     {
                         ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(350, 300));
                         CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;

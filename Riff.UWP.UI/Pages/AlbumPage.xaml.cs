@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using CommonServiceLocator;
+using Riff.Data;
 using Riff.UWP.ViewModel;
 using System;
 using System.IO;
@@ -27,11 +28,13 @@ namespace Riff.UWP.Pages
             HeaderText = ResourceLoader.GetForCurrentView().GetString("AlbumPageHeader");
         }
 
+        public PlayerViewModel Player => Locator.Player;
+
+        public MusicLibrary Library => Locator.Library;
+
         public AlbumViewModel ViewModel { get; } = new AlbumViewModel(Locator.MusicMetadata);
 
         public override IDataViewModel DataViewModel => ViewModel;
-
-        public PlayerViewModel Player => Locator.Player;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -64,9 +67,9 @@ namespace Riff.UWP.Pages
 
         private async Task LoadArtAsync(Image image, Album album)
         {
-            if (Locator.Library.AlbumArts.Exists(album.Id.Value))
+            if (Library.AlbumArts.Exists(album.Id.Value))
             {
-                using (var stream = Locator.Library.AlbumArts.Get(album.Id.Value))
+                using (var stream = Library.AlbumArts.Get(album.Id.Value))
                 {
                     using (var rtStream = stream.AsRandomAccessStream())
                     {

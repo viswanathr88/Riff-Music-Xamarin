@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using Riff.UWP.ViewModel;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Riff.UWP.Pages

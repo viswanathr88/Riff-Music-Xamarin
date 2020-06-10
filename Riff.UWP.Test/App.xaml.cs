@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿using Riff.UWP.ViewModel;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -31,6 +24,8 @@ namespace Riff.UWP.Test
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
+
+        public static Frame RootFrame => Window.Current.Content as Frame;
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -55,6 +50,7 @@ namespace Riff.UWP.Test
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
+                rootFrame.Background = new SolidColorBrush(Colors.Azure);
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
