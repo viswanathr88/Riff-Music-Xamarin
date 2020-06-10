@@ -134,6 +134,7 @@
       <DependentUpon>Titlebar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\SyncStatusIconConverter.cs" />
+    <Compile Include="Converters\TaglessItemsConverter.cs" />
     <Compile Include="Converters\TrackSortTypeConverter.cs" />
     <Compile Include="Converters\SortOrderConverter.cs" />
     <Compile Include="Converters\AlbumSortTypeConverter.cs" />

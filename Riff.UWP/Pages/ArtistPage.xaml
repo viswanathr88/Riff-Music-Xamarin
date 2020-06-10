@@ -137,7 +137,7 @@
                             </Grid>
 
                             <!-- Album name -->
-                            <TextBlock Text="{x:Bind Key.Name, TargetNullValue='Unknown Album'}"
+                            <TextBlock Text="{x:Bind Key.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                                        Style="{StaticResource BodyTextBlockStyle}"
                                        TextWrapping="Wrap"
                                        TextTrimming="CharacterEllipsis"
@@ -166,7 +166,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- Track Name -->
-                    <TextBlock Text="{x:Bind Title, TargetNullValue='Unknown Title'}"
+                    <TextBlock Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                                Grid.Column="0"
                                FontSize="13"
                                Margin="0,0,30,0"
@@ -175,7 +175,7 @@
                                MaxLines="1"/>
 
                     <!-- Track Artist -->
-                    <TextBlock Text="{x:Bind Artist, TargetNullValue='Unknown Artist'}"
+                    <TextBlock Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                                Grid.Column="1"
                                FontSize="13"
                                Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"

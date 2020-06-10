@@ -118,7 +118,7 @@
 
                         <!-- Track details -->
                         <TextBlock x:Name="TrackTitle"
-                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Title, Mode=OneWay}"
+                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Title, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                                    Style="{ThemeResource TitleTextBlockStyle}"
                                    TextWrapping="NoWrap"
                                    Grid.Column="1"
@@ -127,7 +127,7 @@
                                    Margin="20,0,0,5" />
 
                         <TextBlock x:Name="TrackArtist"
-                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Artist, Mode=OneWay}"
+                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Artist, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                                    Style="{ThemeResource BodyTextBlockStyle}"
                                    TextWrapping="NoWrap"
                                    Grid.Column="1"
@@ -136,7 +136,7 @@
                                    Margin="20,0,0,5" />
 
                         <TextBlock x:Name="TrackAlbum"
-                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Album, Mode=OneWay}"
+                                   Text="{x:Bind ViewModel.PlaybackList.CurrentItem.Album, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                                    Style="{ThemeResource BodyTextBlockStyle}"
                                    TextWrapping="NoWrap"
                                    Grid.Column="1"
@@ -203,7 +203,7 @@
 
                             <!-- Track Title -->
                             <TextBlock x:Name="TrackItemTitle"
-                                       Text="{x:Bind Title}"
+                                       Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                                        Style="{StaticResource BodyTextBlockStyle}"
                                        TextWrapping="NoWrap"
                                        TextTrimming="CharacterEllipsis"
@@ -216,7 +216,7 @@
 
                             <!-- Track Artist -->
                             <TextBlock x:Name="TrackItemArtist" 
-                                       Text="{x:Bind Artist}"
+                                       Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                                        Style="{StaticResource BodyTextBlockStyle}"
                                        x:Phase="1"
                                        TextWrapping="NoWrap"
@@ -229,7 +229,7 @@
 
                             <!-- Track Album -->
                             <TextBlock x:Name="TrackItemAlbum" 
-                                       Text="{x:Bind Album}"
+                                       Text="{x:Bind Album, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                                        Style="{StaticResource BodyTextBlockStyle}"
                                        x:Phase="1"
                                        TextWrapping="NoWrap"
