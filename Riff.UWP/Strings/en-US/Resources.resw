@@ -330,4 +330,19 @@
   <data name="ToolbarSortReleaseDate.Text" xml:space="preserve">
     <value>Release Date</value>
   </data>
+  <data name="UnknownAlbumText" xml:space="preserve">
+    <value>Unknown Album</value>
+  </data>
+  <data name="UnknownArtistText" xml:space="preserve">
+    <value>Unknown Artist</value>
+  </data>
+  <data name="UnknownGenreText" xml:space="preserve">
+    <value>Unknown Genre</value>
+  </data>
+  <data name="UnknownText" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="UnknownTitleText" xml:space="preserve">
+    <value>Unknown Title</value>
+  </data>
 </root>

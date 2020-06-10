@@ -83,7 +83,7 @@
                 <!-- Track Title -->
                 <TextBlock x:Name="TrackTitle"
                            x:Phase="0"
-                           Text="{x:Bind Title, TargetNullValue='Unknown Title'}"
+                           Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top"
                            FontSize="13"
@@ -96,7 +96,7 @@
                 
                 <!-- Track Artist -->
                 <TextBlock x:Name="TrackArtist" 
-                           Text="{x:Bind Artist, TargetNullValue='Unknown Artist'}"
+                           Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                            x:Phase="1"
                            HorizontalAlignment="Left"
                            Style="{StaticResource CaptionTextBlockStyle}"
@@ -159,7 +159,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Track Title -->
-                <TextBlock Text="{x:Bind Title, TargetNullValue='Unknown Title'}"
+                <TextBlock Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                            MaxLines="1"
                            x:Phase="0"
                            TextTrimming="CharacterEllipsis"
@@ -169,7 +169,7 @@
                            Margin="0,0,20,0" />
 
                 <!-- Track Artist -->
-                <TextBlock Text="{x:Bind Artist, TargetNullValue='Unknown Artist'}"
+                <TextBlock Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                            MaxLines="1"
                            x:Phase="1"
                            TextTrimming="CharacterEllipsis"
@@ -179,7 +179,7 @@
                            Margin="0,0,20,0" />
 
                 <!-- Track Album -->
-                <TextBlock Text="{x:Bind Album.Name, TargetNullValue='Unknown Album'}"
+                <TextBlock Text="{x:Bind Album.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                            MaxLines="1"
                            x:Phase="2"
                            TextTrimming="CharacterEllipsis"
@@ -213,7 +213,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Track Title -->
-                <TextBlock Text="{x:Bind Title, TargetNullValue='Unknown Title'}"
+                <TextBlock Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                            MaxLines="1"
                            x:Phase="0"
                            TextTrimming="CharacterEllipsis"
@@ -223,7 +223,7 @@
                            Margin="0,0,20,0"/>
 
                 <!-- Track Artist -->
-                <TextBlock Text="{x:Bind Artist, TargetNullValue='Unknown Artist'}"
+                <TextBlock Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                            MaxLines="1"
                            x:Phase="1"
                            TextTrimming="CharacterEllipsis"
@@ -233,7 +233,7 @@
                            Margin="0,0,20,0"/>
 
                 <!-- Track Album -->
-                <TextBlock Text="{x:Bind Album.Name, TargetNullValue='Unknown Album'}"
+                <TextBlock Text="{x:Bind Album.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                            MaxLines="1"
                            x:Phase="2"
                            TextTrimming="CharacterEllipsis"
@@ -254,7 +254,7 @@
                            Margin="0,0,20,0"/>
 
                 <!-- Track Genre -->
-                <TextBlock Text="{x:Bind Genre.Name, TargetNullValue='Unknown Genre'}"
+                <TextBlock Text="{x:Bind Genre.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
                            MaxLines="1"
                            x:Phase="2"
                            TextTrimming="CharacterEllipsis"

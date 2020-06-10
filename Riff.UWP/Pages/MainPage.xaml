@@ -154,7 +154,7 @@
                                        RelativePanel.AlignLeftWithPanel="True"
                                        RelativePanel.AlignTopWithPanel="True"
                                        ImageFailed="ImageArt_ImageFailed" />
-                                <TextBlock Text="{x:Bind Name, TargetNullValue='Unknown'}"
+                                <TextBlock Text="{x:Bind Name, Converter={StaticResource TaglessItemsConverter}}"
                                            x:Name="SearchItemName"
                                            Style="{StaticResource BodyTextBlockStyle}"
                                            TextWrapping="NoWrap"

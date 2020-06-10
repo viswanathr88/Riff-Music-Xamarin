@@ -44,7 +44,7 @@
 
                 <TextBlock Grid.Row="1"
                            HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.AlbumInfo.Name, Mode=OneWay, TargetNullValue='Unknown Album'}"
+                           Text="{x:Bind ViewModel.AlbumInfo.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                            Style="{StaticResource TitleTextBlockStyle}"
                            MaxLines="2"
                            TextWrapping="Wrap"
@@ -64,7 +64,7 @@
                             Margin="20,10,20,10">
                     <TextBlock x:Name="AlbumArtist"
                                VerticalAlignment="Center"
-                               Text="{x:Bind ViewModel.AlbumInfo.Artist.Name, Mode=OneWay, TargetNullValue='Unknown Artist'}"
+                               Text="{x:Bind ViewModel.AlbumInfo.Artist.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                MaxLines="1"
                                Margin="0,0,5,0" />
@@ -89,7 +89,7 @@
                               VerticalAlignment="Center"
                               Margin="0,0,5,0" />
 
-                    <TextBlock Text="{x:Bind ViewModel.AlbumInfo.Genre.Name, Mode=OneWay, TargetNullValue='Unknown Genre'}"
+                    <TextBlock Text="{x:Bind ViewModel.AlbumInfo.Genre.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                MaxLines="1"
                                VerticalAlignment="Center" />
@@ -167,14 +167,14 @@
                                Grid.Column="0"
                                FontSize="13"
                                Margin="0,0,20,0" />
-                    <TextBlock Text="{x:Bind Title, TargetNullValue='Unknown Title'}"
+                    <TextBlock Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                                MaxLines="1"
                                TextTrimming="CharacterEllipsis"
                                Grid.Column="1"
                                FontSize="13"
                                Margin="0,0,20,0" />
 
-                    <TextBlock Text="{x:Bind Artist, TargetNullValue='Unknown Artist'}"
+                    <TextBlock Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                                MaxLines="2"
                                TextTrimming="CharacterEllipsis"
                                Grid.Column="2"
