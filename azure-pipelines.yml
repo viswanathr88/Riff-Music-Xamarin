@@ -10,7 +10,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  group: riff-uwp-pipeline
+  group: 'riff-uwp-pipeline'
   solution: '**/*.sln'
   buildPlatform: 'x86|x64|ARM'
   buildConfiguration: 'Release'
