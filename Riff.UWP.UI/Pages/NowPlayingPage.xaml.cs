@@ -12,10 +12,13 @@ using EF = ExpressionBuilder.ExpressionFunctions;
 
 namespace Riff.UWP.Pages
 {
+    public class NowPlayingPageBase : PageBase<PlayerViewModel>
+    {
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class NowPlayingPage : ShellPageBase, ISupportViewModel<PlayerViewModel>
+    public sealed partial class NowPlayingPage : NowPlayingPageBase, IShellPage
     {
         CompositionPropertySet _props;
         CompositionPropertySet _scrollerPropertySet;
@@ -26,18 +29,14 @@ namespace Riff.UWP.Pages
             this.InitializeComponent();
         }
 
-        public override IDataViewModel DataViewModel => ViewModel;
-
-        public PlayerViewModel ViewModel => Locator.Player;
-
-        public override bool CanGoBack => Frame.CanGoBack;
+        public bool CanGoBack => Frame.CanGoBack;
 
         private void Titlebar_BackRequested(object sender, EventArgs e)
         {
             GoBack();
         }
 
-        public override void GoBack()
+        public void GoBack()
         {
             if (Frame.CanGoBack)
             {
@@ -67,7 +66,7 @@ namespace Riff.UWP.Pages
         private void MakeHeaderSticky()
         {
             // Retrieve the scroll viewer of the list view
-            var scrollViewer = VisualTreeHelperExtensions.FindVisualChild<ScrollViewer>(NowPlayingList);
+            var scrollViewer = VisualTreeHelperExtensions.FindVisualChild<ScrollViewer>(NowPlayingList, string.Empty);
 
             // Set the z-Index on the header so that it is above the content
             var headerPresenter = (UIElement)VisualTreeHelper.GetParent((UIElement)NowPlayingList.Header);

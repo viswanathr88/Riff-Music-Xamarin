@@ -1,4 +1,4 @@
-﻿<local:ShellPageBase x:Class="Riff.UWP.Pages.MainPage"
+﻿<local:MainPageBase x:Class="Riff.UWP.Pages.MainPage"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:local="using:Riff.UWP.Pages"
@@ -50,7 +50,7 @@
                            ItemInvoked="NavView_ItemInvoked"
                            IsBackButtonVisible="Collapsed"
                            IsTitleBarAutoPaddingEnabled="True"
-                           Background="{x:Bind ContentFrame.Content.(local:NavViewPageBase.ShellBackground), Mode=OneWay}">
+                           Background="{x:Bind ContentFrame.Content.(local:ICustomizeMainHeader.ShellBackground), Mode=OneWay}">
 
             <ui:NavigationView.Transitions>
                 <TransitionCollection>
@@ -66,7 +66,7 @@
 
             <ui:NavigationView.Header>
                 <Grid x:Name="NavViewHeaderContainer"
-                      Opacity="{x:Bind ContentFrame.Content.(local:NavViewPageBase.HeaderOpacity), Mode=OneWay}">
+                      Opacity="{x:Bind ContentFrame.Content.(local:ICustomizeMainHeader.HeaderOpacity), Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
@@ -74,7 +74,7 @@
 
                     <!-- Header Text -->
                     <TextBlock x:Name="NavViewHeaderText"
-                               Text="{x:Bind ContentFrame.Content.(local:NavViewPageBase.HeaderText).ToUpper(), Mode=OneWay}"
+                               Text="{x:Bind ContentFrame.Content.(local:ICustomizeMainHeader.HeaderText).ToUpper(), Mode=OneWay}"
                                VerticalAlignment="Top"
                                Style="{StaticResource NavigationViewItemHeaderTextStyle}"
                                Margin="0,5,0,0"
@@ -339,4 +339,4 @@
         </VisualStateManager.VisualStateGroups>
 
     </Grid>
-</local:ShellPageBase>
+</local:MainPageBase>

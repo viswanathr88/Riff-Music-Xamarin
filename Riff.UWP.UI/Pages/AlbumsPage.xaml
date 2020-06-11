@@ -1,4 +1,4 @@
-﻿<local:LibraryPageBase x:Class="Riff.UWP.Pages.AlbumsPage"
+﻿<local:AlbumsPageBase x:Class="Riff.UWP.Pages.AlbumsPage"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:local="using:Riff.UWP.Pages"
@@ -22,7 +22,7 @@
 
     </Page.Resources>
 
-    <local:LibraryPageBase.SortMenu>
+    <local:AlbumsPageBase.SortMenu>
         <MenuFlyout Placement="Bottom"
                     x:Name="ToolbarSortFlyout">
             <MenuFlyout.MenuFlyoutPresenterStyle>
@@ -58,7 +58,7 @@
                                     GroupName="SortOrder"
                                     IsChecked="{x:Bind ViewModel.SortOrder, Mode=TwoWay, Converter={StaticResource SortOrderConverter}, ConverterParameter=sortOrderDecreasing}"/>
         </MenuFlyout>
-    </local:LibraryPageBase.SortMenu>
+    </local:AlbumsPageBase.SortMenu>
 
     <Grid>
         <GridView ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
@@ -100,7 +100,7 @@
                                    RelativePanel.AlignHorizontalCenterWithPanel="True"
                                    RelativePanel.AlignTopWithPanel="True" />
                         </Border>
-                        <TextBlock Text="{x:Bind Name}"
+                        <TextBlock Text="{x:Bind Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                                    x:Name="AlbumName"
                                    MaxLines="1"
                                    TextTrimming="CharacterEllipsis"
@@ -108,7 +108,8 @@
                                    RelativePanel.AlignLeftWithPanel="True"
                                    Style="{StaticResource BaseTextBlockStyle}" />
 
-                        <TextBlock Text="{x:Bind Artist.Name}"
+                        <TextBlock Text="{x:Bind Artist.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                                   x:Name="ArtistName"
                                    MaxLines="1"
                                    x:Phase="1"
                                    TextTrimming="CharacterEllipsis"
@@ -120,4 +121,4 @@
             </GridView.ItemTemplate>
         </GridView>
     </Grid>
-</local:LibraryPageBase>
+</local:AlbumsPageBase>

@@ -6,8 +6,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:conv="using:Riff.UWP.Converters"
       mc:Ignorable="d"
-      Background="#506658"
-      DataContext="{Binding Source={StaticResource VMLocator}, Path=FirstRunExperience}">
+      Background="#506658">
 
     <Page.Resources>
         <conv:BoolNegationConverter x:Key="BoolNegationConv" />

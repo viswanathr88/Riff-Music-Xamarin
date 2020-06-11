@@ -22,7 +22,7 @@ namespace Riff.UWP.ViewModel
         public MusicLibraryViewModel(MusicLibrary library)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
-            albums = new Lazy<AlbumsViewModel>(() => new AlbumsViewModel(this.library));
+            albums = new Lazy<AlbumsViewModel>(() => new AlbumsViewModel(this.library.Metadata));
             artists = new Lazy<ArtistsViewModel>(() => new ArtistsViewModel(this.library));
             tracks = new Lazy<TracksViewModel>(() => new TracksViewModel(this.library));
         }

@@ -1,4 +1,4 @@
-﻿<local:NavViewPageBase
+﻿<local:SettingsPageBase
     x:Class="Riff.UWP.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,9 +12,9 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     DataContext="{Binding Source={StaticResource VMLocator}, Path=Settings}">
 
-    <local:NavViewPageBase.Resources>
+    <Page.Resources>
         <conv:BoolNegationConverter x:Key="BoolNegationConverter" />
-    </local:NavViewPageBase.Resources>
+    </Page.Resources>
 
     <StackPanel Orientation="Vertical"
                 Margin="12">
@@ -113,4 +113,4 @@
                      IsChecked="{x:Bind IsChecked(ViewModel.AppTheme, storage:Theme.Default), BindBack=SetTheme, Mode=TwoWay}"
                      Margin="0,0,0,20"/>
     </StackPanel>
-</local:NavViewPageBase>
+</local:SettingsPageBase>

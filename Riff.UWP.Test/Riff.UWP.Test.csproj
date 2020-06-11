@@ -120,11 +120,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Infra\CoreDispatcherExtensions.cs" />
+    <Compile Include="Infra\UITree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\AlbumPageTest.cs" />
     <Compile Include="UI\AlbumsPageTest.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\ArtistPageTest.cs" />
+    <Compile Include="UI\ArtistsPageTest.cs" />
+    <Compile Include="UI\TracksPageTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -160,6 +166,9 @@
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.3.200213001</Version>
     </PackageReference>
+    <PackageReference Include="Moq">
+      <Version>4.14.1</Version>
+    </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>2.1.1</Version>
     </PackageReference>
@@ -192,6 +201,7 @@
       <Name>Riff</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems" Label="Shared" />
   <Import Project="..\Riff.UWP.UI\Riff.UWP.UI.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

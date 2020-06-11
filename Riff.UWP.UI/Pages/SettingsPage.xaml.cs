@@ -2,27 +2,24 @@
 using Riff.UWP.ViewModel;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Riff.UWP.Pages
 {
+    public class SettingsPageBase : NavViewPageBase<SettingsViewModel>
+    {
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SettingsPage : NavViewPageBase, ISupportViewModel<SettingsViewModel>
+    public sealed partial class SettingsPage : SettingsPageBase
     {
         public SettingsPage()
         {
             this.InitializeComponent();
             HeaderText = ResourceLoader.GetForCurrentView().GetString("SettingsPageHeader");
         }
-
-        public SettingsViewModel ViewModel => DataContext as SettingsViewModel;
-
-        public override IDataViewModel DataViewModel => ViewModel;
 
         private async void SignOutButton_Click(object sender, RoutedEventArgs e)
         {

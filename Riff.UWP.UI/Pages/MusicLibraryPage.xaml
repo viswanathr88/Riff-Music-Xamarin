@@ -1,4 +1,4 @@
-﻿<local:NavViewPageBase x:Class="Riff.UWP.Pages.MusicLibraryPage"
+﻿<local:MusicLibraryPageBase x:Class="Riff.UWP.Pages.MusicLibraryPage"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:local="using:Riff.UWP.Pages"
@@ -96,8 +96,8 @@
                               Click="AppBarButton_Click"
                               x:Name="ToolbarSort"
                               x:Uid="ToolbarSortButton"
-                              x:Load="{x:Bind LibraryContentFrame.Content.(local:LibraryPageBase.ShowSortMenu), Mode=OneWay}"
-                              Flyout="{x:Bind LibraryContentFrame.Content.(local:LibraryPageBase.SortMenu), Mode=OneWay}">
+                              x:Load="{x:Bind LibraryContentFrame.Content.(local:ICustomizeLibraryToolbar.ShowSortMenu), Mode=OneWay}"
+                              Flyout="{x:Bind LibraryContentFrame.Content.(local:ICustomizeLibraryToolbar.SortMenu), Mode=OneWay}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                   Glyph="&#xE8CB;" />
@@ -129,4 +129,4 @@
         </VisualStateManager.VisualStateGroups>
 
     </Grid>
-</local:NavViewPageBase>
+</local:MusicLibraryPageBase>

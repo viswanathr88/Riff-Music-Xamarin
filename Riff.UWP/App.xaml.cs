@@ -1,6 +1,7 @@
-﻿using Riff.UWP.Pages;
+﻿using CommonServiceLocator;
+using Riff.Authentication;
+using Riff.UWP.Pages;
 using Riff.UWP.Storage;
-using Riff.UWP.ViewModel;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,8 @@ namespace Riff.UWP
             Device.UpdateTheme(new AppPreferences().AppTheme);
         }
 
+        public Bootstapper Bootstapper { get; private set; }
+
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
@@ -62,6 +65,7 @@ namespace Riff.UWP
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
+                rootFrame.CacheSize = 0;
                 rootFrame.Background = new SolidColorBrush(new Windows.UI.Color() { R = 80, G = 102, B = 88, A = 255 });
 
                 rootFrame.Navigated += RootFrame_Navigated;
@@ -74,6 +78,11 @@ namespace Riff.UWP
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
+
+                if (Bootstapper == null)
+                {
+                    Bootstapper = new Bootstapper();
+                }
             }
 
             if (e.PrelaunchActivated == false)
@@ -118,9 +127,8 @@ namespace Riff.UWP
             // When the navigation stack isn't restored navigate to the first page,
             // configuring the new page by passing required information as a navigation
             // parameter
-            var locator = Resources["VMLocator"] as Locator;
-
-            if (!await locator.LoginManager.LoginExistsAsync())
+            var loginManager = ServiceLocator.Current.GetInstance<ILoginManager>();
+            if (!await loginManager.LoginExistsAsync())
             {
                 rootFrame.Navigate(typeof(FirstRunExperiencePage), e.Arguments, null);
             }
@@ -134,7 +142,7 @@ namespace Riff.UWP
         {
             if (Window.Current.Content is Frame rootFrame)
             {
-                if (rootFrame.Content is ShellPageBase shell)
+                if (rootFrame.Content is IShellPage shell)
                 {
                     if (shell.CanGoBack)
                     {

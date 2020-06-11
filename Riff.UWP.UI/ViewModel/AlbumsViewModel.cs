@@ -11,14 +11,14 @@ namespace Riff.UWP.ViewModel
     public sealed class AlbumsViewModel : DataViewModel
     {
         private ObservableCollection<Album> items = new ObservableCollection<Album>();
-        private readonly MusicLibrary library;
+        private readonly IMusicMetadata metadata;
         private AlbumSortType sortType = AlbumSortType.ReleaseYear;
         private SortOrder sortOrder = SortOrder.Descending;
 
-        public AlbumsViewModel(MusicLibrary library)
+        public AlbumsViewModel(IMusicMetadata metadata)
         {
-            this.library = library ?? throw new ArgumentNullException(nameof(library));
-            this.library.Metadata.Refreshed += Metadata_Refreshed;
+            this.metadata = metadata;
+            metadata.Refreshed += Metadata_Refreshed;
         }
 
         public ObservableCollection<Album> Items
@@ -66,7 +66,7 @@ namespace Riff.UWP.ViewModel
                 SortOrder = SortOrder
             };
 
-            return await Task.Run(() => library.Metadata.Albums.Get(options));
+            return await Task.Run(() => metadata.Albums.Get(options));
         }
     }
 }
