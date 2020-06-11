@@ -8,7 +8,7 @@ namespace Riff.UWP.Pages
     /// <summary>
     /// Represents any page that is rendered within the NavigationView
     /// </summary>
-    public abstract class NavViewPageBase : PageBase
+    public abstract class NavViewPageBase<TViewModel> : PageBase<TViewModel>, ICustomizeMainHeader where TViewModel : IDataViewModel
     {
         public string HeaderText
         {
@@ -18,7 +18,7 @@ namespace Riff.UWP.Pages
 
         // Using a DependencyProperty as the backing store for HeaderText.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HeaderTextProperty =
-            DependencyProperty.Register("HeaderText", typeof(string), typeof(NavViewPageBase), new PropertyMetadata(""));
+            DependencyProperty.Register("HeaderText", typeof(string), typeof(NavViewPageBase<TViewModel>), new PropertyMetadata(""));
 
         public Brush ShellBackground
         {
@@ -28,7 +28,7 @@ namespace Riff.UWP.Pages
 
         // Using a DependencyProperty as the backing store for ShellBackground.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ShellBackgroundProperty =
-            DependencyProperty.Register("ShellBackground", typeof(Brush), typeof(NavViewPageBase), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
+            DependencyProperty.Register("ShellBackground", typeof(Brush), typeof(NavViewPageBase<TViewModel>), new PropertyMetadata(new SolidColorBrush(Colors.Transparent)));
 
 
         public double HeaderOpacity
@@ -39,6 +39,6 @@ namespace Riff.UWP.Pages
 
         // Using a DependencyProperty as the backing store for HeaderOpacity.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HeaderOpacityProperty =
-            DependencyProperty.Register("HeaderOpacity", typeof(double), typeof(NavViewPageBase), new PropertyMetadata(1.0));
+            DependencyProperty.Register("HeaderOpacity", typeof(double), typeof(NavViewPageBase<TViewModel>), new PropertyMetadata(1.0));
     }
 }

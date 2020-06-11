@@ -11,15 +11,14 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Riff.UWP.Pages
 {
+    public class MusicLibraryPageBase : NavViewPageBase<MusicLibraryViewModel>
+    {
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MusicLibraryPage : NavViewPageBase, ISupportViewModel<MusicLibraryViewModel>
+    public sealed partial class MusicLibraryPage : MusicLibraryPageBase
     {
-        public MusicLibraryViewModel ViewModel => Locator.MusicLibrary;
-
-        public override IDataViewModel DataViewModel => ViewModel;
-
         public MusicLibraryPage()
         {
             this.InitializeComponent();

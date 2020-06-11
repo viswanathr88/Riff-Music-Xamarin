@@ -1,7 +1,6 @@
-﻿using Riff.UWP.ViewModel;
+﻿using CommonServiceLocator;
+using Riff.UWP.ViewModel;
 using System;
-using Windows.Security.Authentication.Web.Core;
-using Windows.UI.ApplicationSettings;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -13,9 +12,9 @@ namespace Riff.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class FirstRunExperiencePage : Page, ISupportViewModel<FirstRunExperienceViewModel>
+    public sealed partial class FirstRunExperiencePage : Page
     {
-        public FirstRunExperienceViewModel ViewModel => DataContext as FirstRunExperienceViewModel;
+        public FirstRunExperienceViewModel ViewModel => ServiceLocator.Current.GetInstance<FirstRunExperienceViewModel>();
 
         public FirstRunExperiencePage()
         {

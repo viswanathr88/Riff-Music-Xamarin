@@ -10,16 +10,17 @@ namespace Riff.UWP
 {
     public static class VisualTreeHelperExtensions
     {
-        public static TChild FindVisualChild<TChild>(DependencyObject obj) where TChild : DependencyObject
+        public static TChild FindVisualChild<TChild>(DependencyObject obj, string name) where TChild : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
             {
                 DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is TChild found)
+                FrameworkElement childElement = child as FrameworkElement;
+                if (child != null && child is TChild found && (string.IsNullOrEmpty(name) || childElement.Name == name))
                     return found;
                 else
                 {
-                    TChild childOfChild = FindVisualChild<TChild>(child);
+                    TChild childOfChild = FindVisualChild<TChild>(child, name);
                     if (childOfChild != null)
                         return childOfChild;
                 }

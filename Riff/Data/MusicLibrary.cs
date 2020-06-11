@@ -8,7 +8,7 @@ namespace Riff.Data
 {
     public sealed class MusicLibrary : IDisposable
     {
-        public MusicLibrary(string path, IMusicMetadata metadata, HttpClient httpClient)
+        public MusicLibrary(string path, IMusicMetadata metadata)
         {
             Metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
             AlbumArts = new ThumbnailCache(Path.Combine(path, "Thumbnails", "Albums"));

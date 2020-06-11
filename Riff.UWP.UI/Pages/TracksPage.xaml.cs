@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using CommonServiceLocator;
+using Riff.Data;
 using Riff.UWP.ViewModel;
 using System;
 using System.IO;
@@ -6,16 +7,18 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace Riff.UWP.Pages
 {
+    public class TracksPageBase : LibraryPageBase<TracksViewModel>
+    {
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class TracksPage : LibraryPageBase, ISupportViewModel<TracksViewModel>, ISupportPlaying
+    public sealed partial class TracksPage : TracksPageBase, ISupportPlaying
     {
         public TracksPage()
         {
@@ -23,12 +26,9 @@ namespace Riff.UWP.Pages
             RegisterForChanges = true;
         }
 
-        public TracksViewModel ViewModel => Locator.MusicLibrary.Tracks;
-        public MusicLibrary Library => Locator.Library;
+        public MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
 
-        public override IDataViewModel DataViewModel => ViewModel;
-
-        public PlayerViewModel Player => Locator.Player;
+        public PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
 
         protected async override void HandleViewModelPropertyChanged(string propertyName)
         {

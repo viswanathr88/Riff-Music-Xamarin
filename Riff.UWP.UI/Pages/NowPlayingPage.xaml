@@ -1,4 +1,4 @@
-﻿<local:ShellPageBase x:Class="Riff.UWP.Pages.NowPlayingPage"
+﻿<local:NowPlayingPageBase x:Class="Riff.UWP.Pages.NowPlayingPage"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                        xmlns:local="using:Riff.UWP.Pages"
@@ -316,4 +316,4 @@
                    Style="{StaticResource TitleTextBlockStyle}"
                    x:Load="{x:Bind ViewModel.IsPlayerVisible, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}" />
     </Grid>
-</local:ShellPageBase>
+</local:NowPlayingPageBase>

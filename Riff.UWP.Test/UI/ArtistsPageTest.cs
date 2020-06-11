@@ -7,7 +7,8 @@ using Riff.UWP.Test.Infra;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -17,7 +18,7 @@ using Xunit;
 namespace Riff.UWP.Test.UI
 {
     [Collection("UITests")]
-    public class AlbumsPageTest : IAsyncLifetime, IDisposable
+    public class ArtistsPageTest : IAsyncLifetime, IDisposable
     {
         private readonly Mock<IMusicMetadata> mockMetadata;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
@@ -25,7 +26,7 @@ namespace Riff.UWP.Test.UI
 
         private readonly UITree view = new UITree();
 
-        public AlbumsPageTest()
+        public ArtistsPageTest()
         {
             // Setup mock album accessor
             mockMetadata = new Mock<IMusicMetadata>();
@@ -37,7 +38,7 @@ namespace Riff.UWP.Test.UI
 
             library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, SimpleIoc.Default.GetInstance<IMusicMetadata>());
             SimpleIoc.Default.Register(() => library);
-            SimpleIoc.Default.Register<AlbumsViewModel>();
+            SimpleIoc.Default.Register<ArtistsViewModel>();
         }
 
         public Task InitializeAsync()
@@ -55,37 +56,18 @@ namespace Riff.UWP.Test.UI
             SimpleIoc.Default.Unregister<IMusicMetadata>();
             SimpleIoc.Default.Unregister<IAlbumReadOnlyAccessor>();
             SimpleIoc.Default.Unregister<MusicLibrary>();
-            SimpleIoc.Default.Unregister<AlbumsViewModel>();
+            SimpleIoc.Default.Unregister<ArtistsViewModel>();
             SimpleIoc.Default.Reset();
         }
 
         [Fact]
-        public async Task AlbumsPage_Navigate_ValidateUnknownAlbum()
+        public async Task ArtistsPage_Navigate_ValidateUnknownArtist()
         {
             // Setup mock album accessor
-            var albums = new List<Album>() { new Album() { Id = 1, Name = null, Artist = new Artist() { Id = 1, Name = "MockArtist" } } };
+            var albums = new List<Album>() { new Album() { Id = 1, Name = "MockAlbum", Artist = new Artist() { Id = 1, Name = "" } } };
             albumAccessor.Setup(accessor => accessor.Get(It.IsAny<AlbumAccessOptions>())).Returns(albums);
 
-            // Load the page
-            Assert.True(await view.LoadPage<AlbumsPage>(null));
-
-            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("AlbumName", (textBlock) =>
-            {
-                return textBlock.Text == ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText");
-            });
-
-            Assert.True(success);
-        }
-
-        [Fact]
-        public async Task AlbumsPage_Navigate_ValidateUnknownArtist()
-        {
-            // Setup mock album accessor
-            var albums = new List<Album>() { new Album() { Id = 1, Name = "MockAlbum", Artist = new Artist() { Id = 1, Name = null } } };
-            albumAccessor.Setup(accessor => accessor.Get(It.IsAny<AlbumAccessOptions>())).Returns(albums);
-
-            // Load the page
-            await view.LoadPage<AlbumsPage>(null);
+            await view.LoadPage<ArtistsPage>(null);
 
             bool success = await view.WaitForElementAndExecute<TextBlock, bool>("ArtistName", (textBlock) =>
             {
@@ -93,6 +75,41 @@ namespace Riff.UWP.Test.UI
             });
 
             Assert.True(success);
+        }
+
+        [Fact]
+        public async Task ArtistsPage_NavigateArtistWithOneAlbum_ValidateAlbumCount()
+        {
+            // Setup mock album accessor
+            var albums = new List<Album>() { new Album() { Id = 1, Name = "MockAlbum", Artist = new Artist() { Id = 1, Name = "" } } };
+            albumAccessor.Setup(accessor => accessor.Get(It.IsAny<AlbumAccessOptions>())).Returns(albums);
+
+            // Load page
+            await view.LoadPage<ArtistsPage>(null);
+
+            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("AlbumCount", (textBlock) =>
+            {
+                return textBlock.Text.Contains(albums.Count.ToString());
+            });
+        }
+
+        [Fact]
+        public async Task ArtistsPage_NavigateArtistWithTwoAlbums_ValidateAlbumCount()
+        {
+            // Setup mock album accessor
+            var albums = new List<Album>();
+            albums.Add(new Album() { Id = 1, Name = "MockAlbum1", Artist = new Artist() { Id = 1, Name = "MockArtist" } });
+            albums.Add(new Album() { Id = 2, Name = "MockAlbum2", Artist = new Artist() { Id = 1, Name = "MockArtist" } });
+
+            albumAccessor.Setup(accessor => accessor.Get(It.IsAny<AlbumAccessOptions>())).Returns(albums);
+
+            // Load page
+            await view.LoadPage<ArtistsPage>(null);
+
+            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("AlbumCount", (textBlock) =>
+            {
+                return textBlock.Text.Contains(albums.Count.ToString());
+            });
         }
     }
 }

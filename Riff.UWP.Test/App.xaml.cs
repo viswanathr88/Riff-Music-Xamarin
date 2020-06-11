@@ -1,4 +1,6 @@
-﻿using Riff.UWP.ViewModel;
+﻿using CommonServiceLocator;
+using GalaSoft.MvvmLight.Ioc;
+using Riff.UWP.ViewModel;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -61,6 +63,7 @@ namespace Riff.UWP.Test
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
+                ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             }
             
             Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();

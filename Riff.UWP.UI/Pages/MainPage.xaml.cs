@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using CommonServiceLocator;
+using Riff.Data;
 using Riff.Data.Access;
 using Riff.Sync;
 using Riff.UWP.Storage;
@@ -18,10 +19,13 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Riff.UWP.Pages
 {
+    public class MainPageBase : PageBase<MainViewModel>
+    {
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : ShellPageBase, ISupportViewModel<MainViewModel>, ISupportPlaying
+    public sealed partial class MainPage : MainPageBase, IShellPage, ISupportPlaying
     {
         private readonly IDictionary<string, Type> pages = new Dictionary<string, Type>()
         {
@@ -50,19 +54,19 @@ namespace Riff.UWP.Pages
             { SearchItemType.TrackArtist, "\uEC4F" }
         };
 
-        public MainViewModel ViewModel => Locator.Main;
+        public PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
 
-        public override IDataViewModel DataViewModel => ViewModel;
+        private IAppPreferences Preferences => ServiceLocator.Current.GetInstance<IAppPreferences>();
 
-        public PlayerViewModel Player => Locator.Player;
+        private IMusicMetadata MusicMetadata => ServiceLocator.Current.GetInstance<IMusicMetadata>();
 
-        public override bool CanGoBack => ContentFrame.CanGoBack;
+        public bool CanGoBack => ContentFrame.CanGoBack;
 
         public MainPage()
         {
             this.InitializeComponent();
             ViewModel.Sync.PropertyChanged += Sync_PropertyChanged;
-            Locator.Preferences.Changed += Preferences_Changed;
+            Preferences.Changed += Preferences_Changed;
             NavigationCacheMode = NavigationCacheMode.Required;
         }
 
@@ -226,12 +230,12 @@ namespace Riff.UWP.Pages
                         IncludeGenre = true,
                         AlbumFilter = item.Id
                     };
-                    var album = Locator.MusicMetadata.Albums.Get(options).First();
+                    var album = MusicMetadata.Albums.Get(options).First();
                     ContentFrame.Navigate(typeof(AlbumPage), album, new EntranceNavigationTransitionInfo());
                 }
                 else if (item.Type == SearchItemType.Artist)
                 {
-                    var artist = Locator.MusicMetadata.Artists.Get(item.Id);
+                    var artist = MusicMetadata.Artists.Get(item.Id);
                     ContentFrame.Navigate(typeof(ArtistPage), artist, new EntranceNavigationTransitionInfo());
                 }
             }
@@ -241,7 +245,7 @@ namespace Riff.UWP.Pages
         {
             if (preference == nameof(IAppPreferences.AppTheme))
             {
-                Device.UpdateTheme(Locator.Preferences.AppTheme);
+                Device.UpdateTheme(Preferences.AppTheme);
             }
         }
 
@@ -265,7 +269,7 @@ namespace Riff.UWP.Pages
             MediaPlayerControl.SetMediaPlayer(Player.MediaPlayer);
         }
 
-        public override void GoBack()
+        public void GoBack()
         {
             if (ContentFrame.CanGoBack)
             {

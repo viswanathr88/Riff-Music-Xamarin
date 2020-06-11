@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Riff.UWP.ViewModel
 {
-    class PlaylistsViewModel : DataViewModel
+    public class PlaylistsViewModel : DataViewModel
     {
         public override Task LoadAsync()
         {

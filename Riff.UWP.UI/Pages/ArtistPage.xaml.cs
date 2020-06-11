@@ -1,4 +1,5 @@
-﻿using Riff.UWP.ViewModel;
+﻿using CommonServiceLocator;
+using Riff.UWP.ViewModel;
 using System;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
@@ -7,10 +8,13 @@ using Windows.UI.Xaml.Controls;
 
 namespace Riff.UWP.Pages
 {
+    public class ArtistPageBase : NavViewPageBase<ArtistViewModel>
+    {
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ArtistPage : NavViewPageBase, ISupportViewModel<ArtistViewModel>, ISupportPlaying
+    public sealed partial class ArtistPage : ArtistPageBase, ISupportPlaying
     {
         public ArtistPage()
         {
@@ -18,11 +22,7 @@ namespace Riff.UWP.Pages
             HeaderText = ResourceLoader.GetForCurrentView().GetString("ArtistPageHeader");
         }
 
-        public ArtistViewModel ViewModel => new ArtistViewModel(Locator.Library);
-
-        public override IDataViewModel DataViewModel => ViewModel;
-
-        public PlayerViewModel Player => Locator.Player;
+        public PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
 
         private async void ArtistToolbarPlayButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {

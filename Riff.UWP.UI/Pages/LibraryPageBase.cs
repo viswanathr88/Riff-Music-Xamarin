@@ -7,7 +7,7 @@ namespace Riff.UWP.Pages
     /// <summary>
     /// Represents any page that is rendered within the Music Library Frame
     /// </summary>
-    public abstract class LibraryPageBase : NavViewPageBase
+    public abstract class LibraryPageBase<TViewModel> : NavViewPageBase<TViewModel>, ICustomizeLibraryToolbar where TViewModel : IDataViewModel
     {
         public bool ShowSortMenu
         {
@@ -17,7 +17,7 @@ namespace Riff.UWP.Pages
 
         // Using a DependencyProperty as the backing store for ShowSortMenu.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ShowSortMenuProperty =
-            DependencyProperty.Register("ShowSortMenu", typeof(bool), typeof(LibraryPageBase), new PropertyMetadata(true));
+            DependencyProperty.Register("ShowSortMenu", typeof(bool), typeof(LibraryPageBase<TViewModel>), new PropertyMetadata(true));
 
         public MenuFlyout SortMenu
         {
@@ -27,7 +27,7 @@ namespace Riff.UWP.Pages
 
         // Using a DependencyProperty as the backing store for SortMenu.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SortMenuProperty =
-            DependencyProperty.Register("SortMenu", typeof(MenuFlyout), typeof(LibraryPageBase), new PropertyMetadata(null));
+            DependencyProperty.Register("SortMenu", typeof(MenuFlyout), typeof(LibraryPageBase<TViewModel>), new PropertyMetadata(null));
 
         public bool ShowLayoutMenu
         {
@@ -37,7 +37,7 @@ namespace Riff.UWP.Pages
 
         // Using a DependencyProperty as the backing store for ShowLayoutMenu.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ShowLayoutMenuProperty =
-            DependencyProperty.Register("ShowLayoutMenu", typeof(bool), typeof(LibraryPageBase), new PropertyMetadata(true));
+            DependencyProperty.Register("ShowLayoutMenu", typeof(bool), typeof(LibraryPageBase<TViewModel>), new PropertyMetadata(true));
 
 
         public MenuFlyout LayoutMenu
@@ -48,7 +48,7 @@ namespace Riff.UWP.Pages
 
         // Using a DependencyProperty as the backing store for LayoutMenu.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LayoutMenuProperty =
-            DependencyProperty.Register("LayoutMenu", typeof(MenuFlyout), typeof(LibraryPageBase), new PropertyMetadata(null));
+            DependencyProperty.Register("LayoutMenu", typeof(MenuFlyout), typeof(LibraryPageBase<TViewModel>), new PropertyMetadata(null));
 
     }
 }

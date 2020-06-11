@@ -6,6 +6,10 @@ namespace Riff.UWP.Converters
 {
     public sealed class TaglessItemsConverter : IValueConverter
     {
+        public TaglessItemsConverter()
+        {
+
+        }
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             string str = (string)value;

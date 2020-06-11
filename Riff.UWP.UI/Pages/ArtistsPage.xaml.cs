@@ -7,20 +7,20 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace Riff.UWP.Pages
 {
+    public class ArtistsPageBase : LibraryPageBase<ArtistsViewModel>
+    {
+
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ArtistsPage : LibraryPageBase, ISupportViewModel<ArtistsViewModel>
+    public sealed partial class ArtistsPage : ArtistsPageBase
     {
         public ArtistsPage()
         {
             this.InitializeComponent();
             RegisterForChanges = true;
         }
-
-        public ArtistsViewModel ViewModel => Locator.MusicLibrary.Artists;
-
-        public override IDataViewModel DataViewModel => ViewModel;
 
         protected async override void HandleViewModelPropertyChanged(string propertyName)
         {

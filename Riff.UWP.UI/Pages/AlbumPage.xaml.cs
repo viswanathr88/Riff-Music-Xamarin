@@ -15,10 +15,15 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Riff.UWP.Pages
 {
+    public class AlbumPageBase : NavViewPageBase<AlbumViewModel>
+    {
+
+    }
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumPage : NavViewPageBase, ISupportViewModel<AlbumViewModel>, ISupportPlaying
+    public sealed partial class AlbumPage : AlbumPageBase, ISupportPlaying
     {
         bool animateBack = false;
         public AlbumPage()
@@ -28,13 +33,9 @@ namespace Riff.UWP.Pages
             HeaderText = ResourceLoader.GetForCurrentView().GetString("AlbumPageHeader");
         }
 
-        public PlayerViewModel Player => Locator.Player;
+        public PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
 
-        public MusicLibrary Library => Locator.Library;
-
-        public AlbumViewModel ViewModel { get; } = new AlbumViewModel(Locator.MusicMetadata);
-
-        public override IDataViewModel DataViewModel => ViewModel;
+        public MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {

@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using CommonServiceLocator;
+using Riff.Data;
 using Riff.UWP.ViewModel;
 using System;
 using System.IO;
@@ -14,10 +15,15 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Riff.UWP.Pages
 {
+    public class AlbumsPageBase : LibraryPageBase<AlbumsViewModel>
+    {
+
+    }
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumsPage : LibraryPageBase, ISupportViewModel<AlbumsViewModel>
+    public sealed partial class AlbumsPage : AlbumsPageBase
     {
         private Album _storedItem = null;
         public AlbumsPage()
@@ -28,10 +34,7 @@ namespace Riff.UWP.Pages
             PreferViewUpdateBeforeLoad = true;
         }
 
-        private MusicLibrary Library => Locator.Library;
-
-        public AlbumsViewModel ViewModel => Locator.MusicLibrary.Albums;
-        public override IDataViewModel DataViewModel => ViewModel;
+        private MusicLibrary Library { get; } = ServiceLocator.Current.GetInstance<MusicLibrary>();
 
         protected async override void HandleViewModelPropertyChanged(string propertyName)
         {
@@ -144,7 +147,7 @@ namespace Riff.UWP.Pages
         private void AlbumGridItem_Loaded(object sender, RoutedEventArgs e)
         {
             var root = (UIElement)sender;
-            InitializeAnimation(VisualTreeHelperExtensions.FindVisualChild<Border>(root));
+            InitializeAnimation(VisualTreeHelperExtensions.FindVisualChild<Border>(root, string.Empty));
         }
 
         private void InitializeAnimation(UIElement root)

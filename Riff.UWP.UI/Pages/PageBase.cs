@@ -1,18 +1,16 @@
-﻿using Riff.UWP.ViewModel;
+﻿using CommonServiceLocator;
+using Riff.UWP.ViewModel;
 using System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
 namespace Riff.UWP.Pages
 {
-    public abstract class PageBase : Page
+    public abstract class PageBase<TViewModel> : Page where TViewModel : IDataViewModel
     {
         public bool RegisterForChanges { get; protected set; } = false;
         public bool PreferViewUpdateBeforeLoad { get; protected set; } = false;
-        public abstract IDataViewModel DataViewModel { get; }
-
-        public static Locator Locator => Application.Current.Resources["VMLocator"] as Locator;
+        public TViewModel ViewModel { get; } = ServiceLocator.Current.GetInstance<TViewModel>();
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -20,20 +18,20 @@ namespace Riff.UWP.Pages
 
             if (RegisterForChanges)
             {
-                DataViewModel.PropertyChanged += DataViewModel_PropertyChanged;
+                ViewModel.PropertyChanged += DataViewModel_PropertyChanged;
             }
 
-            bool load = e.NavigationMode == NavigationMode.Refresh || !DataViewModel.IsLoaded;
+            bool load = (e.NavigationMode == NavigationMode.New || e.NavigationMode == NavigationMode.Refresh) || !ViewModel.IsLoaded;
 
             if (load)
             {
                 if (PreferViewUpdateBeforeLoad)
                 {
-                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() => await DataViewModel.LoadAsync(e.Parameter ?? VoidType.Empty));
+                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async() => await ViewModel.LoadAsync(e.Parameter ?? VoidType.Empty));
                 }
                 else
                 {
-                    await DataViewModel.LoadAsync(e.Parameter ?? VoidType.Empty);
+                    await ViewModel.LoadAsync(e.Parameter ?? VoidType.Empty);
                 }
             }
         }
@@ -43,7 +41,7 @@ namespace Riff.UWP.Pages
             base.OnNavigatedFrom(e);
             if (RegisterForChanges)
             {
-                DataViewModel.PropertyChanged -= DataViewModel_PropertyChanged;
+                ViewModel.PropertyChanged -= DataViewModel_PropertyChanged;
             }
         }
 
