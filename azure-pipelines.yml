@@ -28,7 +28,7 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DownloadSecureFile@1
-  name: signingCert
+  name: secureCert
   displayName: 'Get the signing cert for Riff UWP'
   inputs:
     secureFile: '$(signingCert.secureFilePath)'
