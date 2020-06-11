@@ -10,11 +10,15 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  group: 'riff-uwp-pipeline'
-  solution: '**/*.sln'
-  buildPlatform: 'x86|x64|ARM'
-  buildConfiguration: 'Release'
-  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+- group: riff-uwp-pipeline
+- name: solution
+  value: '**/*.sln'
+- name: buildPlatform
+  value: 'x86|x64|ARM'
+- name: buildConfiguration
+  value: 'Release'
+- name: appxPackageDir
+  value: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
 steps:
 - task: NuGetToolInstaller@1
