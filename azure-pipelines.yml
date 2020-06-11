@@ -10,14 +10,14 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-- group: riff-uwp-pipeline
-- name: solution
+- group: 'riff-uwp-pipeline'
+- name: 'solution'
   value: '**/*.sln'
-- name: buildPlatform
+- name: 'buildPlatform'
   value: 'x86|x64|ARM'
-- name: buildConfiguration
+- name: 'buildConfiguration'
   value: 'Release'
-- name: appxPackageDir
+- name: 'appxPackageDir'
   value: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
 steps:
@@ -31,7 +31,7 @@ steps:
   name: secureCert
   displayName: 'Get the signing cert for Riff UWP'
   inputs:
-    secureFile: $(signingCert.secureFilePath)
+    secureFile: '$(signingCert.secureFilePath)'
 
 - task: VSBuild@1
   inputs:
