@@ -1,0 +1,52 @@
+# Universal Windows Platform
+# Build a Universal Windows Platform project using Visual Studio.
+# Add steps that test and distribute an app, save build artifacts, and more:
+# https://aka.ms/yaml
+
+pr:
+- master
+
+name: 0.$(Date:yyMM).$(DayOfMonth)$(Rev:rr).0
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+- group: 'riff-uwp-pipeline'
+- name: 'solution'
+  value: '**/*.sln'
+- name: 'buildPlatform'
+  value: 'x64'
+- name: 'buildConfiguration'
+  value: 'Debug'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: PowerShell@2
+displayName: Set version number in AppxManifest
+inputs:
+    filePath: $(Build.SourcesDirectory)\build\scripts\UpdateAppxManifestVersion.ps1
+    arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
+
+- task: VSBuild@1
+    displayName: Build solution
+    inputs:
+      solution: '$(solution)'
+      vsVersion: 15.0
+      msbuildArgs: /p:OutDir=$(Build.BinariesDirectory)\$(BuildConfiguration)\$(BuildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(BuildConfiguration)\$(BuildPlatform)\publish\
+      platform: $(BuildPlatform)
+      configuration: $(BuildConfiguration)
+      clean: true
+      maximumCpuCount: true
+
+ - task: PublishBuildArtifacts@1
+    displayName: Publish drop artifact
+    inputs:
+      artifactName: drop
+      pathToPublish: $(Build.BinariesDirectory)
+      parallel: true

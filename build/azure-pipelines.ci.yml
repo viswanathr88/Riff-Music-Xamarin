@@ -3,10 +3,8 @@
 # Add steps that test and distribute an app, save build artifacts, and more:
 # https://aka.ms/yaml
 
-trigger:
+pr:
 - master
-
-pr: none
 
 pool:
   vmImage: 'windows-latest'
@@ -16,9 +14,9 @@ variables:
 - name: 'solution'
   value: '**/*.sln'
 - name: 'buildPlatform'
-  value: 'x86|x64|ARM'
+  value: 'x64'
 - name: 'buildConfiguration'
-  value: 'Release'
+  value: 'Debug'
 - name: 'appxPackageDir'
   value: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
@@ -31,11 +29,12 @@ steps:
 
 - task: DownloadSecureFile@1
   name: secureCert
-  displayName: 'Get the signing cert for Riff UWP'
+  displayName: 'Get the signing cert for the UWP app'
   inputs:
     secureFile: '$(signingCert.secureFilePath)'
 
 - task: PowerShell@2
+  displayName: 'Add the cert to the certificate store'
   inputs:
     targetType: 'inline'
     script: |
