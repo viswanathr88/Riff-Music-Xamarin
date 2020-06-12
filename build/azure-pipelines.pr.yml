@@ -119,4 +119,4 @@ steps:
   displayName: Publish tests results
   inputs:
     testResultsFormat: 'VSTest'
-     testResultsFiles: '**/TEST-*.trx'
+    testResultsFiles: '**/TEST-*.trx'
