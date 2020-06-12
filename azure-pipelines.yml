@@ -6,6 +6,8 @@
 trigger:
 - master
 
+pr: none
+
 pool:
   vmImage: 'windows-latest'
 
@@ -19,8 +21,6 @@ variables:
   value: 'Release'
 - name: 'appxPackageDir'
   value: '$(build.artifactStagingDirectory)\AppxPackages\\'
-- name: 'System.Debug'
-  value: true
 
 steps:
 - task: NuGetToolInstaller@1
