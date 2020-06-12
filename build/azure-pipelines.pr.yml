@@ -36,7 +36,7 @@ steps:
     arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
 
 - task: DownloadSecureFile@1
-  name: secureCert
+  name: testCert
   displayName: 'Get the signing cert for the UWP Unit Test app'
   inputs:
     secureFile: '$(unitTestCert.secureFilePath)'
@@ -48,8 +48,8 @@ steps:
     script: |
       Write-Host "Start adding the PFX file to the certificate store."
 
-      $pfxpath = '$(unitTestCert.secureFilePath)'
-      $password = '$(unitTestCert.password)'
+      $pfxpath = '$(testCert.secureFilePath)'
+      $password = '$(testCert.password)'
       
       Add-Type -AssemblyName System.Security
       $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
