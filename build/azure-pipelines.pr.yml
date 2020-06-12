@@ -48,10 +48,10 @@ steps:
 
 - task: VSTest@2
   inputs:
-    platform: 'x86|x64'
+    platform: '$(buildPlatform)'
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      **\Release\UnitTestProject1.build.appxrecipe
+      **\$(buildConfiguration)\*Test.build.appxrecipe
       !**\*TestAdapter.dll
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
