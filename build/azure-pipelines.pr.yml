@@ -40,7 +40,7 @@ steps:
   inputs:
     solution: '$(solution)'
     vsVersion: latest
-    msbuildArgs: /p:OutDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\publish\ /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
+    msbuildArgs: /p:AppVersion=$(Build.BuildNumber) /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
     clean: true
@@ -54,7 +54,7 @@ steps:
       **\$(buildConfiguration)\*Test.build.appxrecipe
       !**\*TestAdapter.dll
       !**\obj\**
-    searchFolder: '$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
     codeCoverageEnabled: true
   
 - task: PublishTestResults@2
@@ -62,10 +62,3 @@ steps:
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '**/TEST-*.trx'
-
-- task: PublishBuildArtifacts@1
-  displayName: Publish drop artifact
-  inputs:
-    artifactName: drop
-    pathToPublish: $(Build.BinariesDirectory)
-    parallel: true
