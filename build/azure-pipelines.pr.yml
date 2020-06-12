@@ -49,7 +49,7 @@ steps:
       Write-Host "Start adding the PFX file to the certificate store."
 
       $pfxpath = '$(testCert.secureFilePath)'
-      $password = '$(testCert.password)'
+      $password = '$(unitTestCert.password)'
       
       Add-Type -AssemblyName System.Security
       $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2
