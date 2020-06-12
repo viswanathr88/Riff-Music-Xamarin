@@ -1,0 +1,53 @@
+﻿<local:ArtistsPageBase
+    x:Class="Riff.UWP.Pages.ArtistsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Riff.UWP.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:data="using:Riff.Data"
+    xmlns:vm="using:Riff.UWP.ViewModel"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    ShowSortMenu="False">
+
+    <GridView x:Name="ArtistList"
+              ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
+              SelectionMode="None"
+              IsItemClickEnabled="True"
+              ItemClick="ArtistList_ItemClick">
+        <GridView.ItemContainerStyle>
+            <Style TargetType="GridViewItem">
+                <Setter Property="Margin"
+                        Value="0,0,20,20" />
+            </Style>
+        </GridView.ItemContainerStyle>
+        <GridView.ItemTemplate>
+            <DataTemplate x:DataType="vm:ArtistItemViewModel">
+                <Grid Height="120"
+                      Width="220"
+                      Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                    <ParallaxView Source="{Binding ElementName=ArtistList}"
+                                  VerticalShift="100">
+                        <Image Stretch="UniformToFill"
+                               x:Name="ArtistAlbumArt"
+                               Source="{x:Bind AlbumArt}" />
+                    </ParallaxView>
+                    
+
+                    <StackPanel Orientation="Vertical"
+                                VerticalAlignment="Bottom"
+                                Background="{ThemeResource SystemControlBaseHighAcrylicElementBrush}"
+                                Padding="12">
+                        <TextBlock x:Name="ArtistName" 
+                                   Text="{x:Bind Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}" />
+                        <TextBlock x:Name="AlbumCount"
+                                   Text="{x:Bind local:ArtistsPage.FormatAlbumsCount(AlbumsCount)}"
+                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </GridView.ItemTemplate>
+    </GridView>
+</local:ArtistsPageBase>

@@ -109,7 +109,7 @@ namespace Riff.Droid
             {
                 if (musicLibrary == null)
                 {
-                    musicLibrary = new MusicLibrary(DefaultPath, MusicMetadata, WebClient);
+                    musicLibrary = new MusicLibrary(DefaultPath, MusicMetadata);
                 }
 
                 return musicLibrary;

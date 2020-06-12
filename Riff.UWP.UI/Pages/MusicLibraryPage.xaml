@@ -1,0 +1,132 @@
+﻿<local:MusicLibraryPageBase x:Class="Riff.UWP.Pages.MusicLibraryPage"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:local="using:Riff.UWP.Pages"
+                       xmlns:ui="using:Microsoft.UI.Xaml.Controls"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:data="using:Riff.Data"
+                       mc:Ignorable="d"
+                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Margin="12,12,12,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Toolbar -->
+        <CommandBar Background="{ThemeResource NavigationViewTopPaneBackground}"
+                    DefaultLabelPosition="Right"
+                    IsDynamicOverflowEnabled="True"
+                    OverflowButtonVisibility="Auto"
+                    x:Name="LibraryToolbar"
+                    HorizontalAlignment="Right">
+            <CommandBar.CommandBarOverflowPresenterStyle>
+                <Style TargetType="CommandBarOverflowPresenter">
+                    <Setter Property="Margin"
+                            Value="0,0,20,0" />
+                    <Setter Property="MinWidth"
+                            Value="180" />
+                    <Setter Property="Width"
+                            Value="200" />
+                </Style>
+            </CommandBar.CommandBarOverflowPresenterStyle>
+            <CommandBar.Content>
+                <ui:DropDownButton x:Name="ToolbarFilter"
+                                   Margin="12,4"
+                                   Background="Transparent"
+                                   HorizontalContentAlignment="Left">
+                    <ui:DropDownButton.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedLeft"
+                                    x:Name="ToolbarFilterFlyout">
+                            <MenuFlyout.MenuFlyoutPresenterStyle>
+                                <Style TargetType="MenuFlyoutPresenter">
+                                    <Setter Property="Margin"
+                                            Value="0,0,20,0" />
+                                    <Setter Property="MinWidth"
+                                            Value="180" />
+                                </Style>
+                            </MenuFlyout.MenuFlyoutPresenterStyle>
+
+                            <ui:RadioMenuFlyoutItem Text=""
+                                                    x:Uid="ToolbarFilterAlbums"
+                                                    x:Name="ToolbarFilterAlbums"
+                                                    Tag="albums"
+                                                    GroupName="ToolbarSectionGroup"
+                                                    Click="RadioMenuFlyoutItem_Click">
+                                <ui:RadioMenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                                              Glyph="&#xE93C;" />
+                                </ui:RadioMenuFlyoutItem.Icon>
+                            </ui:RadioMenuFlyoutItem>
+                            <ui:RadioMenuFlyoutItem Text=""
+                                                    Tag="artists"
+                                                    x:Uid="ToolbarFilterArtists"
+                                                    x:Name="ToolbarFilterArtists"
+                                                    GroupName="ToolbarSectionGroup"
+                                                    Click="RadioMenuFlyoutItem_Click">
+                                <ui:RadioMenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                                              Glyph="&#xE8D4;" />
+                                </ui:RadioMenuFlyoutItem.Icon>
+                            </ui:RadioMenuFlyoutItem>
+                            <ui:RadioMenuFlyoutItem Text=""
+                                                    x:Uid="ToolbarFilterTracks"
+                                                    x:Name="ToolbarFilterTracks"
+                                                    GroupName="ToolbarSectionGroup"
+                                                    Tag="tracks"
+                                                    Click="RadioMenuFlyoutItem_Click">
+                                <ui:RadioMenuFlyoutItem.Icon>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                                              Glyph="&#xEC4F;" />
+                                </ui:RadioMenuFlyoutItem.Icon>
+                            </ui:RadioMenuFlyoutItem>
+                        </MenuFlyout>
+                    </ui:DropDownButton.Flyout>
+                </ui:DropDownButton>
+            </CommandBar.Content>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Label=""
+                              Click="AppBarButton_Click"
+                              x:Name="ToolbarShuffleutton"
+                              x:Uid="ToolbarShuffleButton"
+                              Icon="Shuffle" />
+                <AppBarButton Label=""
+                              Click="AppBarButton_Click"
+                              x:Name="ToolbarSort"
+                              x:Uid="ToolbarSortButton"
+                              x:Load="{x:Bind LibraryContentFrame.Content.(local:ICustomizeLibraryToolbar.ShowSortMenu), Mode=OneWay}"
+                              Flyout="{x:Bind LibraryContentFrame.Content.(local:ICustomizeLibraryToolbar.SortMenu), Mode=OneWay}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets"
+                                  Glyph="&#xE8CB;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+
+        <!-- Content -->
+        <Frame x:Name="LibraryContentFrame"
+               Padding="0,20,0,20"
+               Grid.Row="1"
+               Navigated="LibraryContentFrame_Navigated"
+               CacheSize="0"/>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+
+                    <VisualState.Setters>
+                        <Setter Target="LibraryToolbar.OverflowButtonVisibility"
+                                Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+    </Grid>
+</local:MusicLibraryPageBase>

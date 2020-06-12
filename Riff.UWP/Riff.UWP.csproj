@@ -129,91 +129,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Authentication\WindowsLoginManager.cs" />
-    <Compile Include="Controls\Titlebar.xaml.cs">
-      <DependentUpon>Titlebar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Converters\SyncStatusIconConverter.cs" />
-    <Compile Include="Converters\TrackSortTypeConverter.cs" />
-    <Compile Include="Converters\SortOrderConverter.cs" />
-    <Compile Include="Converters\AlbumSortTypeConverter.cs" />
-    <Compile Include="Converters\BoolNegationConverter.cs" />
-    <Compile Include="Converters\ImageStreamConverter.cs" />
-    <Compile Include="Extensions\DeviceFamilyHelper.cs" />
-    <Compile Include="Extensions\ThumbnailCacheExtensions.cs" />
-    <Compile Include="Pages\AlbumPage.xaml.cs">
-      <DependentUpon>AlbumPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\AlbumsPage.xaml.cs">
-      <DependentUpon>AlbumsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\ArtistPage.xaml.cs">
-      <DependentUpon>ArtistPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\ArtistsPage.xaml.cs">
-      <DependentUpon>ArtistsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\FirstRunExperiencePage.xaml.cs">
-      <DependentUpon>FirstRunExperiencePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\ISupportViewModel.cs" />
-    <Compile Include="Pages\LibraryPageBase.cs" />
-    <Compile Include="Pages\MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\MusicLibraryPage.xaml.cs">
-      <DependentUpon>MusicLibraryPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\NavViewPageBase.cs" />
-    <Compile Include="Pages\NowPlayingPage.xaml.cs">
-      <DependentUpon>NowPlayingPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\PageBase.cs" />
-    <Compile Include="Pages\PlaylistsPage.xaml.cs">
-      <DependentUpon>PlaylistsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\ShellPageBase.cs" />
-    <Compile Include="Pages\SyncStatusPage.xaml.cs">
-      <DependentUpon>SyncStatusPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\TracksPage.xaml.cs">
-      <DependentUpon>TracksPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\AppPreferences.cs" />
-    <Compile Include="Storage\IAppPreferences.cs" />
-    <Compile Include="ViewModel\ArtistItemViewModel.cs" />
-    <Compile Include="ViewModel\ArtistsViewModel.cs" />
-    <Compile Include="ViewModel\AlbumsViewModel.cs" />
-    <Compile Include="ViewModel\AlbumViewModel.cs" />
-    <Compile Include="ViewModel\ArtistViewModel.cs" />
-    <Compile Include="ViewModel\Commands\SyncCommand.cs" />
-    <Compile Include="Pages\ISupportPlaying.cs" />
-    <Compile Include="ViewModel\ItemCache.cs" />
-    <Compile Include="ViewModel\ItemIndexRangeExtensions.cs" />
-    <Compile Include="ViewModel\ItemIndexRangeList.cs" />
-    <Compile Include="ViewModel\MediaList.cs" />
-    <Compile Include="ViewModel\MediaListItem.cs" />
-    <Compile Include="ViewModel\PlayerViewModel.cs" />
-    <Compile Include="ViewModel\PlaylistsViewModel.cs" />
-    <Compile Include="ViewModel\TracksViewModel.cs" />
-    <Compile Include="ViewModel\VirtualDataSource.cs" />
-    <Compile Include="ViewModel\DataViewModel.cs" />
-    <Compile Include="ViewModel\FirstRunExperienceViewModel.cs" />
-    <Compile Include="ViewModel\IDataViewModel.cs" />
-    <Compile Include="ViewModel\Locator.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\MusicLibraryViewModel.cs" />
-    <Compile Include="ViewModel\SearchItemViewModel.cs" />
-    <Compile Include="ViewModel\SearchSuggestionsViewModel.cs" />
-    <Compile Include="ViewModel\SettingsViewModel.cs" />
-    <Compile Include="ViewModel\SyncViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="ViewModel\VoidType.cs" />
-    <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -251,6 +167,7 @@
     <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-32.png" />
     <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-48.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-16.png" />
+    <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-24.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-256.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-32.png" />
     <Content Include="Assets\Square44x44Logo.altform-unplated_targetsize-48.png" />
@@ -277,11 +194,9 @@
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
@@ -289,64 +204,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\Titlebar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\AlbumPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\AlbumsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\ArtistPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\ArtistsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\FirstRunExperiencePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\MusicLibraryPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\NowPlayingPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\PlaylistsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\SettingsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\SyncStatusPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\TracksPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\BorderLessGridViewItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommonServiceLocator">
+      <Version>2.0.5</Version>
+    </PackageReference>
     <PackageReference Include="ListDiff">
       <Version>1.1.28</Version>
     </PackageReference>
@@ -354,7 +216,10 @@
       <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.3.191129002</Version>
+      <Version>2.3.200213001</Version>
+    </PackageReference>
+    <PackageReference Include="MvvmLightLibs">
+      <Version>5.4.1.1</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
@@ -374,9 +239,7 @@
       <Name>Riff</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\Resources.resw" />
-  </ItemGroup>
+  <Import Project="..\Riff.UWP.UI\Riff.UWP.UI.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

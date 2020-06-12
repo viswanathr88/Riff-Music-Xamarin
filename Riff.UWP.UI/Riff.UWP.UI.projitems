@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>a39777ec-992c-4ef4-a5d7-664bc5ea810c</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Riff.UWP.UI</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Authentication\WindowsLoginManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Bootstapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\Titlebar.xaml.cs">
+      <DependentUpon>Titlebar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\AlbumSortTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\BoolNegationConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\ImageStreamConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\SortOrderConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\SyncStatusIconConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\TaglessItemsConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\TrackSortTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\ThumbnailCacheExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions\VisualTreeHelperExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Device.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\AlbumPage.xaml.cs">
+      <DependentUpon>AlbumPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\AlbumsPage.xaml.cs">
+      <DependentUpon>AlbumsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\ArtistPage.xaml.cs">
+      <DependentUpon>ArtistPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\ArtistsPage.xaml.cs">
+      <DependentUpon>ArtistsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\FirstRunExperiencePage.xaml.cs">
+      <DependentUpon>FirstRunExperiencePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\ICustomizeLibraryToolbar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\ICustomizeMainHeader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\ISupportPlaying.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\LibraryPageBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\MusicLibraryPage.xaml.cs">
+      <DependentUpon>MusicLibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\NavViewPageBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\NowPlayingPage.xaml.cs">
+      <DependentUpon>NowPlayingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\PageBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\PlaylistsPage.xaml.cs">
+      <DependentUpon>PlaylistsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\IShellPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\SyncStatusPage.xaml.cs">
+      <DependentUpon>SyncStatusPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Pages\TracksPage.xaml.cs">
+      <DependentUpon>TracksPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\AppPreferences.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Storage\IAppPreferences.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\AlbumsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\AlbumViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ArtistItemViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ArtistsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ArtistViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\Commands\SyncCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DataViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\FirstRunExperienceViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IDataViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ItemCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ItemIndexRangeExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ItemIndexRangeList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MainViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MediaList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MediaListItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MusicLibraryViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PlayerViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PlaylistsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SearchItemViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SearchSuggestionsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SettingsViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SyncViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\TracksViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\VirtualDataSource.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\VoidType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\Titlebar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\AlbumPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\AlbumsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\ArtistPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\ArtistsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\FirstRunExperiencePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\MusicLibraryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\NowPlayingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\PlaylistsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\SyncStatusPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Pages\TracksPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Resources\BorderLessGridViewItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="$(MSBuildThisFileDirectory)Strings\en-US\Resources.resw" />
+  </ItemGroup>
+</Project>
