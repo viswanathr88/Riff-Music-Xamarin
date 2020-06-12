@@ -30,25 +30,25 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: PowerShell@2
-displayName: Set version number in AppxManifest
-inputs:
+  displayName: 'Set version number in AppxManifest'
+  inputs:
     filePath: $(Build.SourcesDirectory)\build\scripts\UpdateAppxManifestVersion.ps1
     arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
 
 - task: VSBuild@1
-    displayName: Build solution
-    inputs:
-      solution: '$(solution)'
-      vsVersion: 15.0
-      msbuildArgs: /p:OutDir=$(Build.BinariesDirectory)\$(BuildConfiguration)\$(BuildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(BuildConfiguration)\$(BuildPlatform)\publish\
-      platform: $(BuildPlatform)
-      configuration: $(BuildConfiguration)
-      clean: true
-      maximumCpuCount: true
+  displayName: Build solution
+  inputs:
+    solution: '$(solution)'
+    vsVersion: latest
+    msbuildArgs: /p:OutDir=$(Build.BinariesDirectory)\$(BuildConfiguration)\$(BuildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(BuildConfiguration)\$(BuildPlatform)\publish\
+    platform: $(BuildPlatform)
+    configuration: $(BuildConfiguration)
+    clean: true
+    maximumCpuCount: true
 
- - task: PublishBuildArtifacts@1
-    displayName: Publish drop artifact
-    inputs:
-      artifactName: drop
-      pathToPublish: $(Build.BinariesDirectory)
-      parallel: true
+- task: PublishBuildArtifacts@1
+  displayName: Publish drop artifact
+  inputs:
+    artifactName: drop
+    pathToPublish: $(Build.BinariesDirectory)
+    parallel: true
