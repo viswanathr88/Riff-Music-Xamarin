@@ -30,13 +30,13 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: PowerShell@2
-  displayName: 'Set version number in AppxManifest'
+  displayName: 'Set AppxManifest Version Number'
   inputs:
     filePath: $(Build.SourcesDirectory)\build\scripts\UpdateAppxManifestVersion.ps1
     arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
 
 - task: VSBuild@1
-  displayName: Build solution
+  displayName: Build Solution
   inputs:
     solution: '$(solution)'
     vsVersion: latest
@@ -47,6 +47,7 @@ steps:
     maximumCpuCount: true
 
 - task: VSTest@2
+  displayName: Run Tests
   inputs:
     platform: '$(buildPlatform)'
     testSelector: 'testAssemblies'
@@ -58,7 +59,7 @@ steps:
     codeCoverageEnabled: true
   
 - task: PublishTestResults@2
-  displayName: Publish tests results
+  displayName: Publish Test Results
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '**/TEST-*.trx'
