@@ -43,7 +43,7 @@ namespace Riff.UWP.Test.Infra
                 }
             }
 
-            Xunit.Assert.True(found);
+            Xunit.Assert.True(found, $"Failed to find element with name {name}");
         }
 
         public async Task WaitForElementAndExecute<TElement>(string name, Action<TElement> fn, int pingFrequencyMs = 500, int totalPings = 20) where TElement : DependencyObject
@@ -52,13 +52,9 @@ namespace Riff.UWP.Test.Infra
             await CoreDispatcher.RunToCompletionAsync(() =>
             {
                 var element = VisualTreeHelperExtensions.FindVisualChild<TElement>(RootFrame, name);
-                if (element != null)
-                {
-                    fn(element);
-                    return Task.CompletedTask;
-                }
-
-                throw new Exception("Element not found to execute function. Tree has probably changed unexpectedly");
+                Xunit.Assert.NotNull(element);
+                fn(element);
+                return Task.CompletedTask;
             });
         }
 
