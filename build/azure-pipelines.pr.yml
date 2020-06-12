@@ -102,21 +102,21 @@ steps:
     parallel: true
 
 - task: PowerShell@2
-    displayName: Install Unit Test App
-    inputs:
-      filePath: $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Add-AppDevPackage.ps1
-      arguments: -CertificatePath $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration).cer -Force
+  displayName: Install Unit Test App
+  inputs:
+    filePath: $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Add-AppDevPackage.ps1
+    arguments: -CertificatePath $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration).cer -Force
 
 - task: VSTest@2
-    displayName: Run Unit Tests
-    inputs:
-      testAssemblyVer2: $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration).appx
-      otherConsoleOptions: /Platform:$(buildPlatform)
-      codeCoverageEnabled: true
-      publishRunAttachments: true
+  displayName: Run Unit Tests
+  inputs:
+    testAssemblyVer2: $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration).appx
+    otherConsoleOptions: /Platform:$(buildPlatform)
+    codeCoverageEnabled: true
+    publishRunAttachments: true
   
-  - task: PublishTestResults@2
-    displayName: Publish tests results
-    inputs:
-      testResultsFormat: 'VSTest'
-      testResultsFiles: '**/TEST-*.trx'
+- task: PublishTestResults@2
+  displayName: Publish tests results
+  inputs:
+    testResultsFormat: 'VSTest'
+     testResultsFiles: '**/TEST-*.trx'
