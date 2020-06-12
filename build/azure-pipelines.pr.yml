@@ -54,7 +54,7 @@ steps:
       **\$(buildConfiguration)\*Test.build.appxrecipe
       !**\*TestAdapter.dll
       !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    searchFolder: '$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)'
     codeCoverageEnabled: true
   
 - task: PublishTestResults@2
