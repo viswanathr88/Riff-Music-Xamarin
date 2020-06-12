@@ -104,13 +104,13 @@ steps:
 - task: PowerShell@2
   displayName: Install Unit Test App
   inputs:
-    filePath: $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Add-AppDevPackage.ps1
-    arguments: -CertificatePath $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration).cer -Force
+    filePath: $(Build.ArtifactStagingDirectory)\drop\$(buildConfiguration)\$(buildPlatform)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Add-AppDevPackage.ps1
+    arguments: -CertificatePath $(Build.ArtifactStagingDirectory)\drop\$(buildConfiguration)\$(buildPlatform)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration).cer -Force
 
 - task: VSTest@2
   displayName: Run Unit Tests
   inputs:
-    testAssemblyVer2: $(Build.ArtifactStagingDirectory)\drop\$(buildPlatform)\$(buildConfiguration)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration).appx
+    testAssemblyVer2: $(Build.ArtifactStagingDirectory)\drop\$(buildConfiguration)\$(buildPlatform)\Riff.UWP.Test\AppPackages\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration)_Test\Riff.UWP.Test_1.0.0.0_$(buildPlatform)_$(buildConfiguration).appx
     otherConsoleOptions: /Platform:$(buildPlatform)
     codeCoverageEnabled: true
     publishRunAttachments: true
