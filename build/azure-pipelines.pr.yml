@@ -40,9 +40,9 @@ steps:
   inputs:
     solution: '$(solution)'
     vsVersion: latest
-    msbuildArgs: /p:OutDir=$(Build.BinariesDirectory)\$(BuildConfiguration)\$(BuildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(BuildConfiguration)\$(BuildPlatform)\publish\ /p:AppxPackageSigningEnabled=false
-    platform: $(BuildPlatform)
-    configuration: $(BuildConfiguration)
+    msbuildArgs: /p:OutDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\publish\ /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
+    platform: $(buildPlatform)
+    configuration: $(buildConfiguration)
     clean: true
     maximumCpuCount: true
 
