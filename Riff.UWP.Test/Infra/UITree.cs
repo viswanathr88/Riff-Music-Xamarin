@@ -26,7 +26,7 @@ namespace Riff.UWP.Test.Infra
             });
         }
 
-        public async Task WaitForElement<T>(string name, int pingFreqencyMs = 100, int totalPings = 20) where T : DependencyObject
+        public async Task WaitForElement<T>(string name, int pingFreqencyMs = 500, int totalPings = 20) where T : DependencyObject
         {
             bool found = false;
             for (int i = 0; i < totalPings; i++)
@@ -46,7 +46,7 @@ namespace Riff.UWP.Test.Infra
             Xunit.Assert.True(found);
         }
 
-        public async Task WaitForElementAndExecute<TElement>(string name, Action<TElement> fn, int pingFrequencyMs = 100, int totalPings = 20) where TElement : DependencyObject
+        public async Task WaitForElementAndExecute<TElement>(string name, Action<TElement> fn, int pingFrequencyMs = 500, int totalPings = 20) where TElement : DependencyObject
         {
             await WaitForElement<TElement>(name, pingFrequencyMs, totalPings);
             await CoreDispatcher.RunToCompletionAsync(() =>
@@ -62,7 +62,7 @@ namespace Riff.UWP.Test.Infra
             });
         }
 
-        public async Task<TReturn> WaitForElementAndExecute<TElement, TReturn>(string name, Func<TElement, TReturn> fn, int pingFrequencyMs = 100, int totalPings = 20) where TElement : DependencyObject
+        public async Task<TReturn> WaitForElementAndExecute<TElement, TReturn>(string name, Func<TElement, TReturn> fn, int pingFrequencyMs = 500, int totalPings = 20) where TElement : DependencyObject
         {
             await WaitForElement<TElement>(name, pingFrequencyMs, totalPings);
             return await CoreDispatcher.RunToCompletionAsync(() =>
@@ -77,7 +77,7 @@ namespace Riff.UWP.Test.Infra
             });
         }
 
-        public async Task WaitForCondition(Func<bool> condition, int pingFreqencyMs = 100, int totalPings = 20)
+        public async Task WaitForCondition(Func<bool> condition, int pingFreqencyMs = 500, int totalPings = 20)
         {
             bool success = false;
             for (int i = 0; i < totalPings; i++)
