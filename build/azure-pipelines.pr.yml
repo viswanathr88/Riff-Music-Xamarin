@@ -35,14 +35,16 @@ steps:
     filePath: $(Build.SourcesDirectory)\build\scripts\UpdateAppxManifestVersion.ps1
     arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
 
-- task: VSBuild@1
-  displayName: Build Solution
+- task: MSBuild@1
   inputs:
-    solution: '$(solution)'
-    vsVersion: latest
-    msbuildArgs: /p:AppVersion=$(Build.BuildNumber) /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
+    solution: '**/Riff.UWP.*.csproj' 
+    #msbuildLocationMethod: 'version' # Optional. Options: version, location
+    #msbuildVersion: 'latest' # Optional. Options: latest, 16.0, 15.0, 14.0, 12.0, 4.0
+    #msbuildArchitecture: 'x86' # Optional. Options: x86, x64
+    msbuildLocation: /p:AppVersion=$(Build.BuildNumber) /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
     platform: $(buildPlatform)
     configuration: $(buildConfiguration)
+    #msbuildArguments: # Optional
     clean: true
     maximumCpuCount: true
 
