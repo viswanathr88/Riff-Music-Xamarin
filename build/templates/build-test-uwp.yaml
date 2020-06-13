@@ -8,7 +8,7 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
-    restoreSolution: '$(solution)'
+    restoreSolution: '**/Riff.sln'
 
 - task: PowerShell@2
   displayName: 'Set AppxManifest Version Number'
@@ -19,7 +19,7 @@ steps:
 - task: VSBuild@1
   displayName: Build Solution	
   inputs:
-    solution: '$(solution)'
+    solution: '**/Riff.sln'
     platform: $(BuildPlatform)
     configuration: $(BuildConfiguration)
     vsVersion: latest

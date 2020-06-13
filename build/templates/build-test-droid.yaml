@@ -11,11 +11,11 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
-    restoreSolution: '**/*.sln'
+    restoreSolution: '**/Riff.sln'
 
 - task: XamarinAndroid@1
   inputs:
-    projectFile: '**/*droid*.csproj'
+    projectFile: '**/*Droid*.csproj'
     outputDirectory: '$(Build.BinariesDirectory)/$(BuildConfiguration)'
     msbuildArguments: $ {{ parameters.extraMsBuildArgs }}
     configuration: '$(BuildConfiguration)'
