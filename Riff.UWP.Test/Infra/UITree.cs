@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -9,6 +10,14 @@ namespace Riff.UWP.Test.Infra
 {
     public class UITree
     {
+        public async Task<Size> GetWindowSize()
+        {
+            return await CoreDispatcher.RunToCompletionAsync(() =>
+            {
+                return Task.FromResult(new Size(RootFrame.ActualWidth, RootFrame.Height));
+            });
+        }
+
         public async Task<bool> ElementExists<T>(string name) where T : DependencyObject
         {
             return await CoreDispatcher.RunToCompletionAsync(() =>
@@ -26,7 +35,7 @@ namespace Riff.UWP.Test.Infra
             });
         }
 
-        public async Task WaitForElement<T>(string name, int pingFreqencyMs = 500, int totalPings = 20) where T : DependencyObject
+        public async Task WaitForElement<T>(string name, int pingFreqencyMs = 100, int totalPings = 20) where T : DependencyObject
         {
             bool found = false;
             for (int i = 0; i < totalPings; i++)
@@ -46,7 +55,7 @@ namespace Riff.UWP.Test.Infra
             Xunit.Assert.True(found, $"Failed to find element with name {name}");
         }
 
-        public async Task WaitForElementAndExecute<TElement>(string name, Action<TElement> fn, int pingFrequencyMs = 500, int totalPings = 20) where TElement : DependencyObject
+        public async Task WaitForElementAndExecute<TElement>(string name, Action<TElement> fn, int pingFrequencyMs = 100, int totalPings = 20) where TElement : DependencyObject
         {
             await WaitForElement<TElement>(name, pingFrequencyMs, totalPings);
             await CoreDispatcher.RunToCompletionAsync(() =>
@@ -58,7 +67,7 @@ namespace Riff.UWP.Test.Infra
             });
         }
 
-        public async Task<TReturn> WaitForElementAndExecute<TElement, TReturn>(string name, Func<TElement, TReturn> fn, int pingFrequencyMs = 500, int totalPings = 20) where TElement : DependencyObject
+        public async Task<TReturn> WaitForElementAndExecute<TElement, TReturn>(string name, Func<TElement, TReturn> fn, int pingFrequencyMs = 100, int totalPings = 20) where TElement : DependencyObject
         {
             await WaitForElement<TElement>(name, pingFrequencyMs, totalPings);
             return await CoreDispatcher.RunToCompletionAsync(() =>
@@ -73,7 +82,7 @@ namespace Riff.UWP.Test.Infra
             });
         }
 
-        public async Task WaitForCondition(Func<bool> condition, int pingFreqencyMs = 500, int totalPings = 20)
+        public async Task WaitForCondition(Func<bool> condition, int pingFreqencyMs = 100, int totalPings = 20)
         {
             bool success = false;
             for (int i = 0; i < totalPings; i++)
