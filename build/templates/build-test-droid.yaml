@@ -17,3 +17,11 @@ steps:
   inputs:
     projectFile: '**/*Droid*.csproj'
     configuration: '$(BuildConfiguration)'
+
+- task: CopyFiles@2
+  inputs:
+    contents: '**/*.apk'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  artifactName: drop
