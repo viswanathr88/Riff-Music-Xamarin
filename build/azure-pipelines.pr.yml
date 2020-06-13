@@ -27,7 +27,11 @@ jobs:
 
 - job: BuildTestDroid
   displayName: Android
+  workspace:
+    clean: outputs
   pool:
     vmImage: 'macos-latest'
   steps:
+  - checkout: self
+    clean: true
   - template: ./templates/build-test-droid.yaml
