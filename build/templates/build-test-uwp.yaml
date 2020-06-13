@@ -1,0 +1,42 @@
+# Universal Windows Platform
+# Build a Universal Windows Platform project using Visual Studio.
+# Add steps that test and distribute an app, save build artifacts, and more:
+# https://aka.ms/yaml
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: PowerShell@2
+  displayName: 'Set AppxManifest Version Number'
+  inputs:
+    filePath: $(Build.SourcesDirectory)\build\scripts\UpdateAppxManifestVersion.ps1
+    arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
+
+- task: VSBuild@1
+  displayName: Build Solution	
+  inputs:	  inputs:
+    solution: '$(solution)'
+    vsVersion: latest
+    msbuildArgs: /p:AppVersion=$(Build.BuildNumber) /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
+
+- task: VSTest@2
+  displayName: Run Tests
+  inputs:
+    platform: '$(BuildPlatform)'
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\$(buildConfiguration)\*Test.build.appxrecipe
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    codeCoverageEnabled: true
+  
+- task: PublishTestResults@2
+  displayName: Publish Test Results
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/TEST-*.trx'
