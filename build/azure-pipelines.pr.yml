@@ -13,17 +13,17 @@ variables:
   BuildConfiguration: Debug
 
 jobs:
-#- job: BuildTestUWP
-#  displayName: Windows UWP
-#  pool:
-#    vmImage: windows-2019
-#  workspace:
-#    clean: outputs
-#  steps:
-#  - checkout: self
-#    clean: true
-#
-#  - template: ./templates/build-test-uwp.yaml
+- job: BuildTestUWP
+  displayName: Windows UWP
+  pool:
+    vmImage: windows-2019
+  workspace:
+    clean: outputs
+  steps:
+  - checkout: self
+    clean: true
+
+  - template: ./templates/build-test-uwp.yaml
 
 - job: BuildTestDroid
   displayName: Android
