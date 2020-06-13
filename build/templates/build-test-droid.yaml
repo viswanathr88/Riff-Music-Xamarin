@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
 parameters:
-    extraMsBuildArgs: ''
+    extraMsBuildArgs: '/p:JavaSdkDirectory=$(JAVA_HOME_DEFAULT_X64)'
 
 steps:
 - task: NuGetToolInstaller@1
