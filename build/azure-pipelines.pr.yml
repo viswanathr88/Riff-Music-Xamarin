@@ -4,64 +4,35 @@
 # https://aka.ms/yaml
 
 trigger: none
-
-pr:
-- master
+pr: none
 
 name: 0.$(Date:yyMM).$(DayOfMonth)$(Rev:rr).0
 
-pool:
-  vmImage: 'windows-latest'
-
 variables:
-- group: 'riff-uwp-pipeline'
-- name: 'solution'
-  value: '**/*.sln'
-- name: 'buildPlatform'
-  value: 'x64'
-- name: 'buildConfiguration'
-  value: 'Debug'
+  BuildPlatform: x64
+  BuildConfiguration: Debug
 
-steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
-- task: PowerShell@2
-  displayName: 'Set AppxManifest Version Number'
-  inputs:
-    filePath: $(Build.SourcesDirectory)\build\scripts\UpdateAppxManifestVersion.ps1
-    arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
-
-- task: MSBuild@1
-  inputs:
-    solution: '**/Riff.UWP.*.csproj' 
-    #msbuildLocationMethod: 'version' # Optional. Options: version, location
-    #msbuildVersion: 'latest' # Optional. Options: latest, 16.0, 15.0, 14.0, 12.0, 4.0
-    #msbuildArchitecture: 'x86' # Optional. Options: x86, x64
-    msbuildLocation: /p:AppVersion=$(Build.BuildNumber) /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
-    platform: $(buildPlatform)
-    configuration: $(buildConfiguration)
-    #msbuildArguments: # Optional
+jobs:
+- job: BuildTestUWP
+  displayName: Windows UWP
+  pool:
+    vmImage: windows-2019
+  workspace:
+    clean: outputs
+  steps:
+  - checkout: self
     clean: true
-    maximumCpuCount: true
 
-- task: VSTest@2
-  displayName: Run Tests
-  inputs:
-    platform: '$(buildPlatform)'
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\$(buildConfiguration)\*Test.build.appxrecipe
-      !**\*TestAdapter.dll
-      !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
-    codeCoverageEnabled: true
-  
-- task: PublishTestResults@2
-  displayName: Publish Test Results
-  inputs:
-    testResultsFormat: 'VSTest'
-    testResultsFiles: '**/TEST-*.trx'
+  - template: ./templates/build-test-uwp.yaml
+
+- job: BuildTestDroid
+  displayName: Android
+  pool:
+    vmImage: 'macos-latest'
+  workspace:
+    clean: outputs
+  steps:
+  - checkout: self
+    clean: true
+
+  - template: ./templates/build-test-droid.yaml
