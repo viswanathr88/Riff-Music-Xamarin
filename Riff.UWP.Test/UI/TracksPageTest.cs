@@ -85,7 +85,7 @@ namespace Riff.UWP.Test.UI
             await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownArtistText"), textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("TrackAlbum", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText"), textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("TrackDuration", (textBlock) => Assert.Equal("01:40", textBlock.Text));
-            if ((await view.GetWindowSize()).Width > 642)
+            if ((await view.GetWindowSize()).Width > 1008)
             {
                 await view.WaitForElementAndExecute<TextBlock>("TrackGenre", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownGenreText"), textBlock.Text));
             }
@@ -108,7 +108,7 @@ namespace Riff.UWP.Test.UI
             await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(textBlock.Text, track.Artist));
             await view.WaitForElementAndExecute<TextBlock>("TrackAlbum", (textBlock) => Assert.Equal(textBlock.Text, track.Album.Name));
 
-            if ((await view.GetWindowSize()).Width > 641)
+            if ((await view.GetWindowSize()).Width > 1008)
             {
                 Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackGenre", (textBlock) => textBlock.Text == track.Genre.Name));
             }
