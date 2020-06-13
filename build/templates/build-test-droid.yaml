@@ -14,8 +14,17 @@ steps:
     restoreSolution: '**/Riff.sln'
 
 - task: XamarinAndroid@1
+  displayName: Build Droid App
   inputs:
-    projectFile: '**/*Droid*.csproj'
+    projectFile: '**/Riff.Droid.csproj'
+    outputDirectory: '$(Build.BinariesDirectory)/$(BuildConfiguration)'
+    msbuildArguments: $ {{ parameters.extraMsBuildArgs }}
+    configuration: '$(BuildConfiguration)'
+
+- task: XamarinAndroid@1
+  displayName: Build Droid Unit Test App
+  inputs:
+    projectFile: '**/Riff.Droid.Test.csproj'
     outputDirectory: '$(Build.BinariesDirectory)/$(BuildConfiguration)'
     msbuildArguments: $ {{ parameters.extraMsBuildArgs }}
     configuration: '$(BuildConfiguration)'
