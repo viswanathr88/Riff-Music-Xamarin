@@ -22,7 +22,6 @@ jobs:
   steps:
   - checkout: self
     clean: true
-
   - template: ./templates/build-test-uwp.yaml
 
 - job: BuildTestDroid
