@@ -14,11 +14,13 @@ steps:
     restoreSolution: '**/*.sln'
 
 - task: XamarinAndroid@1
+  displayName: Build the Android App & Unit Test App
   inputs:
     projectFile: '**/*Droid*.csproj'
     configuration: '$(BuildConfiguration)'
 
 - task: CopyFiles@2
+  displayName: Copy Files to Staging Directory
   inputs:
     contents: '**/*.apk'
     targetFolder: '$(build.artifactStagingDirectory)'
