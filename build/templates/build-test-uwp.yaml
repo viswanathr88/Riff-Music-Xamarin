@@ -31,7 +31,7 @@ steps:
     platform: '$(BuildPlatform)'
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      **\$(BuildConfiguration)\*Test.build.appxrecipe
+      **\$(BuildConfiguration)\$(BuildPlatform)\**\*Test.build.appxrecipe
       !**\*TestAdapter.dll
       !**\obj\**
     searchFolder: '$(System.DefaultWorkingDirectory)'
