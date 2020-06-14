@@ -4,7 +4,8 @@
 # https://aka.ms/yaml
 
 trigger: none
-pr: none
+pr: 
+- master
 
 name: 0.$(Date:yyMM).$(DayOfMonth)$(Rev:rr).0
 
