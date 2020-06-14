@@ -31,10 +31,10 @@ steps:
     platform: '$(BuildPlatform)'
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      **\$(BuildConfiguration)\$(BuildPlatform)\**\*Test.build.appxrecipe
+      $(BuildConfiguration)\$(BuildPlatform)\**\*Test.build.appxrecipe
       !**\*TestAdapter.dll
       !**\obj\**
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    searchFolder: '$(Build.BinariesDirectory)'
     codeCoverageEnabled: true
   
 - task: PublishTestResults@2
@@ -47,7 +47,7 @@ steps:
   displayName: 'Copy Files to Staging Directory'
   inputs:
     SourceFolder: '$(Build.BinariesDirectory)'
-    Contents: '$(BuildConfiguration)\**'
+    Contents: '$(BuildConfiguration)\**\AppPackages\**'
     TargetFolder: '$(build.artifactstagingdirectory)'
 
 - task: PublishBuildArtifacts@1
