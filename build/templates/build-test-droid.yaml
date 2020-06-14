@@ -3,9 +3,6 @@
 # Add steps that test, sign, and distribute an app, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
 
-parameters:
-    extraMsBuildArgs: '/p:JavaSdkDirectory=$(JAVA_HOME_DEFAULT_X64)'
-
 steps:
 - task: NuGetToolInstaller@1
 
@@ -18,10 +15,12 @@ steps:
   inputs:
     projectFile: '**/*Droid*.csproj'
     configuration: '$(BuildConfiguration)'
+    msbuildArguments: /p:OutDir=$(Build.BinariesDirectory)\$(buildConfiguration)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber)
 
 - task: CopyFiles@2
   displayName: Copy Files to Staging Directory
   inputs:
+    sourceFolder: '$(Build.BinariesDirectory)'
     contents: '**/*.apk'
     targetFolder: '$(build.artifactStagingDirectory)'
 
