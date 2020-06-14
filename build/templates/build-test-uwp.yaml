@@ -36,12 +36,15 @@ steps:
       !**\obj\**
     searchFolder: '$(Build.BinariesDirectory)'
     codeCoverageEnabled: true
+    runTestsInIsolation: true
   
 - task: PublishTestResults@2
   displayName: Publish Test Results
   inputs:
+    searchFolder: '$(Agent.TempDirectory)/TestResults'
     testResultsFormat: 'VSTest'
-    testResultsFiles: '**/TEST-*.trx'
+    testResultsFiles: '*.trx'
+    publishRunAttachments: true
 
 - task: CopyFiles@2
   displayName: 'Copy Files to Staging Directory'
