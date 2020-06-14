@@ -23,7 +23,7 @@ steps:
     platform: $(BuildPlatform)
     configuration: $(BuildConfiguration)
     vsVersion: latest
-    msbuildArgs: /p:OutDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\publish\ /p:AppVersion=$(Build.BuildNumber) /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
+    msbuildArgs: '/p:OutDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\publish\ /p:AppVersion=$(Build.BuildNumber) /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never'
 
 - task: VSTest@2
   displayName: Run Tests
