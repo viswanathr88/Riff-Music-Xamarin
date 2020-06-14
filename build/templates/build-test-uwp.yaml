@@ -1,0 +1,51 @@
+# Universal Windows Platform
+# Build a Universal Windows Platform project using Visual Studio.
+# Add steps that test and distribute an app, save build artifacts, and more:
+# https://aka.ms/yaml
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/Riff.sln'
+
+- task: PowerShell@2
+  displayName: 'Set AppxManifest Version Number'
+  inputs:
+    filePath: $(Build.SourcesDirectory)\build\scripts\UpdateAppxManifestVersion.ps1
+    arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
+
+- task: VSBuild@1
+  displayName: Build Solution	
+  inputs:
+    solution: '**/Riff.sln'
+    platform: $(BuildPlatform)
+    configuration: $(BuildConfiguration)
+    vsVersion: latest
+    msbuildArgs: /p:OutDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber) /t:Publish /p:PublishDir=$(Build.BinariesDirectory)\$(buildConfiguration)\$(buildPlatform)\publish\ /p:AppVersion=$(Build.BuildNumber) /p:AppxPackageSigningEnabled=false /p:AppxBundle=Never
+
+- task: VSTest@2
+  displayName: Run Tests
+  inputs:
+    platform: '$(BuildPlatform)'
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      $(BuildConfiguration)\$(BuildPlatform)\**\*Test.build.appxrecipe
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(Build.BinariesDirectory)'
+    codeCoverageEnabled: true
+    runTestsInIsolation: true
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to Staging Directory'
+  inputs:
+    SourceFolder: '$(Build.BinariesDirectory)'
+    Contents: '$(BuildConfiguration)\**\AppPackages\**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Xunit;
 
@@ -59,103 +60,35 @@ namespace Riff.UWP.Test.UI
         }
 
         [Fact]
-        public async Task TracksPage_Navigate_ValidateUnknownTitle()
+        public async Task TracksPage_Navigate_ValidateUnknownFields()
         {
             // Setup mock track accessor gets
             var tracks = new List<Track>();
-            tracks.Add(new Track() { Id = 1, Title = null, Album = new Album() { Id = 1, Name = "MockAlbum" }, Artist = "MockArtist", Duration = TimeSpan.FromSeconds(100), ReleaseYear = 1999 });
+            var track = new Track() 
+            { 
+                Id = 1, 
+                Title = null, 
+                Album = new Album() { Id = 1, Name = null }, 
+                Artist = null, 
+                Duration = TimeSpan.FromSeconds(100), 
+                Genre = new Genre() { Id = 1, Name = null }, 
+                ReleaseYear = 1999 
+            };
+            tracks.Add(track);
             trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
 
             // Load Tracks Page
             await view.LoadPage<TracksPage>(null);
 
             // Validate Unknown Title
-            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("TrackTitle", (textBlock) =>
+            await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownTitleText"), textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownArtistText"), textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("TrackAlbum", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText"), textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("TrackDuration", (textBlock) => Assert.Equal("01:40", textBlock.Text));
+            if ((await view.GetWindowSize()).Width > 1008)
             {
-                return textBlock.Text == ResourceLoader.GetForCurrentView().GetString("UnknownTitleText");
-            });
-
-            Assert.True(success);
-        }
-
-        [Fact]
-        public async Task TracksPage_Navigate_ValidateUnknownArtist()
-        {
-            // Setup mock track accessor gets
-            var tracks = new List<Track>();
-            tracks.Add(new Track() { Id = 1, Title = "MockTitle", Album = new Album() { Id = 1, Name = "MockAlbum" }, Artist = null, Duration = TimeSpan.FromSeconds(100), ReleaseYear = 1999 });
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
-
-            // Load Tracks Page
-            await view.LoadPage<TracksPage>(null);
-
-            // Validate Unknown Artist
-            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("TrackArtist", (textBlock) =>
-            {
-                return textBlock.Text == ResourceLoader.GetForCurrentView().GetString("UnknownArtistText");
-            });
-
-            Assert.True(success);
-        }
-
-        [Fact]
-        public async Task TracksPage_Navigate_ValidateUnknownAlbum()
-        {
-            // Setup mock track accessor gets
-            var tracks = new List<Track>();
-            tracks.Add(new Track() { Id = 1, Title = "MockTitle", Album = new Album() { Id = 1, Name = null }, Artist = "MockArtist", Duration = TimeSpan.FromSeconds(100), ReleaseYear = 1999 });
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
-
-            // Load Tracks Page
-            await view.LoadPage<TracksPage>(null);
-
-            // Validate Unknown Album
-            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("TrackAlbum", (textBlock) =>
-            {
-                return textBlock.Text == ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText");
-            });
-
-            Assert.True(success);
-        }
-
-        [Fact]
-        public async Task TracksPage_Navigate_ValidateUnknownGenre()
-        {
-            // Setup mock track accessor gets
-            var tracks = new List<Track>();
-            tracks.Add(new Track() { Id = 1, Title = "MockTitle", Album = new Album() { Id = 1, Name = "Mock Artist" }, Genre = new Genre() { Id = 1, Name = null },  Artist = "MockArtist", Duration = TimeSpan.FromSeconds(100), ReleaseYear = 1999 });
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
-
-            // Load Tracks Page
-            await view.LoadPage<TracksPage>(null);
-
-            // Validate Unknown Genre
-            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("TrackGenre", (textBlock) =>
-            {
-                return textBlock.Text == ResourceLoader.GetForCurrentView().GetString("UnknownGenreText");
-            });
-
-            Assert.True(success);
-        }
-
-        [Fact]
-        public async Task TracksPage_Navigate_ValidateDurationFormat()
-        {
-            // Setup mock track accessor gets
-            var tracks = new List<Track>();
-            tracks.Add(new Track() { Id = 1, Title = "MockTitle", Album = new Album() { Id = 1, Name = "Mock Artist" }, Genre = new Genre() { Id = 1, Name = "MockGenre" }, Artist = "MockArtist", Duration = TimeSpan.FromSeconds(100), ReleaseYear = 1999 });
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
-
-            // Load Tracks Page
-            await view.LoadPage<TracksPage>(null);
-
-            // Validate Unknown Genre
-            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("TrackDuration", (textBlock) =>
-            {
-                return textBlock.Text == "01:40";
-            });
-
-            Assert.True(success);
+                await view.WaitForElementAndExecute<TextBlock>("TrackGenre", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownGenreText"), textBlock.Text));
+            }
         }
 
         [Fact]
@@ -171,10 +104,14 @@ namespace Riff.UWP.Test.UI
 
             // Validate Unknown Genre
             var track = tracks[0];
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackTitle", (textBlock) => textBlock.Text == track.Title));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackArtist", (textBlock) => textBlock.Text == track.Artist));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackAlbum", (textBlock) => textBlock.Text == track.Album.Name));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackGenre", (textBlock) => textBlock.Text == track.Genre.Name));
+            await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(textBlock.Text, track.Title));
+            await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(textBlock.Text, track.Artist));
+            await view.WaitForElementAndExecute<TextBlock>("TrackAlbum", (textBlock) => Assert.Equal(textBlock.Text, track.Album.Name));
+
+            if ((await view.GetWindowSize()).Width > 1008)
+            {
+                Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackGenre", (textBlock) => textBlock.Text == track.Genre.Name));
+            }
         }
     }
 }

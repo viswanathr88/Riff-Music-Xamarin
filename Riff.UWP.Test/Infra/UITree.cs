@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -9,6 +10,14 @@ namespace Riff.UWP.Test.Infra
 {
     public class UITree
     {
+        public async Task<Size> GetWindowSize()
+        {
+            return await CoreDispatcher.RunToCompletionAsync(() =>
+            {
+                return Task.FromResult(new Size(RootFrame.ActualWidth, RootFrame.Height));
+            });
+        }
+
         public async Task<bool> ElementExists<T>(string name) where T : DependencyObject
         {
             return await CoreDispatcher.RunToCompletionAsync(() =>
@@ -43,7 +52,7 @@ namespace Riff.UWP.Test.Infra
                 }
             }
 
-            Xunit.Assert.True(found);
+            Xunit.Assert.True(found, $"Failed to find element with name {name}");
         }
 
         public async Task WaitForElementAndExecute<TElement>(string name, Action<TElement> fn, int pingFrequencyMs = 100, int totalPings = 20) where TElement : DependencyObject
@@ -52,13 +61,9 @@ namespace Riff.UWP.Test.Infra
             await CoreDispatcher.RunToCompletionAsync(() =>
             {
                 var element = VisualTreeHelperExtensions.FindVisualChild<TElement>(RootFrame, name);
-                if (element != null)
-                {
-                    fn(element);
-                    return Task.CompletedTask;
-                }
-
-                throw new Exception("Element not found to execute function. Tree has probably changed unexpectedly");
+                Xunit.Assert.NotNull(element);
+                fn(element);
+                return Task.CompletedTask;
             });
         }
 

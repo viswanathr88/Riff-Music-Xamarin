@@ -1,0 +1,30 @@
+# Xamarin.Android
+# Build a Xamarin.Android project.
+# Add steps that test, sign, and distribute an app, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/xamarin
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '**/*.sln'
+
+- task: XamarinAndroid@1
+  displayName: Build the Android App & Unit Test App
+  inputs:
+    projectFile: '**/*Droid*.csproj'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: /p:OutDir=$(Build.BinariesDirectory)\$(buildConfiguration)\ /p:GenerateProjectSpecificOutputFolder=true /p:AppVersion=$(Build.BuildNumber)
+
+- task: CopyFiles@2
+  displayName: Copy Files to Staging Directory
+  inputs:
+    sourceFolder: '$(Build.BinariesDirectory)'
+    contents: '**/*.apk'
+    targetFolder: '$(build.artifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'

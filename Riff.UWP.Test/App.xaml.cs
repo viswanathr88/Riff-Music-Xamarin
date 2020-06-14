@@ -64,6 +64,7 @@ namespace Riff.UWP.Test
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
                 ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+                
             }
             
             Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();
