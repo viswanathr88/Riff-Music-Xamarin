@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
-using Windows.Storage;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -12,6 +11,8 @@ namespace Riff.UWP.ViewModel
     {
         private readonly MediaPlaybackItem item;
         private ImageSource image = null;
+        private static readonly string AlbumArtProperty = "AlbumArtPath";
+        private static readonly string YearProperty = "Year";
 
         public MediaListItem(MediaPlaybackItem item)
         {
@@ -26,7 +27,7 @@ namespace Riff.UWP.ViewModel
 
         public string AlbumArtist => item.GetDisplayProperties().MusicProperties.AlbumArtist;
 
-        public int ReleaseYear => (int)item.Source.CustomProperties["Year"];
+        public int ReleaseYear => item.Source.CustomProperties.ContainsKey(YearProperty) ? (int)item.Source.CustomProperties[YearProperty] : 0;
 
         public ImageSource Art
         {
@@ -36,7 +37,7 @@ namespace Riff.UWP.ViewModel
 
         public async Task LoadArtAsync()
         {
-            var path = (string)item.Source.CustomProperties["AlbumArtPath"];
+            var path = item.Source.CustomProperties.ContainsKey(AlbumArtProperty) ? (string)item.Source.CustomProperties[AlbumArtProperty] : string.Empty;
             if (!string.IsNullOrEmpty(path))
             {
                 using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))

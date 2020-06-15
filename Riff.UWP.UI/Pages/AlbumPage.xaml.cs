@@ -92,7 +92,7 @@ namespace Riff.UWP.Pages
             if (e.ClickedItem != null)
             {
                 var index = Convert.ToUInt32(AlbumTrackList.Items.IndexOf(e.ClickedItem));
-                await Player.PlayAsync(ViewModel.AlbumInfo, index);
+                await Player.PlayAsync(ViewModel.Tracks, index);
             }
         }
 
@@ -146,7 +146,7 @@ namespace Riff.UWP.Pages
 
         private async void AlbumToolbarPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            await Player.PlayAsync(ViewModel.AlbumInfo);
+            await Player.PlayAsync(ViewModel.Tracks, 0);
         }
 
         private void AlbumToolbarBrowseArtistButton_Click(object sender, RoutedEventArgs e)

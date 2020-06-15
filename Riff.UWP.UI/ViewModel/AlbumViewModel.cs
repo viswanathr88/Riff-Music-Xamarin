@@ -11,7 +11,7 @@ namespace Riff.UWP.ViewModel
     {
         private Album album;
         private readonly IMusicMetadata metadata;
-        private ObservableCollection<Track> tracks;
+        private ObservableCollection<DriveItem> tracks;
 
         public AlbumViewModel(IMusicMetadata metadata)
         {
@@ -24,7 +24,7 @@ namespace Riff.UWP.ViewModel
             private set => SetProperty(ref this.album, value);
         }
 
-        public ObservableCollection<Track> Tracks
+        public ObservableCollection<DriveItem> Tracks
         {
             get => tracks;
             private set => SetProperty(ref this.tracks, value);
@@ -47,17 +47,18 @@ namespace Riff.UWP.ViewModel
                 await RunUISafe(() => AlbumInfo = a);
 
                 // Get tracks for album
-                var options = new TrackAccessOptions()
+                var options = new DriveItemAccessOptions()
                 {
                     SortType = TrackSortType.Number,
                     SortOrder = SortOrder.Ascending,
-                    AlbumFilter = album.Id.Value
+                    AlbumFilter = album.Id.Value,
+                    IncludeTrack = true
                 };
 
-                return this.metadata.Tracks.Get(options);
+                return this.metadata.DriveItems.Get(options);
             });
 
-            Tracks = new ObservableCollection<Track>(tracks);
+            Tracks = new ObservableCollection<DriveItem>(tracks);
             IsLoaded = true;
         }
     }

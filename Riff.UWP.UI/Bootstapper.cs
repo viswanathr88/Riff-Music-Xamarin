@@ -36,6 +36,7 @@ namespace Riff.UWP
             SimpleIoc.Default.Register<IMusicMetadata>(() => new MusicMetadata(Path.Combine(DefaultPath, DatabaseName)));
             SimpleIoc.Default.Register(() => new MusicLibrary(DefaultPath, SimpleIoc.Default.GetInstance<IMusicMetadata>()));
             SimpleIoc.Default.Register<SyncEngine>();
+            SimpleIoc.Default.Register<ITrackUrlDownloader>(() => SimpleIoc.Default.GetInstance<SyncEngine>());
 
             // Setup all ViewModels
             SimpleIoc.Default.Register<FirstRunExperienceViewModel>();
