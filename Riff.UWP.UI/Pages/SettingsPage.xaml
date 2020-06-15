@@ -9,8 +9,7 @@
     xmlns:storage="using:Riff.UWP.Storage"
     xmlns:conv="using:Riff.UWP.Converters"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    DataContext="{Binding Source={StaticResource VMLocator}, Path=Settings}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
         <conv:BoolNegationConverter x:Key="BoolNegationConverter" />
