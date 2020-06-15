@@ -373,9 +373,9 @@
       <Project>{0d0f3dbe-f0cf-4bc7-a578-1529daae80bd}</Project>
       <Name>Riff.Data.Sqlite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Riff\Riff.csproj">
+    <ProjectReference Include="..\Riff\Riff.Core.csproj">
       <Project>{91416f7a-1829-47a0-8632-4d67891a7914}</Project>
-      <Name>Riff</Name>
+      <Name>Riff.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

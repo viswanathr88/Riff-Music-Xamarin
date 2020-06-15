@@ -26,6 +26,8 @@ namespace Riff.UWP.ViewModel
 
         public SearchItemType Type => item.Type;
 
+        public long? ParentId => item.ParentId;
+
         public ImageSource Art => image;
 
         public bool HasNoArt => !GetHasArt();

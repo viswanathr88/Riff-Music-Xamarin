@@ -4,6 +4,7 @@ using Riff.Data.Access;
 using Riff.Sync;
 using Riff.UWP.Storage;
 using Riff.UWP.ViewModel;
+using Riff.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -187,7 +188,7 @@ namespace Riff.UWP.Pages
 
         private async void NavViewSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput && !string.IsNullOrEmpty(sender.Text))
             {
                 await ViewModel.SearchSuggestions.Load(sender.Text);
             }
@@ -209,19 +210,13 @@ namespace Riff.UWP.Pages
             return searchItemIconMap[type];
         }
 
-        private void NavViewSearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        private async void NavViewSearchBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            sender.Text = "";
-        }
-
-        private void NavViewSearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            sender.Text = "";
             NavView.IsPaneOpen = false;
 
-            if (args.SelectedItem != null)
+            if (args.ChosenSuggestion != null)
             {
-                var item = args.SelectedItem as SearchItemViewModel;
+                var item = args.ChosenSuggestion as SearchItemViewModel;
                 if (item.Type == SearchItemType.Album)
                 {
                     var options = new AlbumAccessOptions()
@@ -237,6 +232,25 @@ namespace Riff.UWP.Pages
                 {
                     var artist = MusicMetadata.Artists.Get(item.Id);
                     ContentFrame.Navigate(typeof(ArtistPage), artist, new EntranceNavigationTransitionInfo());
+                }
+                else if (item.Type == SearchItemType.Track || item.Type == SearchItemType.TrackArtist)
+                {
+                    var options = new DriveItemAccessOptions()
+                    {
+                        SortType = TrackSortType.Number,
+                        SortOrder = SortOrder.Ascending,
+                        IncludeTrack = true,
+                        IncludeTrackAlbum = true,
+                        AlbumFilter = item.ParentId
+                    };
+
+                    var items = MusicMetadata.DriveItems.Get(options);
+                    var index = items.IndexOf(driveItem => driveItem.Track.Id == item.Id);
+                    if (index >= 0)
+                    {
+                        await Player.PlayAsync(items, Convert.ToUInt32(index));
+                    }
+                    sender.Text = "";
                 }
             }
         }
