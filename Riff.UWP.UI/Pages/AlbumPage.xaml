@@ -154,7 +154,7 @@
         </ListView.ItemContainerStyle>
 
         <ListView.ItemTemplate>
-            <DataTemplate x:DataType="data:Track">
+            <DataTemplate x:DataType="data:DriveItem">
                 <Grid VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -163,13 +163,13 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="{x:Bind Number}"
+                    <TextBlock Text="{x:Bind Track.Number}"
                                MaxLines="1"
                                Grid.Column="0"
                                FontSize="13"
                                Margin="0,0,20,0" />
                     <TextBlock x:Name="TrackTitle"
-                               Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
+                               Text="{x:Bind Track.Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                                MaxLines="1"
                                TextTrimming="CharacterEllipsis"
                                Grid.Column="1"
@@ -177,7 +177,7 @@
                                Margin="0,0,20,0" />
 
                     <TextBlock x:Name="TrackArtist"
-                               Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                               Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                                MaxLines="2"
                                TextTrimming="CharacterEllipsis"
                                Grid.Column="2"
@@ -185,7 +185,7 @@
                                Margin="0,0,20,0" />
 
                     <TextBlock x:Name="TrackDuration"
-                               Text="{x:Bind FormatDuration(Duration)}"
+                               Text="{x:Bind Track.FormatDuration(Track.Duration)}"
                                MaxLines="1"
                                TextTrimming="CharacterEllipsis"
                                Grid.Column="3"

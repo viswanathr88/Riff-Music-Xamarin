@@ -1,6 +1,8 @@
 ﻿using CommonServiceLocator;
+using Riff.Data;
 using Riff.UWP.ViewModel;
 using System;
+using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
 
@@ -26,7 +28,7 @@ namespace Riff.UWP.Pages
 
         private async void ArtistToolbarPlayButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            await Player.PlayAsync(ViewModel.Parameter);
+            await Player.PlayAsync(ViewModel.PlayableTracks, 0);
         }
 
         private async void AlbumList_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
@@ -34,7 +36,7 @@ namespace Riff.UWP.Pages
             if (e.ClickedItem != null)
             {
                 var index = (sender as ListView).Items.IndexOf(e.ClickedItem);
-                await Player.PlayAsync(ViewModel.Parameter, Convert.ToUInt32(index));
+                await Player.PlayAsync(ViewModel.PlayableTracks, Convert.ToUInt32(index));
             }
         }
     }

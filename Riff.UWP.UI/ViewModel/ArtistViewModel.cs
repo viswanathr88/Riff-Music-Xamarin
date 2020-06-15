@@ -22,21 +22,21 @@ namespace Riff.UWP.ViewModel
         }
     }
 
-    public sealed class ExpandedAlbumItem : IGrouping<Album, Track>
+    public sealed class ExpandedAlbumItem : IGrouping<Album, DriveItem>
     {
-        private IList<Track> tracks;
-        private ThumbnailCache cache;
+        private readonly IList<DriveItem> tracks;
+        private readonly ThumbnailCache cache;
 
-        public ExpandedAlbumItem(ThumbnailCache cache, Album key, IEnumerable<Track> tracks)
+        public ExpandedAlbumItem(ThumbnailCache cache, Album key, IEnumerable<DriveItem> tracks)
         {
             this.cache = cache;
             Key = key;
-            this.tracks = new List<Track>(tracks);
+            this.tracks = new List<DriveItem>(tracks);
         }
 
         public Album Key { get; }
 
-        public IEnumerator<Track> GetEnumerator() => tracks.GetEnumerator();
+        public IEnumerator<DriveItem> GetEnumerator() => tracks.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => tracks.GetEnumerator();
 
@@ -46,6 +46,7 @@ namespace Riff.UWP.ViewModel
     public sealed class ArtistViewModel : DataViewModel<Artist>
     {
         private ObservableCollection<ExpandedAlbumItem> albumTracks;
+        private IList<DriveItem> tracks;
         private readonly MusicLibrary library;
 
         public ArtistViewModel(MusicLibrary library)
@@ -59,14 +60,20 @@ namespace Riff.UWP.ViewModel
             set => SetProperty(ref this.albumTracks, value);
         }
 
+        public IList<DriveItem> PlayableTracks
+        {
+            get => tracks;
+            private set => SetProperty(ref this.tracks, value);
+        }
+
         public async override Task LoadAsync(Artist artist)
         {
             Parameter = artist;
 
-            var options = new TrackAccessOptions()
+            var options = new DriveItemAccessOptions()
             {
-                IncludeAlbum = true,
-                IncludeGenre = true,
+                IncludeTrack = true,
+                IncludeTrackAlbum = true,
                 AlbumArtistFilter = artist.Id,
                 SortType = TrackSortType.ReleaseYear,
                 SortOrder = SortOrder.Descending
@@ -74,11 +81,13 @@ namespace Riff.UWP.ViewModel
 
             var groups = await Task.Run(() =>
             {
-                var tracks = library.Metadata.Tracks.Get(options);
-                return tracks.GroupBy(track => track.Album, (key, list) => new ExpandedAlbumItem(library.AlbumArts, key, list), new AlbumComparer());
+                var items = library.Metadata.DriveItems.Get(options);
+                var groupedItems = items.GroupBy(item => item.Track.Album, (key, list) => new ExpandedAlbumItem(library.AlbumArts, key, list), new AlbumComparer());
+                return groupedItems;
             });
 
             AlbumTracks = new ObservableCollection<ExpandedAlbumItem>(groups);
+            PlayableTracks = groups.SelectMany(album => album).ToList();
             IsLoaded = true;
         }
     }

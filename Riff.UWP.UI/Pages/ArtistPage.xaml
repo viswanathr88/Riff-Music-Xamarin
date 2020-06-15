@@ -158,7 +158,7 @@
         </ListView.GroupStyle>
 
         <ListView.ItemTemplate>
-            <DataTemplate x:DataType="data:Track">
+            <DataTemplate x:DataType="data:DriveItem">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -168,7 +168,7 @@
 
                     <!-- Track Name -->
                     <TextBlock x:Name="TrackTitle"
-                               Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
+                               Text="{x:Bind Track.Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                                Grid.Column="0"
                                FontSize="13"
                                Margin="0,0,30,0"
@@ -178,7 +178,7 @@
 
                     <!-- Track Artist -->
                     <TextBlock x:Name="TrackArtist"
-                               Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                               Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                                Grid.Column="1"
                                FontSize="13"
                                Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
@@ -189,7 +189,7 @@
 
                     <!-- Track Duration -->
                     <TextBlock x:Name="TrackDuration"
-                               Text="{x:Bind FormatDuration(Duration)}"
+                               Text="{x:Bind Track.FormatDuration(Track.Duration)}"
                                Grid.Column="2"
                                FontSize="13"
                                Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"

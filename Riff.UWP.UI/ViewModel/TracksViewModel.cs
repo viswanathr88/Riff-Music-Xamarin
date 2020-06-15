@@ -13,7 +13,8 @@ namespace Riff.UWP.ViewModel
         private readonly MusicLibrary library;
         private TrackSortType sortType = TrackSortType.ReleaseYear;
         private SortOrder sortOrder = SortOrder.Descending;
-        private ObservableCollection<Track> tracks = new ObservableCollection<Track>();
+        private ObservableCollection<DriveItem> tracks = new ObservableCollection<DriveItem>();
+        private int currentIndex = -1;
 
         public TracksViewModel(MusicLibrary library)
         {
@@ -21,7 +22,13 @@ namespace Riff.UWP.ViewModel
             this.library.Metadata.Refreshed += Metadata_Refreshed;
         }
 
-        public ObservableCollection<Track> Tracks
+        public int CurrentIndex
+        {
+            get => currentIndex;
+            set => SetProperty(ref this.currentIndex, value);
+        }
+
+        public ObservableCollection<DriveItem> Tracks
         {
             get => tracks;
             private set => SetProperty(ref this.tracks, value);
@@ -48,7 +55,7 @@ namespace Riff.UWP.ViewModel
 
         public async Task ReloadAsync()
         {
-            Tracks = new ObservableCollection<Track>();
+            Tracks = new ObservableCollection<DriveItem>();
             await LoadAsync();
         }
 
@@ -57,17 +64,17 @@ namespace Riff.UWP.ViewModel
             await RunUISafe(() => IsLoaded = false);
         }
 
-        private async Task<IList<Track>> FetchTracksAsync()
+        private async Task<IList<DriveItem>> FetchTracksAsync()
         {
-            var options = new TrackAccessOptions()
+            var options = new DriveItemAccessOptions()
             {
-                IncludeAlbum = true,
-                IncludeGenre = true,
+                IncludeTrack = true,
+                IncludeTrackAlbum = true,
                 SortType = SortType,
                 SortOrder = SortOrder
             };
 
-            return await Task.Run(() => library.Metadata.Tracks.Get(options));
+            return await Task.Run(() => library.Metadata.DriveItems.Get(options));
         }
     }
 }

@@ -64,7 +64,7 @@
         <conv:TrackSortTypeConverter x:Key="TrackSortTypeConverter" />
         <conv:SortOrderConverter x:Key="SortOrderConverter" />
         
-        <DataTemplate x:DataType="data:Track"
+        <DataTemplate x:DataType="data:DriveItem"
                       x:Key="NarrowTrackItemTemplate">
             <RelativePanel>
                 <!-- Track Art -->
@@ -83,7 +83,7 @@
                 <!-- Track Title -->
                 <TextBlock x:Name="TrackTitle"
                            x:Phase="0"
-                           Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
+                           Text="{x:Bind Track.Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                            HorizontalAlignment="Left"
                            VerticalAlignment="Top"
                            FontSize="13"
@@ -96,7 +96,7 @@
                 
                 <!-- Track Artist -->
                 <TextBlock x:Name="TrackArtist" 
-                           Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                           Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                            x:Phase="1"
                            HorizontalAlignment="Left"
                            Style="{StaticResource CaptionTextBlockStyle}"
@@ -138,7 +138,7 @@
                 
                 <!-- Track Duration -->
                 <TextBlock x:Name="TrackDuration"
-                           Text="{x:Bind FormatDuration(Duration)}"
+                           Text="{x:Bind Track.FormatDuration(Track.Duration)}"
                            FontSize="13"
                            x:Phase="2"
                            RelativePanel.AlignTopWithPanel="True"
@@ -148,7 +148,7 @@
             </RelativePanel>
         </DataTemplate>
 
-        <DataTemplate x:DataType="data:Track"
+        <DataTemplate x:DataType="data:DriveItem"
                       x:Key="NormalTrackItemTemplate">
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -159,7 +159,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Track Title -->
-                <TextBlock Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
+                <TextBlock Text="{x:Bind Track.Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                            x:Name="TrackTitle"
                            MaxLines="1"
                            x:Phase="0"
@@ -170,7 +170,7 @@
                            Margin="0,0,20,0" />
 
                 <!-- Track Artist -->
-                <TextBlock Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                <TextBlock Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                            x:Name="TrackArtist"
                            MaxLines="1"
                            x:Phase="1"
@@ -181,7 +181,7 @@
                            Margin="0,0,20,0" />
 
                 <!-- Track Album -->
-                <TextBlock Text="{x:Bind Album.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
+                <TextBlock Text="{x:Bind Track.Album.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                            x:Name="TrackAlbum"
                            MaxLines="1"
                            x:Phase="2"
@@ -192,7 +192,7 @@
                            Margin="0,0,20,0" />
 
                 <!-- Track Duration -->
-                <TextBlock Text="{x:Bind FormatDuration(Duration)}"
+                <TextBlock Text="{x:Bind Track.FormatDuration(Track.Duration)}"
                            x:Name="TrackDuration"
                            MaxLines="1"
                            x:Phase="2"
@@ -204,7 +204,7 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:DataType="data:Track"
+        <DataTemplate x:DataType="data:DriveItem"
                       x:Key="WideTrackItemTemplate">
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -217,7 +217,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Track Title -->
-                <TextBlock Text="{x:Bind Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
+                <TextBlock Text="{x:Bind Track.Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
                            x:Name="TrackTitle"
                            MaxLines="1"
                            x:Phase="0"
@@ -228,7 +228,7 @@
                            Margin="0,0,20,0"/>
 
                 <!-- Track Artist -->
-                <TextBlock Text="{x:Bind Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                <TextBlock Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                            x:Name="TrackArtist"
                            MaxLines="1"
                            x:Phase="1"
@@ -239,7 +239,7 @@
                            Margin="0,0,20,0"/>
 
                 <!-- Track Album -->
-                <TextBlock Text="{x:Bind Album.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
+                <TextBlock Text="{x:Bind Track.Album.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                            x:Name="TrackAlbum"
                            MaxLines="1"
                            x:Phase="2"
@@ -250,7 +250,7 @@
                            Margin="0,0,20,0"/>
 
                 <!-- Track Year -->
-                <TextBlock Text="{x:Bind ReleaseYear}"
+                <TextBlock Text="{x:Bind Track.ReleaseYear}"
                            x:Name="TrackReleaseYear"
                            MaxLines="1"
                            x:Phase="2"
@@ -262,7 +262,7 @@
                            Margin="0,0,20,0"/>
 
                 <!-- Track Genre -->
-                <TextBlock Text="{x:Bind Genre.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
+                <TextBlock Text="{x:Bind Track.Genre.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
                            x:Name="TrackGenre"
                            MaxLines="1"
                            x:Phase="2"
@@ -273,7 +273,7 @@
                            Margin="0,0,20,0"/>
 
                 <!-- Track Duration -->
-                <TextBlock Text="{x:Bind FormatDuration(Duration)}"
+                <TextBlock Text="{x:Bind Track.FormatDuration(Track.Duration)}"
                            x:Name="TrackDuration"
                            MaxLines="1"
                            x:Phase="2"
@@ -288,8 +288,8 @@
 
     <ListView x:Name="TracksList"
               SelectionMode="Single"
-              IsItemClickEnabled="True"
-              ItemClick="TracksList_ItemClick"
+              SelectedIndex="{x:Bind ViewModel.CurrentIndex, Mode=TwoWay}"
+              IsItemClickEnabled="False"
               ShowsScrollingPlaceholders="False"
               ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
               ItemTemplate="{StaticResource NarrowTrackItemTemplate}"

@@ -21,7 +21,7 @@ namespace Riff.UWP.Pages
                 ViewModel.PropertyChanged += DataViewModel_PropertyChanged;
             }
 
-            bool load = (e.NavigationMode == NavigationMode.New || e.NavigationMode == NavigationMode.Refresh) || !ViewModel.IsLoaded;
+            bool load = !ViewModel.IsLoaded;
 
             if (load)
             {
