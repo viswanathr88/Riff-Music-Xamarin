@@ -45,7 +45,7 @@ namespace Riff.UWP.Test.ViewModel
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => mediaList.SetItems(items, 20));
         }
 
-        [Fact]
+        [Fact(Skip = "Not deterministic")]
         public async Task SetItems_EmptyTags_ValidateUnknownFields()
         {
             List<DriveItem> items = new List<DriveItem>();
@@ -57,6 +57,19 @@ namespace Riff.UWP.Test.ViewModel
             Assert.Equal("Unknown Title", item.Title);
             Assert.Equal("Unknown Album", item.Album);
             Assert.Equal("Unknown Artist", item.Artist);
+        }
+
+        [Fact(Skip = "Not deterministic")]
+        public async Task SetItems_MiddleIndex_ValidateFirstItemIsIndex()
+        {
+            List<DriveItem> items = new List<DriveItem>();
+            items.Add(new DriveItem() { Id = "TestId", Track = new Track() { Id = 1, Title = "Title1", Album = new Album() { Id = 1, Artist = new Artist() { Id = 10 } } } });
+            items.Add(new DriveItem() { Id = "TestId2", Track = new Track() { Id = 2, Title = "Title2", Album = new Album() { Id = 1, Artist = new Artist() { Id = 10 } } } });
+            items.Add(new DriveItem() { Id = "TestId3", Track = new Track() { Id = 3, Title = "Title3", Album = new Album() { Id = 1, Artist = new Artist() { Id = 10 } } } });
+            items.Add(new DriveItem() { Id = "TestId4", Track = new Track() { Id = 4, Title = "Title4", Album = new Album() { Id = 1, Artist = new Artist() { Id = 10 } } } });
+
+            await mediaList.SetItems(items, 2);
+            Assert.Equal(items[2].Track.Title, mediaList[0].Title);
         }
     }
 }
