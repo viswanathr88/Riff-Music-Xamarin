@@ -15,6 +15,7 @@ namespace Riff.Data.Access
         public long? Count { get; set; }
         public bool IncludeTrack { get; set; }
         public bool IncludeTrackAlbum { get; set; }
+        public bool IncludeTrackGenre { get; set; }
     }
 
     public interface IDriveItemReadOnlyAccessor

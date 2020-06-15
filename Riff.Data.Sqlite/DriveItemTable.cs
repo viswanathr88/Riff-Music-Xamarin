@@ -237,6 +237,13 @@ namespace Riff.Data.Sqlite
                 }
 
                 fields.Add("track.GenreId AS TrackGenreId");
+
+                if (options.IncludeTrackGenre)
+                {
+                    fields.Add("genre.Name AS TrackGenreName");
+                    joins.Add("INNER JOIN Genre genre ON track.GenreId = genre.Id");
+                }
+
                 joins.Add("INNER JOIN Track track ON track.Id = item.TrackId");
             }
             else

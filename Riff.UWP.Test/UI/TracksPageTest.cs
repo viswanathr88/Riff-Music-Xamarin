@@ -122,7 +122,6 @@ namespace Riff.UWP.Test.UI
             // Load Tracks Page
             await view.LoadPage<TracksPage>(null);
 
-            // Validate Unknown Genre
             var track = driveItems.First().Track;
             await view.WaitForElementAndCondition<TextBlock>("TrackTitle", (textBlock) => textBlock.Text == track.Title);
             await view.WaitForElementAndCondition<TextBlock>("TrackArtist", (textBlock) => textBlock.Text == track.Artist);

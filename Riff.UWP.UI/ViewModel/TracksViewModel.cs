@@ -70,6 +70,7 @@ namespace Riff.UWP.ViewModel
             {
                 IncludeTrack = true,
                 IncludeTrackAlbum = true,
+                IncludeTrackGenre = true,
                 SortType = SortType,
                 SortOrder = SortOrder
             };
