@@ -21,7 +21,7 @@ namespace Riff.UWP.Test.UI
     {
         private readonly Mock<IMusicMetadata> mockMetadata;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
-        private readonly Mock<ITrackReadOnlyAccessor> trackAccessor;
+        private readonly Mock<IDriveItemReadOnlyAccessor> driveItemAccessor;
         private readonly MusicLibrary library;
 
         private readonly UITree view = new UITree();
@@ -31,12 +31,12 @@ namespace Riff.UWP.Test.UI
             // Setup mock album accessor
             mockMetadata = new Mock<IMusicMetadata>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
-            trackAccessor = new Mock<ITrackReadOnlyAccessor>();
+            driveItemAccessor = new Mock<IDriveItemReadOnlyAccessor>();
             mockMetadata.Setup(metadata => metadata.Albums).Returns(albumAccessor.Object);
-            mockMetadata.Setup(metadata => metadata.Tracks).Returns(trackAccessor.Object);
+            mockMetadata.Setup(metadata => metadata.DriveItems).Returns(driveItemAccessor.Object);
 
             SimpleIoc.Default.Register(() => mockMetadata.Object);
-            SimpleIoc.Default.Register(() => trackAccessor.Object);
+            SimpleIoc.Default.Register(() => driveItemAccessor.Object);
 
             library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, SimpleIoc.Default.GetInstance<IMusicMetadata>());
             SimpleIoc.Default.Register(() => library);
@@ -47,7 +47,7 @@ namespace Riff.UWP.Test.UI
         {
             SimpleIoc.Default.Unregister<IMusicMetadata>();
             SimpleIoc.Default.Unregister<IAlbumReadOnlyAccessor>();
-            SimpleIoc.Default.Unregister<ITrackReadOnlyAccessor>();
+            SimpleIoc.Default.Unregister<IDriveItemReadOnlyAccessor>();
             SimpleIoc.Default.Unregister<MusicLibrary>();
             SimpleIoc.Default.Unregister<AlbumViewModel>();
             SimpleIoc.Default.Reset();
@@ -69,7 +69,7 @@ namespace Riff.UWP.Test.UI
             // Setup album mock
             var albums = new List<Album>() { new Album() { Id = 1, Name = null, Artist = new Artist() { Id = 1, Name = null }, Genre = new Genre() { Id = 1, Name = null } } };
             albumAccessor.Setup(accessor => accessor.Get(It.IsAny<AlbumAccessOptions>())).Returns(albums);
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(new List<Track>());
+            driveItemAccessor.Setup(accessor => accessor.Get(It.IsAny<DriveItemAccessOptions>())).Returns(new List<DriveItem>());
 
             // Load Tracks Page
             await view.LoadPage<AlbumPage>(albums[0]);
@@ -85,7 +85,7 @@ namespace Riff.UWP.Test.UI
             // Setup album mock
             var albums = new List<Album>() { new Album() { Id = 1, Name = "MockAlbum", Artist = new Artist() { Id = 1, Name = "MockArtist" }, Genre = new Genre() { Id = 1, Name = "MockGenre" } } };
             albumAccessor.Setup(accessor => accessor.Get(It.IsAny<AlbumAccessOptions>())).Returns(albums);
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(new List<Track>());
+            driveItemAccessor.Setup(accessor => accessor.Get(It.IsAny<DriveItemAccessOptions>())).Returns(new List<DriveItem>());
 
             // Load Tracks Page
             var album = albums.First();
@@ -103,14 +103,35 @@ namespace Riff.UWP.Test.UI
             var albums = new List<Album>() { new Album() { Id = 1, Name = "MockAlbum", Artist = new Artist() { Id = 1, Name = "MockArtist" }, Genre = new Genre() { Id = 1, Name = "MockGenre" } } };
             albumAccessor.Setup(accessor => accessor.Get(It.IsAny<AlbumAccessOptions>())).Returns(albums);
 
-            var tracks = new List<Track>() { new Track() { Id = 1, Title = null, Album = new Album() { Id = 1, Name = null }, Artist = null, Genre = new Genre() { Id = 1, Name = null }, Duration = TimeSpan.FromSeconds(120) } };
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
+            var driveItems = new List<DriveItem>();
+            driveItems.Add(new DriveItem()
+            {
+                Id = "Item1",
+                Track = new Track()
+                {
+                    Id = 1,
+                    Title = null,
+                    Album = new Album()
+                    {
+                        Id = 1,
+                        Name = null
+                    },
+                    Artist = null,
+                    Genre = new Genre()
+                    {
+                        Id = 1,
+                        Name = null
+                    },
+                    Duration = TimeSpan.FromSeconds(120)
+                }
+            });
+            driveItemAccessor.Setup(accessor => accessor.Get(It.IsAny<DriveItemAccessOptions>())).Returns(driveItems);
 
             // Load Tracks Page
             var album = albums.First();
             await view.LoadPage<AlbumPage>(album);
 
-            var track = tracks.First();
+            var track = driveItems.First().Track;
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackTitle", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownTitleText") == textBlock.Text));
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackArtist", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownArtistText") == textBlock.Text));
         }
@@ -122,14 +143,35 @@ namespace Riff.UWP.Test.UI
             var albums = new List<Album>() { new Album() { Id = 1, Name = "MockAlbum", Artist = new Artist() { Id = 1, Name = "MockArtist" }, Genre = new Genre() { Id = 1, Name = "MockGenre" } } };
             albumAccessor.Setup(accessor => accessor.Get(It.IsAny<AlbumAccessOptions>())).Returns(albums);
 
-            var tracks = new List<Track>() { new Track() { Id = 1, Title = "TrackTitle", Album = new Album() { Id = 1, Name = "TrackAlbum" }, Artist = "TrackArtist", Genre = new Genre() { Id = 1, Name = "TrackGenre" }, Duration = TimeSpan.FromSeconds(120) } };
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
+            var driveItems = new List<DriveItem>();
+            driveItems.Add(new DriveItem()
+            {
+                Id = "Item1",
+                Track = new Track()
+                {
+                    Id = 1,
+                    Title = "TrackTitle",
+                    Album = new Album()
+                    {
+                        Id = 1,
+                        Name = "TrackAlbum",
+                    },
+                    Artist = "TrackArtist",
+                    Genre = new Genre()
+                    {
+                        Id = 1,
+                        Name = "TrackGenre"
+                    },
+                    Duration = TimeSpan.FromSeconds(120)
+                }
+            });
+            driveItemAccessor.Setup(accessor => accessor.Get(It.IsAny<DriveItemAccessOptions>())).Returns(driveItems);
 
             // Load Tracks Page
             var album = albums.First();
             await view.LoadPage<AlbumPage>(album);
 
-            var track = tracks.First();
+            var track = driveItems.First().Track;
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackTitle", (textBlock) => track.Title == textBlock.Text));
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackArtist", (textBlock) => track.Artist == textBlock.Text));
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackDuration", (textBlock) => "02:00" == textBlock.Text));
