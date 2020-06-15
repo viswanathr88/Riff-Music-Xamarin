@@ -111,7 +111,7 @@
                Padding="0,20,0,20"
                Grid.Row="1"
                Navigated="LibraryContentFrame_Navigated"
-               CacheSize="0"/>
+               CacheSize="1"/>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup>

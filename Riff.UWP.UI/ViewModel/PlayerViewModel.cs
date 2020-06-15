@@ -1,6 +1,7 @@
 ﻿using Riff.Data;
 using Riff.Data.Access;
 using Riff.Sync;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 
@@ -10,13 +11,13 @@ namespace Riff.UWP.ViewModel
     {
         private bool isPlayerVisible;
         private readonly MusicLibrary library;
-        private readonly SyncEngine syncEngine;
+        private readonly ITrackUrlDownloader urlDownloader;
         private MediaList list;
 
-        public PlayerViewModel(MusicLibrary library, SyncEngine engine)
+        public PlayerViewModel(MusicLibrary library, ITrackUrlDownloader urlDownloader)
         {
             this.library = library;
-            this.syncEngine = engine;
+            this.urlDownloader = urlDownloader;
             this.MediaPlayer = new Windows.Media.Playback.MediaPlayer();
             MediaPlayer.AudioCategory = Windows.Media.Playback.MediaPlayerAudioCategory.Media;
         }
@@ -82,13 +83,19 @@ namespace Riff.UWP.ViewModel
 
         private async Task PlayAsync(DriveItemAccessOptions options, uint startIndex)
         {
-            PlaybackList = new MediaList(library, syncEngine);
-            MediaPlayer.Source = PlaybackList.InnerList;
+            var items = await Task.Run(() => library.Metadata.DriveItems.Get(options));
+            await PlayAsync(items, startIndex);
+        }
 
-            await Task.Run(async() =>
+        public async Task PlayAsync(IList<DriveItem> items, uint startIndex)
+        {
+            PlaybackList = new MediaList(library, urlDownloader);
+            MediaPlayer.Source = PlaybackList.InnerList;
+            MediaPlayer.AutoPlay = true;
+
+            await Task.Run(async () =>
             {
-                var items = library.Metadata.DriveItems.Get(options);
-                await PlaybackList.SetItems(items, startIndex, MediaPlayer);
+                await PlaybackList.SetItems(items, startIndex);
             });
         }
 

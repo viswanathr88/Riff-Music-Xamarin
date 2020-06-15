@@ -53,7 +53,7 @@ namespace Riff.Sync
         } = 0;
     }
 
-    public sealed class SyncEngine
+    public sealed class SyncEngine : ITrackUrlDownloader
     {
         public event EventHandler<SyncState> StateChanged;
         public event EventHandler<SyncStatus> Checkpoint;
@@ -125,7 +125,7 @@ namespace Riff.Sync
             if (preferences.IsSyncPaused)
             {
                 State = SyncState.Stopped;
-            } 
+            }
             else if (State == SyncState.NotStarted || State == SyncState.Stopped)
             {
                 State = SyncState.Started;
@@ -193,7 +193,7 @@ namespace Riff.Sync
             Checkpoint?.Invoke(this, Status);
 
             string deltaUrl = string.Empty;
-            
+
             bool completed = false;
 
             using (var session = library.Metadata.Edit())

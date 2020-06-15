@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
-using Windows.Storage;
 using Windows.Storage.Streams;
 
 namespace Riff.UWP.ViewModel
@@ -15,15 +15,16 @@ namespace Riff.UWP.ViewModel
     public sealed class MediaList : ObservableCollection<MediaListItem>
     {
         private readonly MediaPlaybackList list;
-        private readonly SyncEngine syncEngine;
+        private readonly ITrackUrlDownloader trackUrlDownloader;
         private readonly MusicLibrary library;
         private MediaListItem currentItem;
         private int currentIndex = -1;
+        private static int MediaListMaxSize = 1000;
 
-        public MediaList(MusicLibrary library, SyncEngine syncEngine)
+        public MediaList(MusicLibrary library, ITrackUrlDownloader urlDownloader)
         {
             this.library = library;
-            this.syncEngine = syncEngine;
+            this.trackUrlDownloader = urlDownloader;
             list = new MediaPlaybackList();
             list.Items.VectorChanged += Items_VectorChanged;
             list.CurrentItemChanged += List_CurrentItemChanged;
@@ -58,48 +59,63 @@ namespace Riff.UWP.ViewModel
             }
         }
 
-        public async Task SetItems(IEnumerable<DriveItem> items, uint startIndex, MediaPlayer player)
+        public async Task SetItems(IList<DriveItem> items, uint startIndex)
         {
-            uint currentIndex = 0;
-            foreach (var item in items)
+            if (items == null)
             {
+                throw new ArgumentNullException(nameof(items));
+            }
+
+            if (startIndex >= items.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            int itemsCount = Math.Min(MediaListMaxSize, items.Count);
+            int index = Convert.ToInt32(startIndex);
+
+            while (itemsCount-- > 0)
+            {
+                int indexToCopy = index % items.Count;
+                var item = items[indexToCopy];
+
                 var binder = new Windows.Media.Core.MediaBinder();
                 binder.Token = item.Id;
                 binder.Binding += Binder_Binding;
                 var playbackSource = Windows.Media.Core.MediaSource.CreateFromMediaBinder(binder);
                 var playbackItem = new Windows.Media.Playback.MediaPlaybackItem(playbackSource);
 
-                // Set metadata
-                var albumId = item.Track.Album.Id.Value;
-                var props = playbackItem.GetDisplayProperties();
-                props.Type = Windows.Media.MediaPlaybackType.Music;
-                props.MusicProperties.Title = item.Track.Title;
-                props.MusicProperties.Artist = item.Track.Artist;
-                props.MusicProperties.AlbumTitle = item.Track.Album.Name;
-                props.MusicProperties.TrackNumber = Convert.ToUInt32(item.Track.Number);
-                props.Thumbnail = library.AlbumArts.Exists(albumId) ? RandomAccessStreamReference.CreateFromFile(await library.AlbumArts.GetStorageFile(albumId)) : null;
-                playbackSource.CustomProperties.Add("AlbumId", albumId);
-                playbackSource.CustomProperties.Add("Year", item.Track.Album.ReleaseYear);
-                playbackSource.CustomProperties.Add("AlbumArtPath", library.AlbumArts.Exists(albumId) ? library.AlbumArts.GetPath(albumId) : "");
-                playbackItem.ApplyDisplayProperties(props);
-                
-                list.Items.Add(playbackItem);
-
-                if (currentIndex == startIndex)
+                // It's ok if we fail to set metadata for the track
+                try
                 {
-                    list.StartingItem = list.Items[(int)currentIndex];
-                    list.MoveTo(currentIndex);
-                    player.Play();
+                    var albumId = item.Track.Album.Id.Value;
+                    var props = playbackItem.GetDisplayProperties();
+                    props.Type = Windows.Media.MediaPlaybackType.Music;
+
+                    props.MusicProperties.Title = item.Track.Title ?? "Unknown Title";
+                    props.MusicProperties.Artist = item.Track.Artist ?? "Unknown Artist";
+                    props.MusicProperties.AlbumTitle = item.Track.Album.Name ?? "Unknown Album";
+                    props.MusicProperties.TrackNumber = Convert.ToUInt32(item.Track.Number);
+                    props.Thumbnail = library.AlbumArts.Exists(albumId) ? RandomAccessStreamReference.CreateFromFile(await library.AlbumArts.GetStorageFile(albumId)) : null;
+                    playbackSource.CustomProperties.Add("AlbumId", albumId);
+                    playbackSource.CustomProperties.Add("Year", item.Track.Album.ReleaseYear);
+                    playbackSource.CustomProperties.Add("AlbumArtPath", library.AlbumArts.Exists(albumId) ? library.AlbumArts.GetPath(albumId) : "");
+                    playbackItem.ApplyDisplayProperties(props);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
                 }
 
-                currentIndex++;
+                list.Items.Add(playbackItem);
+                index++;
             }
         }
 
         private async void Binder_Binding(MediaBinder sender, MediaBindingEventArgs args)
         {
             var deferral = args.GetDeferral();
-            var uri = await this.syncEngine.GetDownloadUrlAsync(sender.Token);
+            var uri = await this.trackUrlDownloader.GetDownloadUrlAsync(sender.Token);
             args.SetUri(uri);
             deferral.Complete();
         }
@@ -143,7 +159,7 @@ namespace Riff.UWP.ViewModel
                     throw new Exception("Trying to understand this event");
                 }
             });
-            
+
         }
     }
 }

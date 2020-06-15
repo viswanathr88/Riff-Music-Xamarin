@@ -65,7 +65,7 @@ namespace Riff.UWP
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-                rootFrame.CacheSize = 0;
+                rootFrame.CacheSize = 1;
                 rootFrame.Background = new SolidColorBrush(new Windows.UI.Color() { R = 80, G = 102, B = 88, A = 255 });
 
                 rootFrame.Navigated += RootFrame_Navigated;
