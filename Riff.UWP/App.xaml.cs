@@ -3,6 +3,7 @@ using Riff.Authentication;
 using Riff.UWP.Pages;
 using Riff.UWP.Storage;
 using System;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -10,6 +11,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
+using Windows.UI.Input;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -67,6 +69,7 @@ namespace Riff.UWP
                 rootFrame = new Frame();
                 rootFrame.CacheSize = 1;
                 rootFrame.Background = new SolidColorBrush(new Windows.UI.Color() { R = 80, G = 102, B = 88, A = 255 });
+                rootFrame.PointerPressed += RootFrame_PointerPressed;
 
                 rootFrame.Navigated += RootFrame_Navigated;
                 rootFrame.NavigationFailed += OnNavigationFailed;
@@ -140,6 +143,20 @@ namespace Riff.UWP
 
         private void App_BackRequested(object sender, BackRequestedEventArgs e)
         {
+            e.Handled = HandleBackNavigation();
+        }
+
+        private void RootFrame_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            bool isXButton1Pressed = e.GetCurrentPoint(sender as UIElement).Properties.PointerUpdateKind == PointerUpdateKind.XButton1Pressed;
+            if (isXButton1Pressed)
+            {
+                e.Handled = HandleBackNavigation();
+            }
+        }
+
+        private bool HandleBackNavigation()
+        {
             if (Window.Current.Content is Frame rootFrame)
             {
                 if (rootFrame.Content is IShellPage shell)
@@ -147,13 +164,12 @@ namespace Riff.UWP
                     if (shell.CanGoBack)
                     {
                         shell.GoBack();
-                        e.Handled = true;
-                        return;
+                        return true;
                     }
                 }
             }
 
-            e.Handled = false;
+            return false;
         }
 
         private void UpdateTitlebarColors()
