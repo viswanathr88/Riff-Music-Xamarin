@@ -138,6 +138,7 @@
     </Compile>
     <Compile Include="UI\ArtistPageTest.cs" />
     <Compile Include="UI\ArtistsPageTest.cs" />
+    <Compile Include="UI\SettingsPageTest.cs" />
     <Compile Include="UI\TracksPageTest.cs" />
     <Compile Include="ViewModel\MediaListTest.cs" />
     <Compile Include="ViewModel\PlayerViewModelTest.cs" />
