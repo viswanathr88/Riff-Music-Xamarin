@@ -1,5 +1,7 @@
-﻿using Riff.UWP.ViewModel;
+﻿using Riff.Data;
+using Riff.UWP.ViewModel;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;

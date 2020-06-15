@@ -206,9 +206,9 @@
       <Project>{4497c461-2030-46ad-a065-8ce33cf9f7a6}</Project>
       <Name>Riff.Data.Sqlite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Riff\Riff.csproj">
-      <Project>{0a546aaf-a4b7-40bf-9c08-8e58b05dfa45}</Project>
-      <Name>Riff</Name>
+    <ProjectReference Include="..\Riff\Riff.Core.csproj">
+      <Project>{91416F7A-1829-47A0-8632-4D67891A7914}</Project>
+      <Name>Riff.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +220,7 @@
   <ItemGroup />
   <Import Project="..\Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems" Label="Shared" />
   <Import Project="..\Riff.UWP.UI\Riff.UWP.UI.projitems" Label="Shared" />
+  <Import Project="..\Riff.Test\Riff.Test.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

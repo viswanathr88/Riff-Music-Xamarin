@@ -132,7 +132,7 @@
                                 ItemsSource="{x:Bind ViewModel.SearchSuggestions.Items, Mode=OneWay}"
                                 TextChanged="NavViewSearchBox_TextChanged"
                                 QuerySubmitted="NavViewSearchBox_QuerySubmitted"
-                                SuggestionChosen="NavViewSearchBox_SuggestionChosen">
+                                TextMemberPath="Name">
                     <AutoSuggestBox.Transitions>
                         <TransitionCollection />
                     </AutoSuggestBox.Transitions>
