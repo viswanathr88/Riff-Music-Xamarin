@@ -86,13 +86,13 @@ namespace Riff.UWP.Test.UI
             await view.LoadPage<TracksPage>(null);
 
             // Validate Unknown Title
-            await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownTitleText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownArtistText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("TrackAlbum", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("TrackDuration", (textBlock) => Assert.Equal("01:40", textBlock.Text));
+            await view.WaitForElementAndCondition<TextBlock>("TrackTitle", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownTitleText") == textBlock.Text);
+            await view.WaitForElementAndCondition<TextBlock>("TrackArtist", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownArtistText") == textBlock.Text);
+            await view.WaitForElementAndCondition<TextBlock>("TrackAlbum", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText") == textBlock.Text);
+            await view.WaitForElementAndCondition<TextBlock>("TrackDuration", (textBlock) => "01:40" == textBlock.Text);
             if ((await view.GetWindowSize()).Width > 1008)
             {
-                await view.WaitForElementAndExecute<TextBlock>("TrackGenre", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownGenreText"), textBlock.Text));
+                await view.WaitForElementAndCondition<TextBlock>("TrackGenre", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownGenreText") == textBlock.Text);
             }
         }
 
