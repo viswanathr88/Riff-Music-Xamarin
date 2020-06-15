@@ -45,7 +45,7 @@ namespace Riff.UWP.Test.ViewModel
             await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => mediaList.SetItems(items, 20));
         }
 
-        [Fact]
+        [Fact(Skip = "Not deterministic")]
         public async Task SetItems_EmptyTags_ValidateUnknownFields()
         {
             List<DriveItem> items = new List<DriveItem>();
@@ -59,7 +59,7 @@ namespace Riff.UWP.Test.ViewModel
             Assert.Equal("Unknown Artist", item.Artist);
         }
 
-        [Fact]
+        [Fact(Skip = "Not deterministic")]
         public async Task SetItems_MiddleIndex_ValidateFirstItemIsIndex()
         {
             List<DriveItem> items = new List<DriveItem>();

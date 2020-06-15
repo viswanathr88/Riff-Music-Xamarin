@@ -20,7 +20,7 @@ namespace Riff.UWP.Test.UI
     public class ArtistPageTest : IAsyncLifetime, IDisposable
     {
         private readonly Mock<IMusicMetadata> mockMetadata;
-        private readonly Mock<ITrackReadOnlyAccessor> trackAccessor;
+        private readonly Mock<IDriveItemReadOnlyAccessor> driveItemAccessor;
         private readonly MusicLibrary library;
         private readonly UITree view = new UITree();
 
@@ -28,11 +28,11 @@ namespace Riff.UWP.Test.UI
         {
             // Setup mock album accessor
             mockMetadata = new Mock<IMusicMetadata>();
-            trackAccessor = new Mock<ITrackReadOnlyAccessor>();
-            mockMetadata.Setup(metadata => metadata.Tracks).Returns(trackAccessor.Object);
+            driveItemAccessor = new Mock<IDriveItemReadOnlyAccessor>();
+            mockMetadata.Setup(metadata => metadata.DriveItems).Returns(driveItemAccessor.Object);
 
             SimpleIoc.Default.Register(() => mockMetadata.Object);
-            SimpleIoc.Default.Register(() => trackAccessor.Object);
+            SimpleIoc.Default.Register(() => driveItemAccessor.Object);
 
             library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, SimpleIoc.Default.GetInstance<IMusicMetadata>());
             SimpleIoc.Default.Register(() => library);
@@ -51,7 +51,7 @@ namespace Riff.UWP.Test.UI
         public void Dispose()
         {
             SimpleIoc.Default.Unregister<IMusicMetadata>();
-            SimpleIoc.Default.Unregister<ITrackReadOnlyAccessor>();
+            SimpleIoc.Default.Unregister<IDriveItemReadOnlyAccessor>();
             SimpleIoc.Default.Unregister<MusicLibrary>();
             SimpleIoc.Default.Unregister<TracksViewModel>();
             SimpleIoc.Default.Reset();
@@ -60,10 +60,27 @@ namespace Riff.UWP.Test.UI
         [Fact]
         public async Task ArtistPage_Navigate_ValidateUnknowns()
         {
-            // Setup mock track accessor gets
-            var tracks = new List<Track>();
-            tracks.Add(new Track() { Id = 1, Title = null, Album = new Album() { Id = 1, Name = null }, Artist = null, Duration = TimeSpan.FromSeconds(100), ReleaseYear = 1999 });
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
+            var items = new List<DriveItem>
+            {
+                new DriveItem()
+                {
+                    Id = "TestId",
+                    Track = new Track()
+                    {
+                        Id = 1,
+                        Title = null,
+                        Album = new Album()
+                        {
+                            Id = 1,
+                            Name = null
+                        },
+                        Artist = null,
+                        Duration = TimeSpan.FromSeconds(100),
+                        ReleaseYear = 1999
+                    }
+                }
+            };
+            driveItemAccessor.Setup(accessor => accessor.Get(It.IsAny<DriveItemAccessOptions>())).Returns(items);
 
             // Load Tracks Page
             var artist = new Artist() { Id = 1, Name = null };
@@ -78,16 +95,33 @@ namespace Riff.UWP.Test.UI
         [Fact]
         public async Task ArtistPage_Navigate_ValidateFields()
         {
-            // Setup mock track accessor gets
-            var tracks = new List<Track>();
-            tracks.Add(new Track() { Id = 1, Title = "MockTitle", Album = new Album() { Id = 1, Name = "MockAlbum" }, Artist = "MockArtist", Duration = TimeSpan.FromSeconds(100), ReleaseYear = 1999 });
-            trackAccessor.Setup(accessor => accessor.Get(It.IsAny<TrackAccessOptions>())).Returns(tracks);
+            var items = new List<DriveItem>
+            {
+                new DriveItem()
+                {
+                    Id = "TestId",
+                    Track = new Track()
+                    {
+                        Id = 1,
+                        Title = "MockTitle",
+                        Album = new Album()
+                        {
+                            Id = 1,
+                            Name = "MockAlbum"
+                        },
+                        Artist = "MockArtist",
+                        Duration = TimeSpan.FromSeconds(100),
+                        ReleaseYear = 1999
+                    }
+                }
+            };
+            driveItemAccessor.Setup(accessor => accessor.Get(It.IsAny<DriveItemAccessOptions>())).Returns(items);
 
             // Load Tracks Page
             var artist = new Artist() { Id = 1, Name = "MockArtist" };
             await view.LoadPage<ArtistPage>(artist);
 
-            var track = tracks.First();
+            var track = items.First().Track;
             await view.WaitForElementAndExecute<TextBlock>("ArtistName", (textBlock) => Assert.Equal(artist.Name, textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("AlbumName", (textBlock) => Assert.Equal(track.Album.Name, textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(track.Title, textBlock.Text));

@@ -36,6 +36,7 @@ steps:
       !**\obj\**
     searchFolder: '$(Build.BinariesDirectory)'
     codeCoverageEnabled: true
+    runTestsInIsolation: true
 
 - task: CopyFiles@2
   displayName: 'Copy Files to Staging Directory'

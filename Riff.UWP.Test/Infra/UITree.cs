@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -35,6 +36,21 @@ namespace Riff.UWP.Test.Infra
             });
         }
 
+        public async Task<bool> ConditionPasses<TElement>(string name, Func<TElement, bool> fn) where TElement : DependencyObject
+        {
+            return await CoreDispatcher.RunToCompletionAsync(() =>
+            {
+                bool result = false;
+                var element = VisualTreeHelperExtensions.FindVisualChild<TElement>(RootFrame, name);
+                if (element != null)
+                {
+                    result = fn(element);
+                }
+
+                return Task.FromResult(result);
+            });
+        }
+
         public async Task WaitForElement<T>(string name, int pingFreqencyMs = 100, int totalPings = 20) where T : DependencyObject
         {
             bool found = false;
@@ -65,6 +81,25 @@ namespace Riff.UWP.Test.Infra
                 fn(element);
                 return Task.CompletedTask;
             });
+        }
+        public async Task WaitForElementAndCondition<TElement>(string name, Func<TElement, bool> condition, int pingFreqencyMs = 100, int totalPings = 20) where TElement : DependencyObject
+        {
+            bool success = false;
+            for (int i = 0; i < totalPings; i++)
+            {
+                bool result = await ConditionPasses(name, condition);
+                if (!result)
+                {
+                    await Task.Delay(pingFreqencyMs);
+                }
+                else
+                {
+                    success = true;
+                    break;
+                }
+            }
+
+            Xunit.Assert.True(success);
         }
 
         public async Task<TReturn> WaitForElementAndExecute<TElement, TReturn>(string name, Func<TElement, TReturn> fn, int pingFrequencyMs = 100, int totalPings = 20) where TElement : DependencyObject
@@ -99,7 +134,7 @@ namespace Riff.UWP.Test.Infra
                 }
             }
 
-            Assert.IsTrue(success);
+            Xunit.Assert.True(success);
         }
 
         public async Task<bool> LoadPage<T>(object parameter) where T : Page
