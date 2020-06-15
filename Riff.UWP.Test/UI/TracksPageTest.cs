@@ -124,13 +124,13 @@ namespace Riff.UWP.Test.UI
 
             // Validate Unknown Genre
             var track = driveItems.First().Track;
-            await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(textBlock.Text, track.Title));
-            await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(textBlock.Text, track.Artist));
-            await view.WaitForElementAndExecute<TextBlock>("TrackAlbum", (textBlock) => Assert.Equal(textBlock.Text, track.Album.Name));
+            await view.WaitForElementAndCondition<TextBlock>("TrackTitle", (textBlock) => textBlock.Text == track.Title);
+            await view.WaitForElementAndCondition<TextBlock>("TrackArtist", (textBlock) => textBlock.Text == track.Artist);
+            await view.WaitForElementAndCondition<TextBlock>("TrackAlbum", (textBlock) => textBlock.Text == track.Album.Name);
 
             if ((await view.GetWindowSize()).Width > 1008)
             {
-                Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackGenre", (textBlock) => textBlock.Text == track.Genre.Name));
+                await view.WaitForElementAndCondition<TextBlock>("TrackGenre", (textBlock) => textBlock.Text == track.Genre.Name);
             }
         }
     }
