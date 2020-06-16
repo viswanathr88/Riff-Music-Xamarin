@@ -17,10 +17,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnitTestPlatformVersion Condition="'$(UnitTestPlatformVersion)' == ''">$(VisualStudioVersion)</UnitTestPlatformVersion>
-    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
+    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
     <AppxBundle>Never</AppxBundle>
-    <PackageCertificateThumbprint>9025FC4F89EF70353D80E315012A6D67036F9B92</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile />
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
@@ -215,9 +213,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="System\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Riff.UWP.Test_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="..\Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems" Label="Shared" />
