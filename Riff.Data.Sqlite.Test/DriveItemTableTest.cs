@@ -154,6 +154,41 @@ namespace Riff.Data.Sqlite.Test
         }
 
         [Fact]
+        public void Get_WithOptions_ValidateWithGenre()
+        {
+            var artist = artistTable.Add(new Artist() { Name = "TestArtist" });
+            var genre = genreTable.Add(new Genre() { Name = "TestGenre" });
+            var album = albumTable.Add(new Album() { Name = "TestAlbum", ReleaseYear = 2000, Artist = new Artist() { Id = artist.Id }, Genre = new Genre() { Id = genre.Id } });
+            var track = trackTable.Add(new Track() { Title = "TestTrack", Album = new Album() { Id = album.Id }, Genre = genre});
+
+            var expectedItem = driveItemTable.Add(new DriveItem()
+            {
+                Id = "TestDriveItemId",
+                AddedDate = new DateTime(2000, 10, 5),
+                CTag = "TestCTag",
+                ETag = "TestETag",
+                DownloadUrl = "TestDownloadUrl",
+                LastModified = new DateTime(2010, 10, 15),
+                Size = 200204,
+                Source = DriveItemSource.OneDrive,
+                Track = new Track() { Id = track.Id }
+            });
+
+            expectedItem.Track = track;
+
+            var options = new DriveItemAccessOptions()
+            {
+                IncludeTrack = true,
+                IncludeTrackGenre = true,
+                SortOrder = SortOrder.Descending,
+                SortType = TrackSortType.ReleaseYear
+            };
+
+            var actualItems = driveItemTable.Get(options);
+            Assert.Equal(actualItems, new List<DriveItem>() { expectedItem }, new DriveItemComparer());
+        }
+
+        [Fact]
         public void Update_NullId_Throw()
         {
             Assert.Throws<ArgumentNullException>(() => driveItemTable.Update(null));

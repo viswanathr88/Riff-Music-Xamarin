@@ -142,6 +142,7 @@
     <Compile Include="UI\TracksPageTest.cs" />
     <Compile Include="ViewModel\MediaListTest.cs" />
     <Compile Include="ViewModel\PlayerViewModelTest.cs" />
+    <Compile Include="ViewModel\TracksViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
