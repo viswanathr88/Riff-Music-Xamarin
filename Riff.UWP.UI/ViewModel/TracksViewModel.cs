@@ -1,13 +1,27 @@
-﻿using ListDiff;
-using Riff.Data;
+﻿using Riff.Data;
 using Riff.Data.Access;
+using Riff.UWP.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Riff.UWP.ViewModel
 {
+    class TracksEqualityComparer : IEqualityComparer<DriveItem>
+    {
+        public bool Equals(DriveItem x, DriveItem y)
+        {
+            return x.Track.Id == y.Track.Id;
+        }
+
+        public int GetHashCode(DriveItem obj)
+        {
+            return obj.Track.GetHashCode();
+        }
+    }
+
     public sealed class TracksViewModel : DataViewModel
     {
         private readonly MusicLibrary library;
@@ -48,8 +62,29 @@ namespace Riff.UWP.ViewModel
 
         public async override Task LoadAsync()
         {
-            var results = await FetchTracksAsync();
-            Tracks.MergeInto(results, (x, y) => x.Id == y.Id);
+            var options = new DriveItemAccessOptions()
+            {
+                IncludeTrack = true,
+                IncludeTrackAlbum = true,
+                IncludeTrackGenre = true,
+                SortType = SortType,
+                SortOrder = SortOrder
+            };
+
+            if (Tracks.Count == 0)
+            {
+                Tracks = new ObservableCollection<DriveItem>(await Task.Run(() => library.Metadata.DriveItems.Get(options)));
+            }
+            else
+            {
+                var diffList = await Task.Run(() =>
+                {
+                    var results = library.Metadata.DriveItems.Get(options);
+                    return Diff.Compare(Tracks, results, new TracksEqualityComparer());
+                });
+
+                Tracks.ApplyDiff(diffList);
+            }
             IsLoaded = true;
         }
 
@@ -62,20 +97,6 @@ namespace Riff.UWP.ViewModel
         private async void Metadata_Refreshed(object sender, EventArgs e)
         {
             await RunUISafe(() => IsLoaded = false);
-        }
-
-        private async Task<IList<DriveItem>> FetchTracksAsync()
-        {
-            var options = new DriveItemAccessOptions()
-            {
-                IncludeTrack = true,
-                IncludeTrackAlbum = true,
-                IncludeTrackGenre = true,
-                SortType = SortType,
-                SortOrder = SortOrder
-            };
-
-            return await Task.Run(() => library.Metadata.DriveItems.Get(options));
         }
     }
 }

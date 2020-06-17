@@ -1,5 +1,4 @@
-﻿using ListDiff;
-using Riff.Data;
+﻿using Riff.Data;
 using Riff.Data.Access;
 using System;
 using System.Collections.Generic;
@@ -41,10 +40,6 @@ namespace Riff.UWP.ViewModel
 
         public override async Task LoadAsync()
         {
-            /*var results = await FetchArtistsAsync();
-            Items.MergeInto(results, (x, y) => x.Id == y.Id);
-            IsLoaded = true;*/
-
             var groups = await Task.Run(() => GetArtists());
             foreach (var group in groups)
             {
@@ -54,10 +49,6 @@ namespace Riff.UWP.ViewModel
             IsLoaded = true;
         }
 
-        private async Task<IList<Artist>> FetchArtistsAsync()
-        {
-            return await Task.Run(() => library.Metadata.Artists.GetAll());
-        }
         private async void Metadata_Refreshed(object sender, EventArgs e)
         {
             await RunUISafe(() => IsLoaded = false);

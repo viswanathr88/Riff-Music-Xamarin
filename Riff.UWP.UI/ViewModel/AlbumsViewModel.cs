@@ -1,6 +1,6 @@
-﻿using ListDiff;
-using Riff.Data;
+﻿using Riff.Data;
 using Riff.Data.Access;
+using Riff.UWP.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +8,19 @@ using System.Threading.Tasks;
 
 namespace Riff.UWP.ViewModel
 {
+    class AlbumEqualityComparer : IEqualityComparer<Album>
+    {
+        public bool Equals(Album x, Album y)
+        {
+            return x.Id == y.Id;
+        }
+
+        public int GetHashCode(Album obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
+
     public sealed class AlbumsViewModel : DataViewModel
     {
         private ObservableCollection<Album> items = new ObservableCollection<Album>();
@@ -41,8 +54,27 @@ namespace Riff.UWP.ViewModel
 
         public override async Task LoadAsync()
         {
-            var results = await FetchAlbumsAsync();
-            Items.MergeInto(results, (x, y) => x.Id == y.Id);
+            var options = new AlbumAccessOptions()
+            {
+                IncludeArtist = true,
+                SortType = SortType,
+                SortOrder = SortOrder
+            };
+
+            if (Items.Count == 0)
+            {
+                Items = new ObservableCollection<Album>(await Task.Run(() => metadata.Albums.Get(options)));
+            }
+            else
+            {
+                var diffList = await Task.Run(() => {
+                    var albums = metadata.Albums.Get(options);
+                    return Diff.Compare(Items, albums, new AlbumEqualityComparer());
+                });
+
+                Items.ApplyDiff(diffList);
+            }
+
             IsLoaded = true;
         }
 
@@ -55,18 +87,6 @@ namespace Riff.UWP.ViewModel
         private async void Metadata_Refreshed(object sender, EventArgs e)
         {
             await RunUISafe(() => IsLoaded = false);
-        }
-
-        private async Task<IList<Album>> FetchAlbumsAsync()
-        {
-            var options = new AlbumAccessOptions()
-            {
-                IncludeArtist = true,
-                SortType = SortType,
-                SortOrder = SortOrder
-            };
-
-            return await Task.Run(() => metadata.Albums.Get(options));
         }
     }
 }
