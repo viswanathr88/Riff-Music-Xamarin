@@ -9,6 +9,7 @@
     <Import_RootNamespace>Riff.Test</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DiffTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ListInterfaceExtensionTest.cs" />
   </ItemGroup>
 </Project>
