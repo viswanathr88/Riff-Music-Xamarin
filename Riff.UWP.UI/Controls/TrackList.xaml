@@ -1,0 +1,287 @@
+﻿<UserControl x:Class="Riff.UWP.Controls.TrackList"
+             x:Name="TrackListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:data="using:Riff.Data"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="400">
+
+    <ListView x:Name="TrackListView"
+              SingleSelectionFollowsFocus="False"
+              IsItemClickEnabled="True"
+              SelectionMode="Single"
+              ShowsScrollingPlaceholders="False"
+              ItemsSource="{x:Bind Items, Mode=OneWay}"
+              Header="{x:Bind Header, Mode=OneWay}"
+              ItemClick="TrackListView_ItemClick">
+
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <ItemsStackPanel Orientation="Vertical"
+                                 CacheLength="0" />
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Stretch" />
+                <Setter Property="Padding"
+                        Value="10" />
+            </Style>
+        </ListView.ItemContainerStyle>
+
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="data:DriveItem">
+                <UserControl>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <!-- Track Art -->
+                            <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowArt, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='Auto'}" />
+                            <!-- Track Number-->
+                            <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowTrackNumbers, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='Auto'}" />
+                            <!-- Track Title & Artist -->
+                            <ColumnDefinition Width="2*" />
+                            <!-- Track Album-->
+                            <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowAlbum, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='*'}" />
+                            <!-- Track Genre -->
+                            <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowGenre, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='*'}" />
+                            <!-- Track Year -->
+                            <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowReleaseYear, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='Auto'}" />
+                            <!-- Track Duration -->
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Track Art -->
+                        <Border x:Name="TrackArtContainer"
+                                Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                                Grid.Column="0"
+                                Width="40"
+                                Margin="0,0,20,0">
+                            <Image x:Name="TrackArt"
+                                   Stretch="Uniform"/>
+                        </Border>
+
+                        <!-- Track Number -->
+                        <TextBlock Text="{x:Bind Track.Number}"
+                                   x:Name="TrackNumber"
+                                   MaxLines="1"
+                                   x:Phase="0"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   FontSize="13"
+                                   Grid.Column="1"
+                                   Margin="10,0,20,0" />
+
+                        <!-- Track Details Mini View -->
+                        <Grid Grid.Column="2"
+                              x:Name="TrackCoreDetailsGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Track Title -->
+                            <TextBlock x:Name="TrackTitle"
+                                       x:Phase="0"
+                                       Text="{x:Bind Track.Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Top"
+                                       FontSize="13"
+                                       Grid.Row="0"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       TextWrapping="NoWrap"
+                                       MaxLines="1"
+                                       TextTrimming="CharacterEllipsis" />
+
+                            <!-- Track Artist -->
+                            <TextBlock x:Name="TrackArtist"
+                                       Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                                       x:Phase="1"
+                                       HorizontalAlignment="Left"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
+                                       Grid.Row="1"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       MaxLines="1"
+                                       MaxWidth="200"
+                                       TextWrapping="NoWrap"
+                                       TextTrimming="CharacterEllipsis"
+                                       Margin="0,0,10,0" />
+                        </Grid>
+
+                        <!-- Track Album -->
+                        <TextBlock Text="{x:Bind Track.Album.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
+                                   x:Name="TrackAlbum"
+                                   MaxLines="1"
+                                   x:Phase="2"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   FontSize="13"
+                                   Grid.Column="3"
+                                   Margin="0,0,20,0" />
+
+                        <!-- Track Genre -->
+                        <TextBlock Text="{x:Bind Track.Genre.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
+                                   x:Name="TrackGenre"
+                                   MaxLines="1"
+                                   x:Phase="2"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   FontSize="13"
+                                   Grid.Column="4"
+                                   Margin="0,0,20,0" />
+
+                        <!-- Track Year -->
+                        <TextBlock Text="{x:Bind Track.ReleaseYear}"
+                                   x:Name="TrackReleaseYear"
+                                   MaxLines="1"
+                                   x:Phase="2"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   FontSize="13"
+                                   Grid.Column="5"
+                                   MinWidth="75"
+                                   Margin="0,0,20,0" />
+
+                        <!-- Track Duration -->
+                        <TextBlock Text="{x:Bind Track.FormatDuration(Track.Duration)}"
+                                   x:Name="TrackDuration"
+                                   MaxLines="1"
+                                   x:Phase="2"
+                                   TextTrimming="CharacterEllipsis"
+                                   TextWrapping="NoWrap"
+                                   FontSize="13"
+                                   Grid.Column="6"
+                                   Margin="0,0,10,0" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <AdaptiveTrigger MinWindowWidth="641" />
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="TrackCoreDetailsGrid.RowDefinitions[1].Height"
+                                                Value="0" />
+                                        <Setter Target="TrackTitle.(Grid.Row)"
+                                                Value="0" />
+                                        <Setter Target="TrackTitle.(Grid.RowSpan)"
+                                                Value="2" />
+                                        <Setter Target="TrackTitle.(Grid.Column)"
+                                                Value="0" />
+                                        <Setter Target="TrackTitle.(Grid.ColumnSpan)"
+                                                Value="1" />
+
+                                        <Setter Target="TrackArtist.(Grid.Row)"
+                                                Value="0" />
+                                        <Setter Target="TrackArtist.(Grid.RowSpan)"
+                                                Value="2" />
+                                        <Setter Target="TrackArtist.(Grid.Column)"
+                                                Value="1" />
+                                        <Setter Target="TrackArtist.(Grid.ColumnSpan)"
+                                                Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                    </Grid>
+                </UserControl>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="VisualStateNormal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="VisualStateNormalTrigger"
+                                         MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TrackListControl.ShowTrackArtGridItem"
+                                Value="False" />
+                        <Setter Target="TrackListControl.ShowTrackNumberGridItem"
+                                Value="True" />
+                        <Setter Target="TrackListControl.ShowTrackReleaseYearGridItem"
+                                Value="False" />
+                        <Setter Target="TrackListControl.ShowTrackAlbumGridItem"
+                                Value="False" />
+                        <Setter Target="TrackListControl.ShowTrackGenreGridItem"
+                                Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="VisualStateWide1">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="VisualStateWide1Trigger"
+                                         MinWindowWidth="740" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TrackListControl.ShowTrackArtGridItem"
+                                Value="False" />
+                        <Setter Target="TrackListControl.ShowTrackNumberGridItem"
+                                Value="True" />
+                        <Setter Target="TrackListControl.ShowTrackAlbumGridItem"
+                                Value="True" />
+                        <Setter Target="TrackListControl.ShowTrackReleaseYearGridItem"
+                                Value="False" />
+                        <Setter Target="TrackListControl.ShowTrackGenreGridItem"
+                                Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="VisualStateWide2">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="VisualStateWide2Trigger"
+                                         MinWindowWidth="870" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TrackListControl.ShowTrackArtGridItem"
+                                Value="False" />
+                        <Setter Target="TrackListControl.ShowTrackNumberGridItem"
+                                Value="True" />
+                        <Setter Target="TrackListControl.ShowTrackAlbumGridItem"
+                                Value="True" />
+                        <Setter Target="TrackListControl.ShowTrackReleaseYearGridItem"
+                                Value="False" />
+                        <Setter Target="TrackListControl.ShowTrackGenreGridItem"
+                                Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="VisualStateWide3">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger x:Name="VisualStateWide3Trigger"
+                                         MinWindowWidth="1008" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TrackListControl.ShowTrackArtGridItem"
+                                Value="False" />
+                        <Setter Target="TrackListControl.ShowTrackNumberGridItem"
+                                Value="True" />
+                        <Setter Target="TrackListControl.ShowTrackAlbumGridItem"
+                                Value="True" />
+                        <Setter Target="TrackListControl.ShowTrackReleaseYearGridItem"
+                                Value="True" />
+                        <Setter Target="TrackListControl.ShowTrackGenreGridItem"
+                                Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
+    </ListView>
+</UserControl>

@@ -23,7 +23,7 @@ namespace Riff.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumPage : AlbumPageBase, ISupportPlaying
+    public sealed partial class AlbumPage : AlbumPageBase
     {
         bool animateBack = false;
         public AlbumPage()
@@ -32,8 +32,6 @@ namespace Riff.UWP.Pages
             NavigationCacheMode = NavigationCacheMode.Enabled;
             HeaderText = ResourceLoader.GetForCurrentView().GetString("AlbumPageHeader");
         }
-
-        public PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
 
         public MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
 
@@ -87,15 +85,6 @@ namespace Riff.UWP.Pages
             await LoadArtAsync(AlbumArt, ViewModel.AlbumInfo);
         }
 
-        private async void AlbumTrackList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (e.ClickedItem != null)
-            {
-                var index = Convert.ToUInt32(AlbumTrackList.Items.IndexOf(e.ClickedItem));
-                await Player.PlayAsync(ViewModel.Tracks, index);
-            }
-        }
-
         private void AlbumTrackList_Loaded(object sender, RoutedEventArgs e)
         {
             /*var listScrollViewer = VisualTreeHelperExtensions.FindVisualChild<ScrollViewer>(sender as DependencyObject);
@@ -146,7 +135,7 @@ namespace Riff.UWP.Pages
 
         private async void AlbumToolbarPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            await Player.PlayAsync(ViewModel.Tracks, 0);
+            await AlbumTrackList.Play();
         }
 
         private void AlbumToolbarBrowseArtistButton_Click(object sender, RoutedEventArgs e)

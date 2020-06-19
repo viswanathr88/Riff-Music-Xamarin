@@ -1,248 +1,202 @@
 ﻿<local:AlbumPageBase x:Class="Riff.UWP.Pages.AlbumPage"
-                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                       xmlns:local="using:Riff.UWP.Pages"
-                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                       xmlns:data="using:Riff.Data"
-                       xmlns:ui="using:Microsoft.UI.Xaml.Controls"
-                       mc:Ignorable="d"
-                       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                       ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}"
-                       x:Name="AlbumPageInstance"
-                       HeaderOpacity="1.0">
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:local="using:Riff.UWP.Pages"
+                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                     xmlns:controls="using:Riff.UWP.Controls"
+                     xmlns:data="using:Riff.Data"
+                     xmlns:ui="using:Microsoft.UI.Xaml.Controls"
+                     mc:Ignorable="d"
+                     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                     ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}"
+                     x:Name="AlbumPageInstance"
+                     HeaderOpacity="1.0">
+    <controls:TrackList x:Name="AlbumTrackList"
+                        EnableArt="False"
+                        EnableAlbum="False"
+                        EnableGenre="False"
+                        EnableReleaseYear="False"
+                        EnableTrackNumbers="True"
+                        Items="{x:Bind ViewModel.Tracks, Mode=OneWay}"
+                        Loaded="AlbumTrackList_Loaded">
+        <controls:TrackList.Header>
+            <UserControl>
+                <Grid x:Name="AlbumHeader"
+                      Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Top"
+                      Padding="20,0,20,20">
 
-    <ListView x:Name="AlbumTrackList"
-              SelectionMode="None"
-              IsItemClickEnabled="True"
-              ItemClick="AlbumTrackList_ItemClick"
-              ItemsSource="{x:Bind ViewModel.Tracks, Mode=OneWay}"
-              Loaded="AlbumTrackList_Loaded">
-        <ListView.Header>
-            <Grid x:Name="AlbumHeader"
-                  Background="{ThemeResource SystemControlAcrylicWindowBrush}"
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Top"
-                  Padding="20,0,20,20">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Image x:Name="AlbumArt"
-                       Width="128"
-                       Height="128"
-                       Loaded="AlbumArt_Loaded"
-                       Grid.ColumnSpan="2"
-                       Grid.Row="0"
-                       HorizontalAlignment="Center" />
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup>
+                            <VisualState>
+                                <VisualState.StateTriggers>
+                                    <AdaptiveTrigger MinWindowWidth="641" />
+                                </VisualState.StateTriggers>
 
-                <TextBlock Grid.Row="1"
-                           HorizontalAlignment="Center"
-                           Text="{x:Bind ViewModel.AlbumInfo.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
-                           Style="{StaticResource TitleTextBlockStyle}"
-                           MaxLines="2"
-                           TextWrapping="Wrap"
-                           TextTrimming="CharacterEllipsis"
-                           Grid.ColumnSpan="2"
-                           x:Name="AlbumName"
-                           Margin="20,10,20,10"
-                           VerticalAlignment="Center"
-                           TextLineBounds="TrimToCapHeight" />
+                                <VisualState.Setters>
+                                    <Setter Target="AlbumHeader.ColumnDefinitions[1].Width"
+                                            Value="*" />
+                                    <Setter Target="AlbumArt.(Grid.ColumnSpan)"
+                                            Value="1" />
+                                    <Setter Target="AlbumArt.(Grid.Column)"
+                                            Value="0" />
+                                    <Setter Target="AlbumArt.(Grid.RowSpan)"
+                                            Value="4" />
+                                    <Setter Target="AlbumName.(Grid.ColumnSpan)"
+                                            Value="1" />
+                                    <Setter Target="AlbumName.(Grid.Column)"
+                                            Value="1" />
+                                    <Setter Target="AlbumDetails.(Grid.ColumnSpan)"
+                                            Value="1" />
+                                    <Setter Target="AlbumDetails.(Grid.Column)"
+                                            Value="1" />
+                                    <Setter Target="AlbumToolbar.(Grid.ColumnSpan)"
+                                            Value="1" />
+                                    <Setter Target="AlbumToolbar.(Grid.Column)"
+                                            Value="1" />
+                                    <Setter Target="AlbumArt.Width"
+                                            Value="196" />
+                                    <Setter Target="AlbumArt.Height"
+                                            Value="196" />
+                                    <Setter Target="AlbumName.HorizontalAlignment"
+                                            Value="Left" />
+                                    <Setter Target="AlbumDetails.HorizontalAlignment"
+                                            Value="Left" />
+                                    <Setter Target="AlbumDetails.Orientation"
+                                            Value="Vertical" />
+                                    <Setter Target="AlbumDetails.HorizontalAlignment"
+                                            Value="Left" />
+                                    <Setter Target="AlbumToolbar.HorizontalAlignment"
+                                            Value="Left" />
+                                    <Setter Target="Division1.Visibility"
+                                            Value="Collapsed" />
+                                    <Setter Target="Division2.Visibility"
+                                            Value="Collapsed" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
 
-                <StackPanel x:Name="AlbumDetails"
-                            Orientation="Horizontal"
-                            Grid.Row="2"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Grid.ColumnSpan="2"
-                            Margin="20,10,20,10">
-                    <TextBlock x:Name="AlbumArtist"
-                               VerticalAlignment="Center"
-                               Text="{x:Bind ViewModel.AlbumInfo.Artist.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
-                               Style="{StaticResource CaptionTextBlockStyle}"
-                               MaxLines="1"
-                               Margin="0,0,5,0" />
-
-                    <FontIcon x:Name="Division1"
-                              FontFamily="Segoe MDL2 Assets"
-                              Glyph="&#xE7C8;"
-                              FontSize="10"
-                              VerticalAlignment="Center"
-                              Margin="0,0,5,0" />
-
-                    <TextBlock Text="{x:Bind ViewModel.AlbumInfo.ReleaseYear, Mode=OneWay}"
-                               Style="{StaticResource CaptionTextBlockStyle}"
-                               MaxLines="1"
-                               VerticalAlignment="Center"
-                               Margin="0,0,5,0" />
-
-                    <FontIcon x:Name="Division2"
-                              FontFamily="Segoe MDL2 Assets"
-                              Glyph="&#xE7C8;"
-                              FontSize="10"
-                              VerticalAlignment="Center"
-                              Margin="0,0,5,0" />
-
-                    <TextBlock x:Name="AlbumGenre" 
-                               Text="{x:Bind ViewModel.AlbumInfo.Genre.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
-                               Style="{StaticResource CaptionTextBlockStyle}"
-                               MaxLines="1"
-                               VerticalAlignment="Center" />
-                </StackPanel>
-
-                <CommandBar x:Name="AlbumToolbar"
-                            Grid.Row="3"
-                            Background="Transparent"
-                            DefaultLabelPosition="Right"
-                            Margin="5,0,5,0"
-                            HorizontalAlignment="Center"
-                            Grid.ColumnSpan="2">
-                    <CommandBar.CommandBarOverflowPresenterStyle>
-                        <Style TargetType="CommandBarOverflowPresenter">
-                            <Setter Property="Margin"
-                                    Value="0,0,20,0" />
-                            <Setter Property="MinWidth"
-                                    Value="180" />
-                            <Setter Property="Width"
-                                    Value="200" />
-                        </Style>
-                    </CommandBar.CommandBarOverflowPresenterStyle>
-
-                    <CommandBar.PrimaryCommands>
-                        <AppBarButton Label=""
-                                      x:Uid="AlbumToolbarPlayButton"
-                                      x:Name="AlbumToolbarPlayButton"
-                                      Icon="Play"
-                                      Margin="0,0,10,0"
-                                      Click="AlbumToolbarPlayButton_Click"/>
-                        <AppBarButton Label=""
-                                      x:Uid="AlbumToolbarAddToButton"
-                                      Icon="Add"
-                                      Margin="0,0,10,0" />
-                        <AppBarButton Label=""
-                                      x:Uid="AlbumToolbarBrowseArtistButton"
-                                      x:Name="AlbumToolbarBrowseArtistButton"
-                                      Icon="Contact"
-                                      Margin="0,0,10,0"
-                                      Click="AlbumToolbarBrowseArtistButton_Click"/>
-                        <AppBarButton Label=""
-                                      x:Uid="AlbumToolbarPinToStartButton"
-                                      Icon="Pin"
-                                      Margin="0,0,10,0" />
-                    </CommandBar.PrimaryCommands>
-                </CommandBar>
-
-            </Grid>
-
-        </ListView.Header>
-
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Setter Property="HorizontalContentAlignment"
-                        Value="Stretch" />
-                <Setter Property="VerticalContentAlignment"
-                        Value="Stretch" />
-                <Setter Property="Margin"
-                        Value="20,0,20,10" />
-            </Style>
-        </ListView.ItemContainerStyle>
-
-        <ListView.ItemTemplate>
-            <DataTemplate x:DataType="data:DriveItem">
-                <Grid VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+                    <Image x:Name="AlbumArt"
+                           Width="128"
+                           Height="128"
+                           Loaded="AlbumArt_Loaded"
+                           Grid.ColumnSpan="2"
+                           Grid.Row="0"
+                           HorizontalAlignment="Center" />
 
-                    <TextBlock Text="{x:Bind Track.Number}"
-                               MaxLines="1"
-                               Grid.Column="0"
-                               FontSize="13"
-                               Margin="0,0,20,0" />
-                    <TextBlock x:Name="TrackTitle"
-                               Text="{x:Bind Track.Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
-                               MaxLines="1"
-                               TextTrimming="CharacterEllipsis"
-                               Grid.Column="1"
-                               FontSize="13"
-                               Margin="0,0,20,0" />
-
-                    <TextBlock x:Name="TrackArtist"
-                               Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                    <TextBlock Grid.Row="1"
+                               HorizontalAlignment="Center"
+                               Text="{x:Bind ViewModel.AlbumInfo.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
+                               Style="{StaticResource TitleTextBlockStyle}"
                                MaxLines="2"
+                               TextWrapping="Wrap"
                                TextTrimming="CharacterEllipsis"
-                               Grid.Column="2"
-                               FontSize="13"
-                               Margin="0,0,20,0" />
+                               Grid.ColumnSpan="2"
+                               x:Name="AlbumName"
+                               Margin="20,10,20,10"
+                               VerticalAlignment="Center"
+                               TextLineBounds="TrimToCapHeight" />
 
-                    <TextBlock x:Name="TrackDuration"
-                               Text="{x:Bind Track.FormatDuration(Track.Duration)}"
-                               MaxLines="1"
-                               TextTrimming="CharacterEllipsis"
-                               Grid.Column="3"
-                               FontSize="13" />
+                    <StackPanel x:Name="AlbumDetails"
+                                Orientation="Horizontal"
+                                Grid.Row="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Grid.ColumnSpan="2"
+                                Margin="20,10,20,10">
+                        <TextBlock x:Name="AlbumArtist"
+                                   VerticalAlignment="Center"
+                                   Text="{x:Bind ViewModel.AlbumInfo.Artist.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   MaxLines="1"
+                                   Margin="0,0,5,0" />
+
+                        <FontIcon x:Name="Division1"
+                                  FontFamily="Segoe MDL2 Assets"
+                                  Glyph="&#xE7C8;"
+                                  FontSize="10"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,5,0" />
+
+                        <TextBlock Text="{x:Bind ViewModel.AlbumInfo.ReleaseYear, Mode=OneWay}"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   MaxLines="1"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,5,0" />
+
+                        <FontIcon x:Name="Division2"
+                                  FontFamily="Segoe MDL2 Assets"
+                                  Glyph="&#xE7C8;"
+                                  FontSize="10"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,5,0" />
+
+                        <TextBlock x:Name="AlbumGenre"
+                                   Text="{x:Bind ViewModel.AlbumInfo.Genre.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
+                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                   MaxLines="1"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <CommandBar x:Name="AlbumToolbar"
+                                Grid.Row="3"
+                                Background="Transparent"
+                                DefaultLabelPosition="Right"
+                                Margin="5,0,5,0"
+                                HorizontalAlignment="Center"
+                                Grid.ColumnSpan="2">
+                        <CommandBar.CommandBarOverflowPresenterStyle>
+                            <Style TargetType="CommandBarOverflowPresenter">
+                                <Setter Property="Margin"
+                                        Value="0,0,20,0" />
+                                <Setter Property="MinWidth"
+                                        Value="180" />
+                                <Setter Property="Width"
+                                        Value="200" />
+                            </Style>
+                        </CommandBar.CommandBarOverflowPresenterStyle>
+
+                        <CommandBar.PrimaryCommands>
+                            <AppBarButton Label=""
+                                          x:Uid="AlbumToolbarPlayButton"
+                                          x:Name="AlbumToolbarPlayButton"
+                                          Icon="Play"
+                                          Margin="0,0,10,0"
+                                          Click="AlbumToolbarPlayButton_Click" />
+                            <AppBarButton Label=""
+                                          x:Uid="AlbumToolbarAddToButton"
+                                          Icon="Add"
+                                          Margin="0,0,10,0" />
+                            <AppBarButton Label=""
+                                          x:Uid="AlbumToolbarBrowseArtistButton"
+                                          x:Name="AlbumToolbarBrowseArtistButton"
+                                          Icon="Contact"
+                                          Margin="0,0,10,0"
+                                          Click="AlbumToolbarBrowseArtistButton_Click" />
+                            <AppBarButton Label=""
+                                          x:Uid="AlbumToolbarPinToStartButton"
+                                          Icon="Pin"
+                                          Margin="0,0,10,0" />
+                        </CommandBar.PrimaryCommands>
+                    </CommandBar>
                 </Grid>
-            </DataTemplate>
-        </ListView.ItemTemplate>
 
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="641" />
-                    </VisualState.StateTriggers>
+               
 
-                    <VisualState.Setters>
-                        <Setter Target="AlbumHeader.ColumnDefinitions[1].Width"
-                                Value="*" />
-                        <Setter Target="AlbumArt.(Grid.ColumnSpan)"
-                                Value="1" />
-                        <Setter Target="AlbumArt.(Grid.Column)"
-                                Value="0" />
-                        <Setter Target="AlbumArt.(Grid.RowSpan)"
-                                Value="4" />
-                        <Setter Target="AlbumName.(Grid.ColumnSpan)"
-                                Value="1" />
-                        <Setter Target="AlbumName.(Grid.Column)"
-                                Value="1" />
-                        <Setter Target="AlbumDetails.(Grid.ColumnSpan)"
-                                Value="1" />
-                        <Setter Target="AlbumDetails.(Grid.Column)"
-                                Value="1" />
-                        <Setter Target="AlbumToolbar.(Grid.ColumnSpan)"
-                                Value="1" />
-                        <Setter Target="AlbumToolbar.(Grid.Column)"
-                                Value="1" />
-                        <Setter Target="AlbumArt.Width"
-                                Value="196" />
-                        <Setter Target="AlbumArt.Height"
-                                Value="196" />
-                        <Setter Target="AlbumName.HorizontalAlignment"
-                                Value="Left" />
-                        <Setter Target="AlbumDetails.HorizontalAlignment"
-                                Value="Left" />
-                        <Setter Target="AlbumDetails.Orientation"
-                                Value="Vertical" />
-                        <Setter Target="AlbumDetails.HorizontalAlignment"
-                                Value="Left" />
-                        <Setter Target="AlbumToolbar.HorizontalAlignment"
-                                Value="Left" />
-                        <Setter Target="Division1.Visibility"
-                                Value="Collapsed" />
-                        <Setter Target="Division2.Visibility"
-                                Value="Collapsed" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-    </ListView>
+            </UserControl>
+        </controls:TrackList.Header>
+    </controls:TrackList>
 </local:AlbumPageBase>
