@@ -5,6 +5,7 @@ using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -25,6 +26,7 @@ namespace Riff.UWP.Test
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
         }
 
         public static Frame RootFrame => Window.Current.Content as Frame;
@@ -63,8 +65,8 @@ namespace Riff.UWP.Test
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
-                ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-                
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(350, 300));
+
             }
             
             Microsoft.VisualStudio.TestPlatform.TestExecutor.UnitTestClient.CreateDefaultUI();

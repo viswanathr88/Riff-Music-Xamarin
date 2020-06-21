@@ -9,7 +9,7 @@
                        xmlns:controls="using:Riff.UWP.Controls"
                        xmlns:conv="using:Riff.UWP.Converters"
                        mc:Ignorable="d"
-                       Background="{ThemeResource SystemControlAcrylicElementBrush}">
+                       Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
 
     <Page.Resources>
         <ResourceDictionary>
@@ -80,7 +80,7 @@
 
             <ListView.Header>
                 <Grid x:Name="Header"
-                      Background="{ThemeResource SystemControlBaseHighAcrylicElementMediumHighBrush}"
+                      Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                       Padding="30,30,30,0">
 
                     <Grid.RowDefinitions>
@@ -106,7 +106,7 @@
 
                         <!-- Album Art -->
                         <Border x:Name="AlbumArtContainer"
-                                Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                                Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
                                 Height="128"
                                 Width="128"
                                 Grid.Row="0"

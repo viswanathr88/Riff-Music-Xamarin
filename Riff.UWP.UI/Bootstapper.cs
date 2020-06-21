@@ -6,6 +6,7 @@ using Riff.Data.Sqlite;
 using Riff.Sync;
 using Riff.UWP.Authentication;
 using Riff.UWP.Storage;
+using Riff.UWP.Strings;
 using Riff.UWP.ViewModel;
 using System.IO;
 using System.Net.Http;
@@ -20,7 +21,7 @@ namespace Riff.UWP
         private static readonly string DatabaseName = "Riff.db";
         private static readonly string LoginDescriptionKey = "LoginDescription";
 
-        public Bootstapper()
+        static Bootstapper()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
@@ -30,7 +31,7 @@ namespace Riff.UWP
             SimpleIoc.Default.Register<IAppPreferences>(() => SimpleIoc.Default.GetInstance<AppPreferences>());
             SimpleIoc.Default.Register(() => new HttpClient(new HttpClientHandler() { AllowAutoRedirect = false }));
 
-            var loginManager = new WindowsLoginManager(SimpleIoc.Default.GetInstance<HttpClient>(), ResourceLoader.GetForCurrentView().GetString(LoginDescriptionKey));
+            var loginManager = new WindowsLoginManager(SimpleIoc.Default.GetInstance<HttpClient>(), Resources.LoginDescription);
             SimpleIoc.Default.Register<ILoginManager>(() => new CacheReadyLoginManager(loginManager, DefaultPath));
 
             SimpleIoc.Default.Register<IMusicMetadata>(() => new MusicMetadata(Path.Combine(DefaultPath, DatabaseName)));
@@ -47,6 +48,7 @@ namespace Riff.UWP
             SimpleIoc.Default.Register<TracksViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
             SimpleIoc.Default.Register<PlayerViewModel>();
+            SimpleIoc.Default.Register<IPlayer>(() => SimpleIoc.Default.GetInstance<PlayerViewModel>());
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<AlbumViewModel>();
             SimpleIoc.Default.Register<ArtistViewModel>();

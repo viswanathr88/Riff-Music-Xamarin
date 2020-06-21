@@ -2,6 +2,7 @@
 using Moq;
 using Riff.Data;
 using Riff.Data.Access;
+using Riff.Sync;
 using Riff.UWP.Pages;
 using Riff.UWP.Test.Infra;
 using Riff.UWP.ViewModel;
@@ -22,6 +23,7 @@ namespace Riff.UWP.Test.UI
         private readonly Mock<IMusicMetadata> mockMetadata;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
         private readonly Mock<IDriveItemReadOnlyAccessor> driveItemAccessor;
+        private readonly Mock<ITrackUrlDownloader> mockUrlDownloader;
         private readonly MusicLibrary library;
 
         private readonly UITree view = new UITree();
@@ -32,15 +34,18 @@ namespace Riff.UWP.Test.UI
             mockMetadata = new Mock<IMusicMetadata>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
             driveItemAccessor = new Mock<IDriveItemReadOnlyAccessor>();
+            mockUrlDownloader = new Mock<ITrackUrlDownloader>();
             mockMetadata.Setup(metadata => metadata.Albums).Returns(albumAccessor.Object);
             mockMetadata.Setup(metadata => metadata.DriveItems).Returns(driveItemAccessor.Object);
 
             SimpleIoc.Default.Register(() => mockMetadata.Object);
             SimpleIoc.Default.Register(() => driveItemAccessor.Object);
+            SimpleIoc.Default.Register(() => mockUrlDownloader.Object);
 
             library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, SimpleIoc.Default.GetInstance<IMusicMetadata>());
             SimpleIoc.Default.Register(() => library);
             SimpleIoc.Default.Register<AlbumViewModel>();
+            SimpleIoc.Default.Register<IPlayer, PlayerViewModel>();
         }
 
         public void Dispose()
@@ -48,8 +53,10 @@ namespace Riff.UWP.Test.UI
             SimpleIoc.Default.Unregister<IMusicMetadata>();
             SimpleIoc.Default.Unregister<IAlbumReadOnlyAccessor>();
             SimpleIoc.Default.Unregister<IDriveItemReadOnlyAccessor>();
+            SimpleIoc.Default.Unregister<ITrackUrlDownloader>();
             SimpleIoc.Default.Unregister<MusicLibrary>();
             SimpleIoc.Default.Unregister<AlbumViewModel>();
+            SimpleIoc.Default.Unregister<IPlayer>();
             SimpleIoc.Default.Reset();
         }
 
@@ -74,9 +81,9 @@ namespace Riff.UWP.Test.UI
             // Load Tracks Page
             await view.LoadPage<AlbumPage>(albums[0]);
 
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumName", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText") == textBlock.Text));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumArtist", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownArtistText") == textBlock.Text));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumGenre", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownGenreText") == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumName", (textBlock) => Strings.Resources.UnknownAlbumText == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumArtist", (textBlock) => Strings.Resources.UnknownArtistText == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumGenre", (textBlock) => Strings.Resources.UnknownGenreText == textBlock.Text));
         }
 
         [Fact]
@@ -132,8 +139,8 @@ namespace Riff.UWP.Test.UI
             await view.LoadPage<AlbumPage>(album);
 
             var track = driveItems.First().Track;
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackTitle", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownTitleText") == textBlock.Text));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackArtist", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownArtistText") == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackTitle", (textBlock) => Strings.Resources.UnknownTitleText == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackArtist", (textBlock) => Strings.Resources.UnknownArtistText == textBlock.Text));
         }
 
         [Fact]

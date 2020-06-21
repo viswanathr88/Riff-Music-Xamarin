@@ -57,10 +57,16 @@ namespace Riff.UWP.ViewModel
         public ObservableCollection<ExpandedAlbumItem> AlbumTracks
         {
             get => albumTracks;
-            set => SetProperty(ref this.albumTracks, value);
+            set  
+            {
+                if (SetProperty(ref this.albumTracks, value))
+                {
+                    Tracks = AlbumTracks.SelectMany(item => item).ToList();
+                }
+            }
         }
 
-        public IList<DriveItem> PlayableTracks
+        public IList<DriveItem> Tracks
         {
             get => tracks;
             private set => SetProperty(ref this.tracks, value);
@@ -87,7 +93,6 @@ namespace Riff.UWP.ViewModel
             });
 
             AlbumTracks = new ObservableCollection<ExpandedAlbumItem>(groups);
-            PlayableTracks = groups.SelectMany(album => album).ToList();
             IsLoaded = true;
         }
     }

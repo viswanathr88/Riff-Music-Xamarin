@@ -2,6 +2,7 @@
 using Moq;
 using Riff.Data;
 using Riff.Data.Access;
+using Riff.Sync;
 using Riff.UWP.Pages;
 using Riff.UWP.Test.Infra;
 using Riff.UWP.ViewModel;
@@ -21,6 +22,7 @@ namespace Riff.UWP.Test.UI
     {
         private readonly Mock<IMusicMetadata> mockMetadata;
         private readonly Mock<IDriveItemReadOnlyAccessor> driveItemAccessor;
+        private readonly Mock<ITrackUrlDownloader> mockUrlDownloader;
         private readonly MusicLibrary library;
         private readonly UITree view = new UITree();
 
@@ -29,14 +31,17 @@ namespace Riff.UWP.Test.UI
             // Setup mock album accessor
             mockMetadata = new Mock<IMusicMetadata>();
             driveItemAccessor = new Mock<IDriveItemReadOnlyAccessor>();
+            mockUrlDownloader = new Mock<ITrackUrlDownloader>();
             mockMetadata.Setup(metadata => metadata.DriveItems).Returns(driveItemAccessor.Object);
 
             SimpleIoc.Default.Register(() => mockMetadata.Object);
             SimpleIoc.Default.Register(() => driveItemAccessor.Object);
+            SimpleIoc.Default.Register(() => mockUrlDownloader.Object);
 
             library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, SimpleIoc.Default.GetInstance<IMusicMetadata>());
             SimpleIoc.Default.Register(() => library);
             SimpleIoc.Default.Register<ArtistViewModel>();
+            SimpleIoc.Default.Register<IPlayer, PlayerViewModel>();
         }
 
         public async Task DisposeAsync()
@@ -52,8 +57,10 @@ namespace Riff.UWP.Test.UI
         {
             SimpleIoc.Default.Unregister<IMusicMetadata>();
             SimpleIoc.Default.Unregister<IDriveItemReadOnlyAccessor>();
+            SimpleIoc.Default.Unregister<ITrackUrlDownloader>();
             SimpleIoc.Default.Unregister<MusicLibrary>();
             SimpleIoc.Default.Unregister<TracksViewModel>();
+            SimpleIoc.Default.Unregister<IPlayer>();
             SimpleIoc.Default.Reset();
         }
 
@@ -86,10 +93,10 @@ namespace Riff.UWP.Test.UI
             var artist = new Artist() { Id = 1, Name = null };
             await view.LoadPage<ArtistPage>(artist);
 
-            await view.WaitForElementAndExecute<TextBlock>("ArtistName", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownArtistText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("AlbumName", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownTitleText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownArtistText"), textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("ArtistName", (textBlock) => Assert.Equal(Strings.Resources.UnknownArtistText, textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("AlbumName", (textBlock) => Assert.Equal(Strings.Resources.UnknownAlbumText, textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(Strings.Resources.UnknownTitleText, textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(Strings.Resources.UnknownArtistText, textBlock.Text));
         }
 
         [Fact]

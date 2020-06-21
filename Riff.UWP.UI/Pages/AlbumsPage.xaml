@@ -14,7 +14,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Resources/BorderlessGridViewItem.xaml" />
+                <ResourceDictionary Source="/Riff.UWP.UI/Resources/BorderlessGridViewItem.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <conv:AlbumSortTypeConverter x:Key="AlbumSortTypeConverter" />
             <conv:SortOrderConverter x:Key="SortOrderConverter" />

@@ -71,7 +71,7 @@ namespace Riff.UWP.Test.UI
 
             bool success = await view.WaitForElementAndExecute<TextBlock, bool>("ArtistName", (textBlock) =>
             {
-                return textBlock.Text == ResourceLoader.GetForCurrentView().GetString("UnknownArtistText");
+                return textBlock.Text == Strings.Resources.UnknownArtistText;
             });
 
             Assert.True(success);

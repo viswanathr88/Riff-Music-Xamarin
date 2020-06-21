@@ -7,9 +7,7 @@ using Riff.UWP.Test.Infra;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using Xunit;
@@ -68,13 +66,7 @@ namespace Riff.UWP.Test.UI
 
             // Load the page
             Assert.True(await view.LoadPage<AlbumsPage>(null));
-
-            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("AlbumName", (textBlock) =>
-            {
-                return textBlock.Text == ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText");
-            });
-
-            Assert.True(success);
+            await view.WaitForElementAndCondition<TextBlock>("AlbumName", (textBlock) => textBlock.Text == Strings.Resources.UnknownAlbumText);
         }
 
         [Fact]
@@ -86,13 +78,7 @@ namespace Riff.UWP.Test.UI
 
             // Load the page
             await view.LoadPage<AlbumsPage>(null);
-
-            bool success = await view.WaitForElementAndExecute<TextBlock, bool>("ArtistName", (textBlock) =>
-            {
-                return textBlock.Text == ResourceLoader.GetForCurrentView().GetString("UnknownArtistText");
-            });
-
-            Assert.True(success);
+            await view.WaitForElementAndCondition<TextBlock>("ArtistName", (textBlock) => textBlock.Text == Strings.Resources.UnknownArtistText);
         }
     }
 }

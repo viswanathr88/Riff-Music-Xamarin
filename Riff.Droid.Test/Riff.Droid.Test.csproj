@@ -166,17 +166,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Riff.Core\Riff.Core.csproj">
+      <Project>{bbd17f58-9a49-451c-87fa-9383fa7d551d}</Project>
+      <Name>Riff.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Riff.Data.Sqlite\Riff.Data.Sqlite.csproj">
       <Project>{4497c461-2030-46ad-a065-8ce33cf9f7a6}</Project>
       <Name>Riff.Data.Sqlite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Riff\Riff.Core.csproj">
-      <Project>{91416f7a-1829-47a0-8632-4d67891a7914}</Project>
-      <Name>Riff.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="..\Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems" Label="Shared" />
-  <Import Project="..\Riff.Test\Riff.Test.projitems" Label="Shared" />
+  <Import Project="..\Riff.Core.Test\Riff.Core.Test.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
     Other similar extension points exist, see Microsoft.Common.targets.

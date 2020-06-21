@@ -1,16 +1,15 @@
-﻿<local:ArtistPageBase
-    x:Class="Riff.UWP.Pages.ArtistPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Riff.UWP.Pages"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:Riff.UWP.ViewModel"
-    xmlns:data="using:Riff.Data"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}"
-    HeaderOpacity="1.0">
+﻿<local:ArtistPageBase x:Class="Riff.UWP.Pages.ArtistPage"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:controls="using:Riff.UWP.Controls"
+                      xmlns:local="using:Riff.UWP.Pages"
+                      xmlns:vm="using:Riff.UWP.ViewModel"
+                      mc:Ignorable="d"
+                      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                      ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}"
+                      HeaderOpacity="1.0">
 
     <Page.Resources>
         <CollectionViewSource x:Name="CVSExpandedAlbums"
@@ -19,20 +18,15 @@
                               IsSourceGrouped="True" />
     </Page.Resources>
 
-    <ListView x:Name="AlbumList"
-              SelectionMode="None"
-              IsItemClickEnabled="True"
-              ItemClick="AlbumList_ItemClick"
-              ItemsSource="{x:Bind CVSExpandedAlbums.View, Mode=OneWay}"
-              ShowsScrollingPlaceholders="False">
-
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Setter Property="HorizontalContentAlignment"
-                        Value="Stretch" />
-            </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.Header>
+    <controls:TrackList x:Name="AlbumList"
+                        EnableTrackNumbers="True"
+                        EnableAlbum="False"
+                        EnableArt="False"
+                        EnableGenre="False"
+                        EnableReleaseYear="False"
+                        Items="{x:Bind CVSExpandedAlbums.View, Mode=OneWay}"
+                        PlayableTracks="{x:Bind ViewModel.Tracks, Mode=OneWay}">
+        <controls:TrackList.Header>
             <Grid x:Name="ArtistHeader"
                   Background="{ThemeResource SystemControlAcrylicWindowBrush}"
                   HorizontalAlignment="Stretch"
@@ -45,7 +39,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                
+
                 <!-- Artist icon -->
                 <Border Width="128"
                         Height="128"
@@ -57,9 +51,9 @@
                               Glyph="&#xE77B;"
                               FontSize="64"
                               HorizontalAlignment="Center"
-                              VerticalAlignment="Center"/>
+                              VerticalAlignment="Center" />
                 </Border>
-                
+
                 <!-- Artist Name -->
                 <TextBlock x:Name="ArtistName"
                            Text="{x:Bind ViewModel.Parameter.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
@@ -69,8 +63,8 @@
                            TextTrimming="CharacterEllipsis"
                            HorizontalAlignment="Center"
                            Margin="20,10,20,10"
-                           Grid.Row="1"/>
-                
+                           Grid.Row="1" />
+
                 <!-- Artist Genres -->
                 <CommandBar x:Name="ArtistToolbar"
                             Grid.Row="3"
@@ -96,7 +90,7 @@
                                       x:Name="ArtistToolbarPlayButton"
                                       Icon="Play"
                                       Margin="0,0,10,0"
-                                      Click="ArtistToolbarPlayButton_Click"/>
+                                      Click="ArtistToolbarPlayButton_Click" />
                         <AppBarButton Label=""
                                       x:Uid="ArtistToolbarAddToButton"
                                       Icon="Add"
@@ -109,9 +103,9 @@
                 </CommandBar>
 
             </Grid>
-        </ListView.Header>
-        
-        <ListView.GroupStyle>
+        </controls:TrackList.Header>
+
+        <controls:TrackList.GroupStyle>
             <GroupStyle>
                 <GroupStyle.HeaderContainerStyle>
                     <Style TargetType="ListViewHeaderItem">
@@ -122,81 +116,41 @@
                 </GroupStyle.HeaderContainerStyle>
                 <GroupStyle.HeaderTemplate>
                     <DataTemplate x:DataType="vm:ExpandedAlbumItem">
-                        <StackPanel Orientation="Vertical" 
-                                    HorizontalAlignment="Left"
-                                    Width="128"
-                                    Margin="0,30,0,0">
+                        <RelativePanel Margin="0,20,0,0">
                             <!-- Album art -->
-                            <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
-                                  HorizontalAlignment="Left">
+                            <Grid x:Name="AlbumArtContainer"
+                                  Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                                  HorizontalAlignment="Left"
+                                  Margin="0,0,10,0">
                                 <Image Source="{x:Bind AlbumArt}"
                                        Stretch="UniformToFill"
-                                       Height="128"
-                                       Width="128"
-                                       x:Phase="2"/>
+                                       Height="64"
+                                       Width="64"
+                                       x:Phase="2" />
                             </Grid>
 
                             <!-- Album name -->
-                            <TextBlock x:Name="AlbumName" 
+                            <TextBlock x:Name="AlbumName"
                                        Text="{x:Bind Key.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                                        Style="{StaticResource BodyTextBlockStyle}"
                                        TextWrapping="Wrap"
                                        TextTrimming="CharacterEllipsis"
                                        MaxLines="2"
-                                       x:Phase="0"/>
+                                       x:Phase="0"
+                                       RelativePanel.RightOf="AlbumArtContainer"
+                                       RelativePanel.AlignTopWith="AlbumArtContainer" />
 
                             <!-- Release year -->
                             <TextBlock Text="{x:Bind Key.ReleaseYear}"
                                        Style="{StaticResource CaptionTextBlockStyle}"
                                        Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
-                                       x:Phase="1"/>
-
-                        </StackPanel>
+                                       x:Phase="1"
+                                       RelativePanel.Below="AlbumName"
+                                       RelativePanel.RightOf="AlbumArtContainer" />
+                        </RelativePanel>
                     </DataTemplate>
                 </GroupStyle.HeaderTemplate>
             </GroupStyle>
-        </ListView.GroupStyle>
-
-        <ListView.ItemTemplate>
-            <DataTemplate x:DataType="data:DriveItem">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <!-- Track Name -->
-                    <TextBlock x:Name="TrackTitle"
-                               Text="{x:Bind Track.Title, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='track'}"
-                               Grid.Column="0"
-                               FontSize="13"
-                               Margin="0,0,30,0"
-                               TextWrapping="Wrap"
-                               TextTrimming="CharacterEllipsis"
-                               MaxLines="1"/>
-
-                    <!-- Track Artist -->
-                    <TextBlock x:Name="TrackArtist"
-                               Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
-                               Grid.Column="1"
-                               FontSize="13"
-                               Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
-                               Margin="0,0,30,0"
-                               TextWrapping="Wrap"
-                               TextTrimming="CharacterEllipsis"
-                               MaxLines="1"/>
-
-                    <!-- Track Duration -->
-                    <TextBlock x:Name="TrackDuration"
-                               Text="{x:Bind Track.FormatDuration(Track.Duration)}"
-                               Grid.Column="2"
-                               FontSize="13"
-                               Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
-                               Margin="0,0,20,0"/>
-
-                </Grid>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </controls:TrackList.GroupStyle>
+    </controls:TrackList>
 </local:ArtistPageBase>

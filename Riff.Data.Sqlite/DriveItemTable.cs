@@ -283,7 +283,7 @@ namespace Riff.Data.Sqlite
                 }
                 else
                 {
-                    builder.Append($"Track{options.SortType.Value} {sortOrderStr}");
+                    builder.Append($"{(!options.SortType.ToString().StartsWith("Track") ? "Track" : string.Empty)}{options.SortType.Value} {sortOrderStr}");
                 }
             }
         }
