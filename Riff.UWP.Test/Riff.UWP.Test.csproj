@@ -127,6 +127,9 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlankPage.xaml.cs">
+      <DependentUpon>BlankPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Infra\CoreDispatcherExtensions.cs" />
     <Compile Include="Infra\UITree.cs" />
@@ -139,7 +142,9 @@
     <Compile Include="UI\ArtistPageTest.cs" />
     <Compile Include="UI\ArtistsPageTest.cs" />
     <Compile Include="UI\SettingsPageTest.cs" />
+    <Compile Include="UI\TrackListTest.cs" />
     <Compile Include="UI\TracksPageTest.cs" />
+    <Compile Include="UI\GridColumnVisibilityConverterTest.cs" />
     <Compile Include="ViewModel\MediaListTest.cs" />
     <Compile Include="ViewModel\PlayerViewModelTest.cs" />
     <Compile Include="ViewModel\TracksViewModelTest.cs" />
@@ -210,13 +215,16 @@
       <Name>Riff.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="System\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Riff.UWP.Test_TemporaryKey.pfx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="BlankPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="..\Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems" Label="Shared" />
   <Import Project="..\Riff.UWP.UI\Riff.UWP.UI.projitems" Label="Shared" />
   <Import Project="..\Riff.Test\Riff.Test.projitems" Label="Shared" />

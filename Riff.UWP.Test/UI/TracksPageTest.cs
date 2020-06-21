@@ -2,6 +2,7 @@
 using Moq;
 using Riff.Data;
 using Riff.Data.Access;
+using Riff.Sync;
 using Riff.UWP.Pages;
 using Riff.UWP.Test.Infra;
 using Riff.UWP.ViewModel;
@@ -22,6 +23,7 @@ namespace Riff.UWP.Test.UI
     {
         private readonly Mock<IMusicMetadata> mockMetadata;
         private readonly Mock<IDriveItemReadOnlyAccessor> driveItemAccessor;
+        private readonly Mock<ITrackUrlDownloader> mockUrlDownloader;
         private readonly MusicLibrary library;
 
         private readonly UITree view = new UITree();
@@ -31,22 +33,27 @@ namespace Riff.UWP.Test.UI
             // Setup mock album accessor
             mockMetadata = new Mock<IMusicMetadata>();
             driveItemAccessor = new Mock<IDriveItemReadOnlyAccessor>();
+            mockUrlDownloader = new Mock<ITrackUrlDownloader>();
             mockMetadata.Setup(metadata => metadata.DriveItems).Returns(driveItemAccessor.Object);
 
             SimpleIoc.Default.Register(() => mockMetadata.Object);
             SimpleIoc.Default.Register(() => driveItemAccessor.Object);
+            SimpleIoc.Default.Register(() => mockUrlDownloader.Object);
 
             library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, SimpleIoc.Default.GetInstance<IMusicMetadata>());
             SimpleIoc.Default.Register(() => library);
             SimpleIoc.Default.Register<TracksViewModel>();
+            SimpleIoc.Default.Register<IPlayer, PlayerViewModel>();
         }
 
         public void Dispose()
         {
             SimpleIoc.Default.Unregister<IMusicMetadata>();
             SimpleIoc.Default.Unregister<IDriveItemReadOnlyAccessor>();
+            SimpleIoc.Default.Unregister<ITrackUrlDownloader>();
             SimpleIoc.Default.Unregister<MusicLibrary>();
             SimpleIoc.Default.Unregister<TracksViewModel>();
+            SimpleIoc.Default.Unregister<IPlayer>();
             SimpleIoc.Default.Reset();
         }
 

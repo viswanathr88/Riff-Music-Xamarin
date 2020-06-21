@@ -23,7 +23,7 @@ namespace Riff.UWP.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AlbumPage : AlbumPageBase, ISupportPlaying
+    public sealed partial class AlbumPage : AlbumPageBase
     {
         bool animateBack = false;
         public AlbumPage()
@@ -33,13 +33,11 @@ namespace Riff.UWP.Pages
             HeaderText = ResourceLoader.GetForCurrentView().GetString("AlbumPageHeader");
         }
 
-        public PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
-
         public MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnLoad(NavigationMode mode)
         {
-            // base.OnNavigatedTo(e);
+            base.OnLoad(mode);
 
             ConnectedAnimation imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("ca1");
             if (imageAnimation != null)
@@ -47,18 +45,13 @@ namespace Riff.UWP.Pages
                 imageAnimation.TryStart(AlbumArt);
                 animateBack = true;
             }
-
-            if (!ViewModel.IsLoaded || ViewModel.AlbumInfo != e.Parameter as Album)
-            {
-                await ViewModel.LoadAsync(e.Parameter as Album);
-            }
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override void OnUnload(NavigationMode mode)
         {
-            base.OnNavigatingFrom(e);
+            base.OnUnload(mode);
 
-            if (animateBack && e.NavigationMode == NavigationMode.Back)
+            if (animateBack && mode == NavigationMode.Back)
             {
                 var service = ConnectedAnimationService.GetForCurrentView();
                 var animation = service.PrepareToAnimate("backAnimation", AlbumArt);
@@ -85,15 +78,6 @@ namespace Riff.UWP.Pages
         private async void AlbumArt_Loaded(object sender, RoutedEventArgs e)
         {
             await LoadArtAsync(AlbumArt, ViewModel.AlbumInfo);
-        }
-
-        private async void AlbumTrackList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (e.ClickedItem != null)
-            {
-                var index = Convert.ToUInt32(AlbumTrackList.Items.IndexOf(e.ClickedItem));
-                await Player.PlayAsync(ViewModel.Tracks, index);
-            }
         }
 
         private void AlbumTrackList_Loaded(object sender, RoutedEventArgs e)
@@ -146,7 +130,7 @@ namespace Riff.UWP.Pages
 
         private async void AlbumToolbarPlayButton_Click(object sender, RoutedEventArgs e)
         {
-            await Player.PlayAsync(ViewModel.Tracks, 0);
+            await AlbumTrackList.Play();
         }
 
         private void AlbumToolbarBrowseArtistButton_Click(object sender, RoutedEventArgs e)

@@ -8,6 +8,13 @@ namespace Riff.UWP.Pages
 {
     public abstract class PageBase<TViewModel> : Page where TViewModel : IDataViewModel
     {
+        static PageBase()
+        {
+            if (Windows.ApplicationModel.DesignMode.DesignMode2Enabled || Windows.ApplicationModel.DesignMode.DesignModeEnabled)
+            {
+                var bootstapper = new Bootstapper();
+            }
+        }
         public bool RegisterForChanges { get; protected set; } = false;
         public bool PreferViewUpdateBeforeLoad { get; protected set; } = false;
         public TViewModel ViewModel { get; } = ServiceLocator.Current.GetInstance<TViewModel>();
@@ -21,7 +28,9 @@ namespace Riff.UWP.Pages
                 ViewModel.PropertyChanged += DataViewModel_PropertyChanged;
             }
 
-            bool load = !ViewModel.IsLoaded;
+            OnLoad(e.NavigationMode);
+
+            bool load = !ViewModel.IsLoaded || ViewModel.Parameter != (e.Parameter ?? VoidType.Empty);
 
             if (load)
             {
@@ -43,6 +52,18 @@ namespace Riff.UWP.Pages
             {
                 ViewModel.PropertyChanged -= DataViewModel_PropertyChanged;
             }
+
+            OnUnload(e.NavigationMode);
+        }
+
+        protected virtual void OnLoad(NavigationMode mode)
+        {
+            
+        }
+
+        protected virtual void OnUnload(NavigationMode mode)
+        {
+            
         }
 
         private void DataViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

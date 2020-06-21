@@ -3,7 +3,6 @@ using Riff.Authentication;
 using Riff.UWP.Pages;
 using Riff.UWP.Storage;
 using System;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -52,7 +51,7 @@ namespace Riff.UWP
             Device.UpdateTheme(new AppPreferences().AppTheme);
         }
 
-        public Bootstapper Bootstapper { get; private set; }
+        private Bootstapper Bootstapper { get; set; }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
@@ -82,10 +81,7 @@ namespace Riff.UWP
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
 
-                if (Bootstapper == null)
-                {
-                    Bootstapper = new Bootstapper();
-                }
+                Bootstapper = new Bootstapper();
             }
 
             if (e.PrelaunchActivated == false)

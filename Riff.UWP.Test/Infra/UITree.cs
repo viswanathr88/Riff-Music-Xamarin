@@ -4,6 +4,7 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -16,6 +17,41 @@ namespace Riff.UWP.Test.Infra
             return await CoreDispatcher.RunToCompletionAsync(() =>
             {
                 return Task.FromResult(new Size(RootFrame.ActualWidth, RootFrame.Height));
+            });
+        }
+
+        public async Task<bool> ResizeWindow(Size size)
+        {
+            return await CoreDispatcher.RunToCompletionAsync(() =>
+            {
+                var currentSize = new Size(RootFrame.ActualWidth, RootFrame.ActualHeight);
+                if (currentSize == size)
+                {
+                    return Task.FromResult(true);
+                }
+
+                var tcs = new TaskCompletionSource<bool>();
+                void sizeChangedCb(object sender, WindowSizeChangedEventArgs e)
+                {
+                    Window.Current.SizeChanged -= sizeChangedCb;
+                    tcs.SetResult(e.Size == size);
+                }
+
+                try
+                {
+                    Window.Current.SizeChanged += sizeChangedCb;
+                    if (!ApplicationView.GetForCurrentView().TryResizeView(size))
+                    {
+                        Window.Current.SizeChanged -= sizeChangedCb;
+                        tcs.SetResult(false);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetException(ex);
+                }
+
+                return tcs.Task;
             });
         }
 
@@ -84,6 +120,7 @@ namespace Riff.UWP.Test.Infra
         }
         public async Task WaitForElementAndCondition<TElement>(string name, Func<TElement, bool> condition, int pingFreqencyMs = 100, int totalPings = 20) where TElement : DependencyObject
         {
+            await WaitForElement<TElement>(name, pingFreqencyMs, totalPings);
             bool success = false;
             for (int i = 0; i < totalPings; i++)
             {
@@ -99,7 +136,7 @@ namespace Riff.UWP.Test.Infra
                 }
             }
 
-            Xunit.Assert.True(success);
+            Xunit.Assert.True(success, $"Element with name {name} found but condition ${condition.ToString()} failed");
         }
 
         public async Task<TReturn> WaitForElementAndExecute<TElement, TReturn>(string name, Func<TElement, TReturn> fn, int pingFrequencyMs = 100, int totalPings = 20) where TElement : DependencyObject
@@ -134,7 +171,7 @@ namespace Riff.UWP.Test.Infra
                 }
             }
 
-            Xunit.Assert.True(success);
+            Xunit.Assert.True(success, $"Condition {condition.ToString()} failed");
         }
 
         public async Task<bool> LoadPage<T>(object parameter) where T : Page
@@ -164,16 +201,32 @@ namespace Riff.UWP.Test.Infra
             });
         }
 
-        public async Task UnloadAllPages()
+        public async Task<bool> UnloadAllPages()
         {
-            await CoreDispatcher.RunAsync(CoreDispatcherPriority.Normal,() =>
+            return await CoreDispatcher.RunToCompletionAsync(() =>
             {
-                RootFrame.BackStack.Clear();
-                RootFrame.Content = null;
-                RootFrame.CacheSize = 0;
-            });
+                if (RootFrame.Content != null)
+                {
+                    // There is one page in the RootFrame
+                    var page = RootFrame.Content as Page;
 
-            await WaitForCondition(() => RootFrame.Content == null);
+                    var tcs = new TaskCompletionSource<bool>();
+                    page.Unloaded += unloadedcb;
+
+                    void unloadedcb(object sender, RoutedEventArgs args)
+                    {
+                        page.Unloaded -= unloadedcb;
+                        tcs.SetResult(true);
+                    }
+
+                    RootFrame.BackStack.Clear();
+                    RootFrame.Content = null;
+                    RootFrame.CacheSize = 0;
+                    return tcs.Task;
+                }
+
+                return Task.FromResult(true);
+            });
         }
 
         private CoreDispatcher CoreDispatcher => Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher;
