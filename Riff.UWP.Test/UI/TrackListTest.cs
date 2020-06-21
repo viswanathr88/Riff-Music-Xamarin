@@ -29,31 +29,21 @@ namespace Riff.UWP.Test.UI
         private readonly UITree view = new UITree();
 
         private IList<DriveItem> tracks = new List<DriveItem>
-            {
-                new DriveItem()
-                {
-                    Id = "TestId",
-                    Track = new Track()
-                    {
-                        Id = 1,
-                        Title = "TestTitle",
-                        Artist = "TestArtist",
-                        Duration = TimeSpan.FromSeconds(100),
-                        Album = new Album() { Id = 1, Name = "TestAlbum" },
-                        Genre = new Genre() { Id = 2, Name = "TestGenre" },
-                        Number = 3
-                    }
-                }
-            };
-
-        public static IEnumerable<object[]> Sizes =>
-        new List<object[]>
         {
-            new object[] { new Size(375, 600) },
-            new object[] { new Size(640, 600) },
-            new object[] { new Size(700, 600) },
-            new object[] { new Size(800, 600) },
-            new object[] { new Size(900, 600) }
+            new DriveItem()
+            {
+                Id = "TestId",
+                Track = new Track()
+                {
+                    Id = 1,
+                    Title = "TestTitle",
+                    Artist = "TestArtist",
+                    Duration = TimeSpan.FromSeconds(100),
+                    Album = new Album() { Id = 1, Name = "TestAlbum" },
+                    Genre = new Genre() { Id = 2, Name = "TestGenre" },
+                    Number = 3
+                }
+            }
         };
 
         public TrackListTest()
@@ -77,7 +67,6 @@ namespace Riff.UWP.Test.UI
         [InlineData(700, 600)]
         [InlineData(800, 600)]
         [InlineData(900, 600)]
-        [InlineData(1010, 600)]
         public async Task DisableAllOptionalFields_ValidateAdaptiveBehavior(double width, double height)
         {
             // Load a blank page
@@ -119,7 +108,6 @@ namespace Riff.UWP.Test.UI
         [InlineData(700, 600)]
         [InlineData(800, 600)]
         [InlineData(900, 600)]
-        [InlineData(1010, 600)]
         public async Task EnableAllOptionalFields_ValidateAdaptiveBehavior(double width, double height)
         {
             var size = new Size(width, height);
