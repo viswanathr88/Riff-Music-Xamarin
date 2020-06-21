@@ -13,6 +13,8 @@
             <x:Double x:Key="NavigationViewTopPaneHeight">44</x:Double>
 
             <converters:TaglessItemsConverter x:Key="TaglessItemsConverter" />
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:GridColumnVisibilityConverter x:Key="GridColumnVisibilityConverter" />
         </ResourceDictionary>
     </Application.Resources>
 

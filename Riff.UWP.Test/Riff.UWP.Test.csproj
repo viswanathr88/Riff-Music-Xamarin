@@ -127,23 +127,27 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlankPage.xaml.cs">
+      <DependentUpon>BlankPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="Infra\CoreDispatcherExtensions.cs" />
     <Compile Include="Infra\UITree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Integration\UI\AlbumPageTest.cs" />
-    <Compile Include="Integration\UI\AlbumsPageTest.cs" />
+    <Compile Include="UI\AlbumPageTest.cs" />
+    <Compile Include="UI\AlbumsPageTest.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Integration\UI\ArtistPageTest.cs" />
-    <Compile Include="Integration\UI\ArtistsPageTest.cs" />
-    <Compile Include="Integration\UI\SettingsPageTest.cs" />
-    <Compile Include="Integration\UI\TracksPageTest.cs" />
-    <Compile Include="UT\UI\GridColumnVisibilityConverterTest.cs" />
-    <Compile Include="UT\ViewModel\MediaListTest.cs" />
-    <Compile Include="UT\ViewModel\PlayerViewModelTest.cs" />
-    <Compile Include="UT\ViewModel\TracksViewModelTest.cs" />
+    <Compile Include="UI\ArtistPageTest.cs" />
+    <Compile Include="UI\ArtistsPageTest.cs" />
+    <Compile Include="UI\SettingsPageTest.cs" />
+    <Compile Include="UI\TrackListTest.cs" />
+    <Compile Include="UI\TracksPageTest.cs" />
+    <Compile Include="UI\GridColumnVisibilityConverterTest.cs" />
+    <Compile Include="ViewModel\MediaListTest.cs" />
+    <Compile Include="ViewModel\PlayerViewModelTest.cs" />
+    <Compile Include="ViewModel\TracksViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -211,13 +215,16 @@
       <Name>Riff.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="System\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Riff.UWP.Test_TemporaryKey.pfx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="BlankPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="..\Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems" Label="Shared" />
   <Import Project="..\Riff.UWP.UI\Riff.UWP.UI.projitems" Label="Shared" />
   <Import Project="..\Riff.Test\Riff.Test.projitems" Label="Shared" />

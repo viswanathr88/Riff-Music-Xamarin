@@ -72,6 +72,7 @@
                         EnableGenre="True"
                         EnableReleaseYear="True"
                         EnableTrackNumbers="False"
-                        Items="{x:Bind ViewModel.Tracks, Mode=OneWay}" />
+                        Items="{x:Bind ViewModel.Tracks, Mode=OneWay}"
+                        PlayableTracks="{x:Bind ViewModel.Tracks, Mode=OneWay}"/>
 
 </local:TracksPageBase>

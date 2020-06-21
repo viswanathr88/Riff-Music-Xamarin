@@ -1,10 +1,10 @@
-﻿using Riff.UWP.UI.Converters;
+﻿using Riff.UWP.Converters;
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Xunit;
 
-namespace Riff.UWP.Test.UT.UI
+namespace Riff.UWP.Test.UI
 {
     public sealed class GridColumnVisibilityConverterTest
     {

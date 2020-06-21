@@ -92,8 +92,7 @@ namespace Riff.UWP.Pages
                 {
                     image.Opacity = 1;
 
-                    var item = ViewModel.Tracks[args.ItemIndex] as DriveItem;
-                    if (item != null)
+                    if (ViewModel.Tracks[args.ItemIndex] is DriveItem item)
                     {
                         await LoadArtAsync(image, item.Track);
                     }

@@ -1,22 +1,14 @@
 ﻿using CommonServiceLocator;
 using Riff.Data;
+using Riff.Extensions;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -33,6 +25,25 @@ namespace Riff.UWP.Controls
             EvaluateTrackGenreVisibility();
             EvaluateTrackNumberVisibility();
             EvaluateTrackReleaseYearVisibility();
+
+            Loaded += TrackList_Loaded;
+            Unloaded += TrackList_Unloaded;
+        }
+
+        private void TrackList_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateCurrentItem();
+            Player.CurrentTrackChanged += Player_CurrentTrackChanged;
+        }
+
+        private void TrackList_Unloaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Player.CurrentTrackChanged -= Player_CurrentTrackChanged;
+            }
+            catch (Exception)
+            { }
         }
 
         public object Header
@@ -45,15 +56,47 @@ namespace Riff.UWP.Controls
         public static readonly DependencyProperty HeaderProperty =
             DependencyProperty.Register("Header", typeof(object), typeof(TrackList), new PropertyMetadata(null));
 
-        public IList<DriveItem> Items
+        public object Items
         {
-            get { return (IList<DriveItem>)GetValue(ItemsProperty); }
+            get { return (object)GetValue(ItemsProperty); }
             set { SetValue(ItemsProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for Items.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ItemsProperty =
-            DependencyProperty.Register("Items", typeof(IList<DriveItem>), typeof(TrackList), new PropertyMetadata(null));
+            DependencyProperty.Register("Items", typeof(object), typeof(TrackList), new PropertyMetadata(null));
+
+
+        public IList<DriveItem> PlayableTracks
+        {
+            get { return (IList<DriveItem>)GetValue(PlayableTracksProperty); }
+            set { SetValue(PlayableTracksProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PlayableTracks.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PlayableTracksProperty =
+            DependencyProperty.Register("PlayableTracks", typeof(IList<DriveItem>), typeof(TrackList), new PropertyMetadata(null, OnPlayableTracksChanged));
+
+        private static void OnPlayableTracksChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as TrackList).UpdateCurrentItem();
+        }
+
+        public GroupStyle GroupStyle
+        {
+            get { return (GroupStyle)GetValue(GroupStyleProperty); }
+            set { SetValue(GroupStyleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty GroupStyleProperty =
+            DependencyProperty.Register("GroupStyle", typeof(GroupStyle), typeof(TrackList), new PropertyMetadata(null, OnGroupStyleChanged));
+
+        private static void OnGroupStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as TrackList).TrackListView.GroupStyle.Clear();
+            (d as TrackList).TrackListView.GroupStyle.Add(e.NewValue as GroupStyle);
+        }
 
         #region Public Column Visibility Methods
 
@@ -96,7 +139,6 @@ namespace Riff.UWP.Controls
         // Using a DependencyProperty as the backing store for EnableGenre.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty EnableGenreProperty =
             DependencyProperty.Register("EnableGenre", typeof(bool), typeof(TrackList), new PropertyMetadata(false, OnEnableGenreChanged));
-
 
         public bool EnableReleaseYear
         {
@@ -297,20 +339,23 @@ namespace Riff.UWP.Controls
         {
             if (args.ClickedItem != null)
             {
-                var index = Convert.ToUInt32(Items.IndexOf(args.ClickedItem as DriveItem));
-                await Player.PlayAsync(Items, index);
+                if (PlayableTracks != null && PlayableTracks.Count > 0)
+                {
+                    var index = Convert.ToUInt32(PlayableTracks.IndexOf(args.ClickedItem as DriveItem));
+                    await Player.PlayAsync(PlayableTracks, index);
+                }
             }
         }
 
         public async Task Play()
         {
-            if (Items.Count > 0)
+            if (PlayableTracks != null && PlayableTracks.Count > 0)
             {
-                await Player.PlayAsync(Items, 0);
+                await Player.PlayAsync(PlayableTracks, 0);
             }
         }
 
-        private PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
+        private IPlayer Player => ServiceLocator.Current.GetInstance<IPlayer>();
 
         private MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
 
@@ -345,7 +390,8 @@ namespace Riff.UWP.Controls
                 {
                     image.Opacity = 1;
 
-                    var item = Items[args.ItemIndex] as DriveItem;
+                    var list = Items as IList<object>;
+                    var item = list[args.ItemIndex] as DriveItem;
                     if (item != null)
                     {
                         await LoadArtAsync(image, item.Track);
@@ -372,6 +418,32 @@ namespace Riff.UWP.Controls
             }
 
             return loaded;
+        }
+
+        private async void Player_CurrentTrackChanged(object sender, EventArgs e)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => UpdateCurrentItem());
+        }
+
+        private void UpdateCurrentItem()
+        {
+            if (Player.PlaybackList != null && PlayableTracks != null && IsCurrentIndexWithinRange())
+            {
+                var currentIndex = Player.PlaybackList.CurrentIndex;
+                var currentItem = Player.PlaybackList[currentIndex];
+                var foundIndex = PlayableTracks.IndexOf(item => item.Track.Id == currentItem.TrackId);
+                TrackListView.SelectedIndex = foundIndex;
+            }
+            else
+            {
+                TrackListView.SelectedIndex = -1;
+                TrackListView.SelectedItem = null;
+            }
+        }
+
+        private bool IsCurrentIndexWithinRange()
+        {
+            return Player.PlaybackList.CurrentIndex >= 0 && Player.PlaybackList.CurrentIndex < Player.PlaybackList.Count;
         }
     }
 }

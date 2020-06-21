@@ -16,7 +16,19 @@
               ShowsScrollingPlaceholders="False"
               ItemsSource="{x:Bind Items, Mode=OneWay}"
               Header="{x:Bind Header, Mode=OneWay}"
-              ItemClick="TrackListView_ItemClick">
+              ItemClick="TrackListView_ItemClick"
+              IsSynchronizedWithCurrentItem="False">
+
+        <ListView.Resources>
+            <SolidColorBrush x:Key="ListViewItemBackgroundSelected"
+                             Color="Transparent" />
+            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver"
+                             Color="Transparent" />
+            <SolidColorBrush x:Key="ListViewItemForegroundSelected"
+                             Color="{ThemeResource SystemAccentColor}" />
+            <SolidColorBrush x:Key="ListViewItemForegroundSelectedPointerOver"
+                             Color="{ThemeResource SystemAccentColor}" />
+        </ListView.Resources>
 
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
@@ -52,7 +64,7 @@
                             <!-- Track Genre -->
                             <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowGenre, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='*'}" />
                             <!-- Track Year -->
-                            <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowReleaseYear, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='Auto'}" />
+                            <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowReleaseYear, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='*'}" />
                             <!-- Track Duration -->
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
@@ -62,7 +74,8 @@
                                 Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                                 Grid.Column="0"
                                 Width="40"
-                                Margin="0,0,20,0">
+                                Margin="0,0,20,0"
+                                Visibility="{Binding ElementName=TrackListControl, Path=ShowArt, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Image x:Name="TrackArt"
                                    Stretch="Uniform"/>
                         </Border>
@@ -76,7 +89,8 @@
                                    TextWrapping="NoWrap"
                                    FontSize="13"
                                    Grid.Column="1"
-                                   Margin="10,0,20,0" />
+                                   Margin="10,0,20,0"
+                                   Visibility="{Binding ElementName=TrackListControl, Path=ShowTrackNumbers, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <!-- Track Details Mini View -->
                         <Grid Grid.Column="2"
@@ -110,11 +124,10 @@
                                        Text="{x:Bind Track.Artist, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
                                        x:Phase="1"
                                        HorizontalAlignment="Left"
-                                       Style="{StaticResource CaptionTextBlockStyle}"
-                                       Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
                                        Grid.Row="1"
                                        Grid.Column="0"
                                        Grid.ColumnSpan="2"
+                                       FontSize="13"
                                        MaxLines="1"
                                        MaxWidth="200"
                                        TextWrapping="NoWrap"
@@ -131,7 +144,8 @@
                                    TextWrapping="NoWrap"
                                    FontSize="13"
                                    Grid.Column="3"
-                                   Margin="0,0,20,0" />
+                                   Margin="0,0,20,0"
+                                   Visibility="{Binding ElementName=TrackListControl, Path=ShowAlbum, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <!-- Track Genre -->
                         <TextBlock Text="{x:Bind Track.Genre.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
@@ -142,7 +156,8 @@
                                    TextWrapping="NoWrap"
                                    FontSize="13"
                                    Grid.Column="4"
-                                   Margin="0,0,20,0" />
+                                   Margin="0,0,20,0"
+                                   Visibility="{Binding ElementName=TrackListControl, Path=ShowGenre, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <!-- Track Year -->
                         <TextBlock Text="{x:Bind Track.ReleaseYear}"
@@ -153,8 +168,8 @@
                                    TextWrapping="NoWrap"
                                    FontSize="13"
                                    Grid.Column="5"
-                                   MinWidth="75"
-                                   Margin="0,0,20,0" />
+                                   Margin="0,0,20,0"
+                                   Visibility="{Binding ElementName=TrackListControl, Path=ShowReleaseYear, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <!-- Track Duration -->
                         <TextBlock Text="{x:Bind Track.FormatDuration(Track.Duration)}"

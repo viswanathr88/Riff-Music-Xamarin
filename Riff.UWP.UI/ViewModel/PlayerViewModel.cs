@@ -1,13 +1,14 @@
 ﻿using Riff.Data;
-using Riff.Data.Access;
 using Riff.Sync;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
 
 namespace Riff.UWP.ViewModel
 {
-    public sealed class PlayerViewModel : DataViewModel
+    public sealed class PlayerViewModel : DataViewModel, IPlayer
     {
         private bool isPlayerVisible;
         private readonly MusicLibrary library;
@@ -22,14 +23,28 @@ namespace Riff.UWP.ViewModel
             MediaPlayer.AudioCategory = Windows.Media.Playback.MediaPlayerAudioCategory.Media;
         }
 
+        public event EventHandler<EventArgs> CurrentTrackChanged;
+
         public Windows.Media.Playback.MediaPlayer MediaPlayer { get; }
 
-        public MediaList PlaybackList
+        public IMediaList PlaybackList
         {
             get => list;
             private set
             {
-                SetProperty(ref this.list, value);
+                if (list != value)
+                {
+                    if (list != null && list is INotifyPropertyChanged changed)
+                    {
+                        changed.PropertyChanged -= PlaybackList_PropertyChanged;
+                    }
+                    SetProperty(ref this.list, (MediaList)value);
+
+                    if (value != null && value is INotifyPropertyChanged newChanged)
+                    {
+                        newChanged.PropertyChanged += PlaybackList_PropertyChanged;
+                    }
+                }
                 IsPlayerVisible = value != null;
             }
         }
@@ -40,57 +55,10 @@ namespace Riff.UWP.ViewModel
             private set => SetProperty(ref this.isPlayerVisible, value);
         }
 
-        public async Task PlayAsync(Album album, uint startIndex = 0)
-        {
-            var options = new DriveItemAccessOptions()
-            {
-                IncludeTrack = true,
-                IncludeTrackAlbum = true,
-                AlbumFilter = album.Id,
-                SortType = TrackSortType.ReleaseYear,
-                SortOrder = SortOrder.Descending
-            };
-
-            await PlayAsync(options, startIndex);
-        }
-
-        public async Task PlayAsync(Artist artist, uint startIndex = 0)
-        {
-            var options = new DriveItemAccessOptions()
-            {
-                IncludeTrack = true,
-                IncludeTrackAlbum = true,
-                AlbumArtistFilter = artist.Id,
-                SortType = TrackSortType.ReleaseYear,
-                SortOrder = SortOrder.Descending
-            };
-
-            await PlayAsync(options, startIndex);
-        }
-
-        public async Task PlayAsync(TrackSortType type, SortOrder order, uint startIndex = 0)
-        {
-            var options = new DriveItemAccessOptions()
-            {
-                IncludeTrack = true,
-                IncludeTrackAlbum = true,
-                SortType = type,
-                SortOrder = order
-            };
-
-            await PlayAsync(options, startIndex);
-        }
-
-        private async Task PlayAsync(DriveItemAccessOptions options, uint startIndex)
-        {
-            var items = await Task.Run(() => library.Metadata.DriveItems.Get(options));
-            await PlayAsync(items, startIndex);
-        }
-
         public async Task PlayAsync(IList<DriveItem> items, uint startIndex)
         {
             PlaybackList = new MediaList(library, urlDownloader);
-            MediaPlayer.Source = PlaybackList.InnerList;
+            MediaPlayer.Source = list.InnerList;
             MediaPlayer.AutoPlay = true;
 
             await Task.Run(async () =>
@@ -102,6 +70,14 @@ namespace Riff.UWP.ViewModel
         public override Task LoadAsync()
         {
             return Task.CompletedTask;
+        }
+
+        private void PlaybackList_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MediaList.CurrentIndex))
+            {
+                CurrentTrackChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }

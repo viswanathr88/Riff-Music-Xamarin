@@ -35,9 +35,9 @@ namespace Riff.UWP.Pages
 
         public MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnLoad(NavigationMode mode)
         {
-            // base.OnNavigatedTo(e);
+            base.OnLoad(mode);
 
             ConnectedAnimation imageAnimation = ConnectedAnimationService.GetForCurrentView().GetAnimation("ca1");
             if (imageAnimation != null)
@@ -45,18 +45,13 @@ namespace Riff.UWP.Pages
                 imageAnimation.TryStart(AlbumArt);
                 animateBack = true;
             }
-
-            if (!ViewModel.IsLoaded || ViewModel.AlbumInfo != e.Parameter as Album)
-            {
-                await ViewModel.LoadAsync(e.Parameter as Album);
-            }
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
+        protected override void OnUnload(NavigationMode mode)
         {
-            base.OnNavigatingFrom(e);
+            base.OnUnload(mode);
 
-            if (animateBack && e.NavigationMode == NavigationMode.Back)
+            if (animateBack && mode == NavigationMode.Back)
             {
                 var service = ConnectedAnimationService.GetForCurrentView();
                 var animation = service.PrepareToAnimate("backAnimation", AlbumArt);
