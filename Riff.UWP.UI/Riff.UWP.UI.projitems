@@ -14,8 +14,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Controls\Titlebar.xaml.cs">
       <DependentUpon>Titlebar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Controls\TrackList.xaml.cs">
+      <DependentUpon>TrackList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Converters\AlbumSortTypeConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\BoolNegationConverter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Converters\GridColumnVisibilityConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\ImageStreamConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\SortOrderConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Converters\SyncStatusIconConverter.cs" />
@@ -78,6 +83,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\DataViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\FirstRunExperienceViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IDataViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IMediaList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IMediaListItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ItemCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ItemIndexRangeExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ItemIndexRangeList.cs" />
@@ -98,6 +106,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Controls\Titlebar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Controls\TrackList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

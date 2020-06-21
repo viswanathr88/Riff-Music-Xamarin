@@ -20,7 +20,7 @@ namespace Riff.UWP
         private static readonly string DatabaseName = "Riff.db";
         private static readonly string LoginDescriptionKey = "LoginDescription";
 
-        public Bootstapper()
+        static Bootstapper()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
@@ -47,6 +47,7 @@ namespace Riff.UWP
             SimpleIoc.Default.Register<TracksViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
             SimpleIoc.Default.Register<PlayerViewModel>();
+            SimpleIoc.Default.Register<IPlayer>(() => SimpleIoc.Default.GetInstance<PlayerViewModel>());
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<AlbumViewModel>();
             SimpleIoc.Default.Register<ArtistViewModel>();

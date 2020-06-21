@@ -53,21 +53,6 @@ namespace Riff.UWP.Pages
             await ViewModel.ReloadAsync();
         }
 
-        private async void TracksList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (e.ClickedItem != null)
-            {
-                var listView = sender as ListView;
-                var itemContainer = listView.ContainerFromItem(e.ClickedItem);
-                if (itemContainer != null)
-                {
-                    
-                }
-                var index = (sender as ListView).Items.IndexOf(e.ClickedItem);
-                await Player.PlayAsync(ViewModel.Tracks, Convert.ToUInt32(index));
-            }
-        }
-
         private async void Track_Selected(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count > 0)
@@ -107,8 +92,7 @@ namespace Riff.UWP.Pages
                 {
                     image.Opacity = 1;
 
-                    var item = ViewModel.Tracks[args.ItemIndex] as DriveItem;
-                    if (item != null)
+                    if (ViewModel.Tracks[args.ItemIndex] is DriveItem item)
                     {
                         await LoadArtAsync(image, item.Track);
                     }

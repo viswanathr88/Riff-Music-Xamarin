@@ -12,12 +12,11 @@ using Windows.Storage.Streams;
 
 namespace Riff.UWP.ViewModel
 {
-    public sealed class MediaList : ObservableCollection<MediaListItem>
+    public sealed class MediaList : ObservableCollection<IMediaListItem>, INotifyPropertyChanged, IMediaList
     {
-        private readonly MediaPlaybackList list;
         private readonly ITrackUrlDownloader trackUrlDownloader;
         private readonly MusicLibrary library;
-        private MediaListItem currentItem;
+        private IMediaListItem currentItem;
         private int currentIndex = -1;
         private static int MediaListMaxSize = 1000;
 
@@ -25,14 +24,14 @@ namespace Riff.UWP.ViewModel
         {
             this.library = library;
             this.trackUrlDownloader = urlDownloader;
-            list = new MediaPlaybackList();
-            list.Items.VectorChanged += Items_VectorChanged;
-            list.CurrentItemChanged += List_CurrentItemChanged;
+            InnerList = new MediaPlaybackList();
+            InnerList.Items.VectorChanged += Items_VectorChanged;
+            InnerList.CurrentItemChanged += List_CurrentItemChanged;
         }
 
-        public MediaPlaybackList InnerList => list;
+        public MediaPlaybackList InnerList { get; private set; }
 
-        public MediaListItem CurrentItem
+        public IMediaListItem CurrentItem
         {
             get => currentItem;
             private set
@@ -79,8 +78,10 @@ namespace Riff.UWP.ViewModel
                 int indexToCopy = index % items.Count;
                 var item = items[indexToCopy];
 
-                var binder = new Windows.Media.Core.MediaBinder();
-                binder.Token = item.Id;
+                var binder = new Windows.Media.Core.MediaBinder
+                {
+                    Token = item.Id
+                };
                 binder.Binding += Binder_Binding;
                 var playbackSource = Windows.Media.Core.MediaSource.CreateFromMediaBinder(binder);
                 var playbackItem = new Windows.Media.Playback.MediaPlaybackItem(playbackSource);
@@ -97,6 +98,8 @@ namespace Riff.UWP.ViewModel
                     props.MusicProperties.AlbumTitle = item.Track.Album.Name ?? "Unknown Album";
                     props.MusicProperties.TrackNumber = Convert.ToUInt32(item.Track.Number);
                     props.Thumbnail = library.AlbumArts.Exists(albumId) ? RandomAccessStreamReference.CreateFromFile(await library.AlbumArts.GetStorageFile(albumId)) : null;
+                    playbackSource.CustomProperties.Add("TrackId", item.Track.Id);
+                    playbackSource.CustomProperties.Add("ItemId", item.Id);
                     playbackSource.CustomProperties.Add("AlbumId", albumId);
                     playbackSource.CustomProperties.Add("Year", item.Track.Album.ReleaseYear);
                     playbackSource.CustomProperties.Add("AlbumArtPath", library.AlbumArts.Exists(albumId) ? library.AlbumArts.GetPath(albumId) : "");
@@ -107,7 +110,7 @@ namespace Riff.UWP.ViewModel
                     Debug.WriteLine(ex.ToString());
                 }
 
-                list.Items.Add(playbackItem);
+                InnerList.Items.Add(playbackItem);
                 index++;
             }
         }
@@ -124,7 +127,7 @@ namespace Riff.UWP.ViewModel
         {
             await ViewModelBase.RunUISafe(async () =>
             {
-                var index = list.CurrentItemIndex;
+                var index = InnerList.CurrentItemIndex;
                 if (index < Items.Count && index >= 0)
                 {
                     int _index = Convert.ToInt32(index);
@@ -143,7 +146,7 @@ namespace Riff.UWP.ViewModel
 
                 if (args.CollectionChange == Windows.Foundation.Collections.CollectionChange.ItemInserted)
                 {
-                    InsertItem(index, new MediaListItem(list.Items[index]));
+                    InsertItem(index, new MediaListItem(InnerList.Items[index]));
                 }
                 else if (args.CollectionChange == Windows.Foundation.Collections.CollectionChange.ItemRemoved)
                 {
@@ -151,7 +154,7 @@ namespace Riff.UWP.ViewModel
                 }
                 else if (args.CollectionChange == Windows.Foundation.Collections.CollectionChange.ItemChanged)
                 {
-                    Items[index] = new MediaListItem(list.Items[index]);
+                    Items[index] = new MediaListItem(InnerList.Items[index]);
                 }
                 else
                 {
