@@ -53,9 +53,7 @@ namespace Riff.UWP.Test.UI
             new object[] { new Size(640, 600) },
             new object[] { new Size(700, 600) },
             new object[] { new Size(800, 600) },
-            new object[] { new Size(900, 600) },
-            new object[] { new Size(1010, 600) },
-
+            new object[] { new Size(900, 600) }
         };
 
         public TrackListTest()
