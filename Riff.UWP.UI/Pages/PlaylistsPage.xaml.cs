@@ -16,7 +16,7 @@ namespace Riff.UWP.Pages
         public PlaylistsPage()
         {
             this.InitializeComponent();
-            HeaderText = ResourceLoader.GetForCurrentView().GetString("PlaylistPageHeader");
+            HeaderText = Strings.Resources.PlaylistPageHeader;
         }
     }
 }

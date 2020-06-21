@@ -27,7 +27,7 @@ namespace Riff.UWP.Pages
             PreferViewUpdateBeforeLoad = true;
             NavigationCacheMode = NavigationCacheMode.Enabled;
             Loaded += MusicLibraryPage_Loaded;
-            HeaderText = ResourceLoader.GetForCurrentView().GetString("MusicLibraryPageHeader");
+            HeaderText = Strings.Resources.MusicLibraryPageHeader;
         }
 
         private void MusicLibraryPage_Loaded(object sender, RoutedEventArgs e)

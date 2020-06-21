@@ -15,6 +15,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using System.Security.Cryptography;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -84,15 +85,15 @@ namespace Riff.UWP.Pages
             switch (state)
             {
                 case SyncState.NotSyncing:
-                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusNotSyncingText");
+                    return Strings.Resources.SyncStatusNotSyncingText;
                 case SyncState.Started:
-                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusStartedText");
+                    return Strings.Resources.SyncStatusStartedText;
                 case SyncState.Stopped:
-                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusStoppedText");
+                    return Strings.Resources.SyncStatusStoppedText;
                 case SyncState.Syncing:
-                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusSyncingText");
+                    return Strings.Resources.SyncStatusSyncingText;
                 case SyncState.Uptodate:
-                    return ResourceLoader.GetForCurrentView().GetString("SyncStatusUptodateText");
+                    return Strings.Resources.SyncStatusUptodateText;
             }
 
             return "";
@@ -163,7 +164,7 @@ namespace Riff.UWP.Pages
             {
                 // Set name for the settings item
                 var settingsMenuItem = (Microsoft.UI.Xaml.Controls.NavigationViewItem)NavView.SettingsItem;
-                settingsMenuItem.Content = ResourceLoader.GetForCurrentView().GetString("NavViewSettingsContent");
+                settingsMenuItem.Content = Strings.Resources.NavViewSettingsContent;
                 NavView.SelectedItem = settingsMenuItem;
             }
             else
@@ -201,8 +202,26 @@ namespace Riff.UWP.Pages
 
         public static string FormatSearchItemDescription(string description, SearchItemType type)
         {
-            string format = searchItemDescriptionFormatMap[type];
-            return string.Format(ResourceLoader.GetForCurrentView().GetString(format), description ?? ResourceLoader.GetForCurrentView().GetString("UnknownText"));
+            string value = string.Empty;
+            switch (type)
+            {
+                case SearchItemType.Album:
+                    value = string.Format(Strings.Resources.SearchItemAlbumDescriptionFormat, description ?? Strings.Resources.UnknownArtistText);
+                    break;
+                case SearchItemType.Artist:
+                    value = string.Format(Strings.Resources.SearchItemArtistDescriptionFormat, description);
+                    break;
+                case SearchItemType.Genre:
+                    value = string.Format(Strings.Resources.SearchItemGenreDescriptionFormat, description);
+                    break;
+                case SearchItemType.Track:
+                case SearchItemType.TrackArtist:
+                    value = string.Format(Strings.Resources.SearchItemTrackDescriptionFormat, description ?? Strings.Resources.UnknownArtistText);
+                    break;
+                default:
+                    break;
+            }
+            return value;
         }
 
         public static string FormatSearchItemIcon(SearchItemType type)

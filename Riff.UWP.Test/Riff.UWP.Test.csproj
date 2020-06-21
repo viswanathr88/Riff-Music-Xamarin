@@ -202,17 +202,17 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExpressionBuilder\ExpressionBuilder.csproj">
-      <Project>{97f79cb4-fb7b-4dc3-8a08-28fa5694a73c}</Project>
-      <Name>ExpressionBuilder</Name>
+    <ProjectReference Include="..\Riff.Core\Riff.Core.csproj">
+      <Project>{bbd17f58-9a49-451c-87fa-9383fa7d551d}</Project>
+      <Name>Riff.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Riff.Data.Sqlite\Riff.Data.Sqlite.csproj">
       <Project>{4497c461-2030-46ad-a065-8ce33cf9f7a6}</Project>
       <Name>Riff.Data.Sqlite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Riff\Riff.Core.csproj">
-      <Project>{91416F7A-1829-47A0-8632-4D67891A7914}</Project>
-      <Name>Riff.Core</Name>
+    <ProjectReference Include="..\Riff.UWP.UI\Riff.UWP.UI.csproj">
+      <Project>{51a53fc7-0779-4cb6-8664-e3f15d18a3ed}</Project>
+      <Name>Riff.UWP.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
@@ -226,8 +226,7 @@
     </Page>
   </ItemGroup>
   <Import Project="..\Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems" Label="Shared" />
-  <Import Project="..\Riff.UWP.UI\Riff.UWP.UI.projitems" Label="Shared" />
-  <Import Project="..\Riff.Test\Riff.Test.projitems" Label="Shared" />
+  <Import Project="..\Riff.Core.Test\Riff.Core.Test.projitems" Label="Shared" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

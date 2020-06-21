@@ -1,17 +1,15 @@
-﻿<local:ArtistPageBase
-    x:Class="Riff.UWP.Pages.ArtistPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Riff.UWP.Pages"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:Riff.UWP.ViewModel"
-    xmlns:data="using:Riff.Data"
-    xmlns:controls="using:Riff.UWP.Controls"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}"
-    HeaderOpacity="1.0">
+﻿<local:ArtistPageBase x:Class="Riff.UWP.Pages.ArtistPage"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:controls="using:Riff.UWP.Controls"
+                      xmlns:local="using:Riff.UWP.Pages"
+                      xmlns:vm="using:Riff.UWP.ViewModel"
+                      mc:Ignorable="d"
+                      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                      ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}"
+                      HeaderOpacity="1.0">
 
     <Page.Resources>
         <CollectionViewSource x:Name="CVSExpandedAlbums"
@@ -148,7 +146,7 @@
                                        Foreground="{ThemeResource SystemControlForegroundChromeGrayBrush}"
                                        x:Phase="1"
                                        RelativePanel.Below="AlbumName"
-                                       RelativePanel.RightOf="AlbumArtContainer"/>
+                                       RelativePanel.RightOf="AlbumArtContainer" />
                         </RelativePanel>
                     </DataTemplate>
                 </GroupStyle.HeaderTemplate>

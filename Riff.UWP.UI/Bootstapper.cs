@@ -6,6 +6,7 @@ using Riff.Data.Sqlite;
 using Riff.Sync;
 using Riff.UWP.Authentication;
 using Riff.UWP.Storage;
+using Riff.UWP.Strings;
 using Riff.UWP.ViewModel;
 using System.IO;
 using System.Net.Http;
@@ -30,7 +31,7 @@ namespace Riff.UWP
             SimpleIoc.Default.Register<IAppPreferences>(() => SimpleIoc.Default.GetInstance<AppPreferences>());
             SimpleIoc.Default.Register(() => new HttpClient(new HttpClientHandler() { AllowAutoRedirect = false }));
 
-            var loginManager = new WindowsLoginManager(SimpleIoc.Default.GetInstance<HttpClient>(), ResourceLoader.GetForCurrentView().GetString(LoginDescriptionKey));
+            var loginManager = new WindowsLoginManager(SimpleIoc.Default.GetInstance<HttpClient>(), Resources.LoginDescription);
             SimpleIoc.Default.Register<ILoginManager>(() => new CacheReadyLoginManager(loginManager, DefaultPath));
 
             SimpleIoc.Default.Register<IMusicMetadata>(() => new MusicMetadata(Path.Combine(DefaultPath, DatabaseName)));

@@ -369,13 +369,13 @@
     <AndroidResource Include="Resources\anim\slide_up.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Riff.Core\Riff.Core.csproj">
+      <Project>{bbd17f58-9a49-451c-87fa-9383fa7d551d}</Project>
+      <Name>Riff.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Riff.Data.Sqlite\Riff.Data.Sqlite.csproj">
       <Project>{0d0f3dbe-f0cf-4bc7-a578-1529daae80bd}</Project>
       <Name>Riff.Data.Sqlite</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Riff\Riff.Core.csproj">
-      <Project>{91416f7a-1829-47a0-8632-4d67891a7914}</Project>
-      <Name>Riff.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

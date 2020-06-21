@@ -18,7 +18,7 @@ namespace Riff.UWP.Pages
         public SettingsPage()
         {
             this.InitializeComponent();
-            HeaderText = ResourceLoader.GetForCurrentView().GetString("SettingsPageHeader");
+            HeaderText = Strings.Resources.SettingsPageHeader;
         }
 
         private async void SignOutButton_Click(object sender, RoutedEventArgs e)

@@ -34,8 +34,7 @@ namespace Riff.UWP.Pages
 
         public static string FormatAlbumsCount(int albumsCount)
         {
-            string resourceKey = albumsCount == 1 ? "ArtistsPageOneAlbumFormat" : "ArtistsPageMultipleAlbumFormat";
-            return string.Format(ResourceLoader.GetForCurrentView().GetString(resourceKey), albumsCount);
+            return string.Format(albumsCount == 1 ? Strings.Resources.ArtistsPageOneAlbumFormat : Strings.Resources.ArtistsPageMultipleAlbumFormat, albumsCount);
         }
 
         private void ArtistList_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)

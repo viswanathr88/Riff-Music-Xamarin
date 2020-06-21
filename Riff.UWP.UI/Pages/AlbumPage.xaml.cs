@@ -30,7 +30,7 @@ namespace Riff.UWP.Pages
         {
             this.InitializeComponent();
             NavigationCacheMode = NavigationCacheMode.Enabled;
-            HeaderText = ResourceLoader.GetForCurrentView().GetString("AlbumPageHeader");
+            HeaderText = Strings.Resources.AlbumPageHeader;
         }
 
         public MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
