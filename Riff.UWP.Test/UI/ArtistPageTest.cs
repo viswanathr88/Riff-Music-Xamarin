@@ -93,10 +93,10 @@ namespace Riff.UWP.Test.UI
             var artist = new Artist() { Id = 1, Name = null };
             await view.LoadPage<ArtistPage>(artist);
 
-            await view.WaitForElementAndExecute<TextBlock>("ArtistName", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownArtistText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("AlbumName", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownTitleText"), textBlock.Text));
-            await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(ResourceLoader.GetForCurrentView().GetString("UnknownArtistText"), textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("ArtistName", (textBlock) => Assert.Equal(Strings.Resources.UnknownArtistText, textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("AlbumName", (textBlock) => Assert.Equal(Strings.Resources.UnknownAlbumText, textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(Strings.Resources.UnknownTitleText, textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(Strings.Resources.UnknownArtistText, textBlock.Text));
         }
 
         [Fact]

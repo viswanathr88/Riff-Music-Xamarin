@@ -81,9 +81,9 @@ namespace Riff.UWP.Test.UI
             // Load Tracks Page
             await view.LoadPage<AlbumPage>(albums[0]);
 
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumName", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownAlbumText") == textBlock.Text));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumArtist", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownArtistText") == textBlock.Text));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumGenre", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownGenreText") == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumName", (textBlock) => Strings.Resources.UnknownAlbumText == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumArtist", (textBlock) => Strings.Resources.UnknownArtistText == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumGenre", (textBlock) => Strings.Resources.UnknownGenreText == textBlock.Text));
         }
 
         [Fact]
@@ -139,8 +139,8 @@ namespace Riff.UWP.Test.UI
             await view.LoadPage<AlbumPage>(album);
 
             var track = driveItems.First().Track;
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackTitle", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownTitleText") == textBlock.Text));
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackArtist", (textBlock) => ResourceLoader.GetForCurrentView().GetString("UnknownArtistText") == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackTitle", (textBlock) => Strings.Resources.UnknownTitleText == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("TrackArtist", (textBlock) => Strings.Resources.UnknownArtistText == textBlock.Text));
         }
 
         [Fact]

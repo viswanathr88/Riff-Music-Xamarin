@@ -19,27 +19,26 @@ namespace Riff.UWP.Converters
             }
 
             string type = (string)parameter;
-            string key;
+            string result;
             switch (type)
             {
                 case "album":
-                    key = "UnknownAlbumText";
+                    result = Strings.Resources.UnknownAlbumText;
                     break;
                 case "artist":
-                    key = "UnknownArtistText";
+                    result = Strings.Resources.UnknownArtistText;
                     break;
                 case "genre":
-                    key = "UnknownGenreText";
+                    result = Strings.Resources.UnknownGenreText;
                     break;
                 case "track":
-                    key = "UnknownTitleText";
+                    result = Strings.Resources.UnknownTitleText;
                     break;
                 default:
-                    key = "UnknownText";
+                    result = Strings.Resources.UnknownText;
                     break;
             }
-
-            return ResourceLoader.GetForCurrentView().GetString(key);
+            return result;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

@@ -6,7 +6,7 @@ using Windows.UI.Text.Core;
 
 namespace Riff.UWP.Storage
 {
-    sealed class AppPreferences : IAppPreferences
+    public sealed class AppPreferences : IAppPreferences
     {
         private readonly string deltaUrlKey = "DeltaUrl";
         private readonly string lastSyncTimeKey = "LastSyncTime";

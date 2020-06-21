@@ -17,7 +17,7 @@ namespace Riff.UWP.Pages
         public ArtistPage()
         {
             this.InitializeComponent();
-            HeaderText = ResourceLoader.GetForCurrentView().GetString("ArtistPageHeader");
+            HeaderText = Strings.Resources.ArtistPageHeader;
             Loaded += ArtistPage_Loaded;
         }
 
