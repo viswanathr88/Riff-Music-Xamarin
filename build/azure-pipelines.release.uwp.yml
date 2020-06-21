@@ -9,6 +9,8 @@ pr: none
 pool:
   vmImage: 'windows-latest'
 
+name: 1.$(Date:yyMM).$(DayOfMonth)$(Rev:rr).0
+
 variables:
 - group: 'riff-uwp-pipeline'
 - name: 'solution'
@@ -26,6 +28,12 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
+
+- task: PowerShell@2
+  displayName: 'Set AppxManifest Version Number'
+  inputs:
+    filePath: $(Build.SourcesDirectory)\build\scripts\UpdateAppxManifestVersion.ps1
+    arguments: '-AppxManifest $(Build.SourcesDirectory)\Riff.UWP\Package.appxmanifest -Version $(Build.BuildNumber)'
 
 - task: DownloadSecureFile@1
   name: secureCert
