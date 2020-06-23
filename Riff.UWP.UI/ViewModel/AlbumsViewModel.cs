@@ -27,10 +27,11 @@ namespace Riff.UWP.ViewModel
         private readonly IMusicMetadata metadata;
         private AlbumSortType sortType = AlbumSortType.ReleaseYear;
         private SortOrder sortOrder = SortOrder.Descending;
+        private bool isCollectionEmpty = false;
 
         public AlbumsViewModel(IMusicMetadata metadata)
         {
-            this.metadata = metadata;
+            this.metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
             metadata.Refreshed += Metadata_Refreshed;
         }
 
@@ -50,6 +51,12 @@ namespace Riff.UWP.ViewModel
         {
             get => sortOrder;
             set => SetProperty(ref this.sortOrder, value);
+        }
+
+        public bool IsCollectionEmpty
+        {
+            get => isCollectionEmpty;
+            set => SetProperty(ref this.isCollectionEmpty, value);
         }
 
         public override async Task LoadAsync()
@@ -74,6 +81,8 @@ namespace Riff.UWP.ViewModel
 
                 Items.ApplyDiff(diffList);
             }
+
+            IsCollectionEmpty = (Items.Count == 0);
 
             IsLoaded = true;
         }

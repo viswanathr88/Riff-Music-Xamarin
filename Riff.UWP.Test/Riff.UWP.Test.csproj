@@ -143,6 +143,8 @@
     <Compile Include="UI\TrackListTest.cs" />
     <Compile Include="UI\TracksPageTest.cs" />
     <Compile Include="UI\GridColumnVisibilityConverterTest.cs" />
+    <Compile Include="ViewModel\AlbumsViewModelTest.cs" />
+    <Compile Include="ViewModel\ArtistsViewModelTests.cs" />
     <Compile Include="ViewModel\MediaListTest.cs" />
     <Compile Include="ViewModel\PlayerViewModelTest.cs" />
     <Compile Include="ViewModel\TracksViewModelTest.cs" />

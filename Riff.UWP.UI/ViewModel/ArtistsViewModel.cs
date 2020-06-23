@@ -25,6 +25,7 @@ namespace Riff.UWP.ViewModel
     {
         private ObservableCollection<ArtistItemViewModel> items = new ObservableCollection<ArtistItemViewModel>();
         private readonly MusicLibrary library;
+        private bool isCollectionEmpty = false;
 
         public ArtistsViewModel(MusicLibrary library)
         {
@@ -38,6 +39,12 @@ namespace Riff.UWP.ViewModel
             set => SetProperty(ref this.items, value);
         }
 
+        public bool IsCollectionEmpty
+        {
+            get => isCollectionEmpty;
+            set => SetProperty(ref this.isCollectionEmpty, value);
+        }
+
         public override async Task LoadAsync()
         {
             var groups = await Task.Run(() => GetArtists());
@@ -45,6 +52,8 @@ namespace Riff.UWP.ViewModel
             {
                 Items.Add(new ArtistItemViewModel(group, library.AlbumArts));
             }
+
+            IsCollectionEmpty = (Items.Count == 0);
 
             IsLoaded = true;
         }
