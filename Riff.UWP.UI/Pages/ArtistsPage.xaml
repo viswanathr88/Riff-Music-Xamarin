@@ -49,5 +49,31 @@
                 </Grid>
             </DataTemplate>
         </GridView.ItemTemplate>
+
+        <GridView.Header>
+            <!-- Empty collection grid -->
+            <Grid x:Name="EmptyCollectionGrid"
+                  x:Load="{x:Bind ViewModel.IsCollectionEmpty, Mode=OneWay}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Image Source="/Assets/Backgrounds/NoAlbums.png"
+                       MaxWidth="200"
+                       Stretch="Uniform"
+                       Grid.Row="0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+
+                <TextBlock Grid.Row="1"
+                           Text="Your collection is empty. Please add some music to your OneDrive to browse them here"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource BaseTextBlockStyle}" />
+            </Grid>
+        </GridView.Header>
     </GridView>
 </local:ArtistsPageBase>
