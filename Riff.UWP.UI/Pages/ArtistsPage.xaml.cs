@@ -1,4 +1,6 @@
-﻿using Riff.UWP.ViewModel;
+﻿using CommonServiceLocator;
+using Riff.UWP.ViewModel;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -16,6 +18,8 @@ namespace Riff.UWP.Pages
     /// </summary>
     public sealed partial class ArtistsPage : ArtistsPageBase
     {
+        private ArtistItemViewModel currentFlyoutContext;
+
         public ArtistsPage()
         {
             this.InitializeComponent();
@@ -44,6 +48,39 @@ namespace Riff.UWP.Pages
                 var item = e.ClickedItem as ArtistItemViewModel;
                 var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
                 parentFrame.Navigate(typeof(ArtistPage), item.Model, new EntranceNavigationTransitionInfo());
+            }
+        }
+
+        private async void PlayArtistContextMenuItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await AddToPlayingListAsync(autoplay: true);
+        }
+
+        private async void AddToNowPlayingListMenuItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await AddToPlayingListAsync(autoplay: false);
+        }
+
+        private void ArtistContextMenu_Opening(object sender, object e)
+        {
+            if (sender is MenuFlyout flyout && flyout.Target is GridViewItem gvitem)
+            {
+                var index = ArtistList.IndexFromContainer(gvitem);
+                currentFlyoutContext = ViewModel.Items[index];
+            }
+        }
+
+        private void ArtistContextMenu_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+        {
+            currentFlyoutContext = null;
+        }
+
+        private async Task AddToPlayingListAsync(bool autoplay)
+        {
+            if (currentFlyoutContext != null)
+            {
+                var player = ServiceLocator.Current.GetInstance<IPlayer>();
+                await player.PlayAsync(currentFlyoutContext.Model, autoplay);
             }
         }
     }

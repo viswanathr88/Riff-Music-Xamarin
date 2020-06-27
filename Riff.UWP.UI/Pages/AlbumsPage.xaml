@@ -9,7 +9,8 @@
                        xmlns:data="using:Riff.Data"
                        xmlns:conv="using:Riff.UWP.Converters"
                        xmlns:sys="using:System"
-                       mc:Ignorable="d"
+                      xmlns:Windows10version1809="http://schemas.microsoft.com/winfx/2006/xaml/presentation?IsApiContractPresent(Windows.Foundation.UniversalApiContract, 7)"
+                      mc:Ignorable="d"
                        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
         <ResourceDictionary>
@@ -80,6 +81,47 @@
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem" BasedOn="{StaticResource BorderlessGridViewItem}">
                     <Setter Property="Margin" Value="0,0,20,20" />
+                    <Setter Property="ContextFlyout">
+                        <Setter.Value>
+                            <MenuFlyout x:Name="AlbumContextMenu"
+                                        Windows10version1809:AreOpenCloseAnimationsEnabled="True"
+                                        Opening="AlbumContextMenu_Opening"
+                                        Closing="AlbumContextMenu_Closing">
+                                <MenuFlyout.MenuFlyoutPresenterStyle>
+                                    <Style TargetType="MenuFlyoutPresenter">
+                                        <Setter Property="Margin"
+                                                Value="0,0,20,0" />
+                                        <Setter Property="MinWidth"
+                                                Value="180" />
+                                    </Style>
+                                </MenuFlyout.MenuFlyoutPresenterStyle>
+                                <MenuFlyoutItem x:Name="PlayAlbumContextMenuItem"
+                                                x:Uid="PlayAlbumContextMenuItem"
+                                                Text=""
+                                                Click="PlayAlbumContextMenuItem_Click"
+                                                Icon="Play" />
+
+                                <MenuFlyoutItem x:Name="BrowseArtistContextMenuItem"
+                                                x:Uid="BrowseArtistContextMenuItem"
+                                                Text=""
+                                                Click="BrowseArtistContextMenuItem_Click"
+                                                Icon="Contact" />
+
+                                <MenuFlyoutSubItem x:Name="AddToSubMenuItem"
+                                                   x:Uid="AddToSubMenuItem"
+                                                   Text=""
+                                                   Icon="Add">
+                                    <MenuFlyoutItem x:Name="AddToNowPlayingListMenuItem"
+                                                    x:Uid="AddToNowPlayingListMenuItem"
+                                                    Text=""
+                                                    Click="AddToNowPlayingListMenuItem_Click" />
+
+                                    <!-- Populate all playlists when the sub menu opens -->
+                                </MenuFlyoutSubItem>
+
+                            </MenuFlyout>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </GridView.ItemContainerStyle>
             <GridView.ItemTemplate>

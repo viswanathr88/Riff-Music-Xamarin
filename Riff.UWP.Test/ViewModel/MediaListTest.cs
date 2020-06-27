@@ -29,7 +29,7 @@ namespace Riff.UWP.Test.ViewModel
         [Fact]
         public async Task SetItems_Null_Throw()
         {
-            await Assert.ThrowsAsync<ArgumentNullException>(() => mediaList.SetItems(null, 0));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => mediaList.AddItems(null, 0));
         }
 
         [Fact]
@@ -41,8 +41,8 @@ namespace Riff.UWP.Test.ViewModel
             items.Add(new DriveItem() { Id = "TestId3" });
             items.Add(new DriveItem() { Id = "TestId4" });
 
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => mediaList.SetItems(items, 4));
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => mediaList.SetItems(items, 20));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => mediaList.AddItems(items, 4));
+            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => mediaList.AddItems(items, 20));
         }
 
         [Fact(Skip = "Not deterministic")]
@@ -50,7 +50,7 @@ namespace Riff.UWP.Test.ViewModel
         {
             List<DriveItem> items = new List<DriveItem>();
             items.Add(new DriveItem() { Id = "TestId", Track = new Track() { Id = 1, Album = new Album() { Id = 1, Artist = new Artist() { Id = 10 } }}});
-            await mediaList.SetItems(items, 0);
+            await mediaList.AddItems(items, 0);
             Assert.Single(mediaList);
             Assert.NotNull(mediaList[0]);
             var item = mediaList[0];
@@ -68,7 +68,7 @@ namespace Riff.UWP.Test.ViewModel
             items.Add(new DriveItem() { Id = "TestId3", Track = new Track() { Id = 3, Title = "Title3", Album = new Album() { Id = 1, Artist = new Artist() { Id = 10 } } } });
             items.Add(new DriveItem() { Id = "TestId4", Track = new Track() { Id = 4, Title = "Title4", Album = new Album() { Id = 1, Artist = new Artist() { Id = 10 } } } });
 
-            await mediaList.SetItems(items, 2);
+            await mediaList.AddItems(items, 2);
             Assert.Equal(items[2].Track.Title, mediaList[0].Title);
         }
     }

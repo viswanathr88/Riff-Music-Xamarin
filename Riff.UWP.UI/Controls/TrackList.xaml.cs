@@ -16,6 +16,7 @@ namespace Riff.UWP.Controls
 {
     public sealed partial class TrackList : UserControl
     {
+        private DriveItem currentFlyoutContext;
         public TrackList()
         {
             this.InitializeComponent();
@@ -444,6 +445,36 @@ namespace Riff.UWP.Controls
         private bool IsCurrentIndexWithinRange()
         {
             return Player.PlaybackList.CurrentIndex >= 0 && Player.PlaybackList.CurrentIndex < Player.PlaybackList.Count;
+        }
+
+        private async void PlayTrackContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentFlyoutContext != null && PlayableTracks != null && PlayableTracks.Count > 0)
+            {
+                var index = Convert.ToUInt32(PlayableTracks.IndexOf(currentFlyoutContext));
+                await Player.PlayAsync(PlayableTracks, index);
+            }
+        }
+
+        private async void AddToNowPlayingListMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentFlyoutContext != null)
+            {
+                await Player.PlayAsync(new List<DriveItem>() { currentFlyoutContext }, 0, true);
+            }
+        }
+
+        private void TrackContextMenu_Opening(object sender, object e)
+        {
+            if (sender is MenuFlyout flyout && flyout.Target is ListViewItem lvitem && lvitem.Content is DriveItem item)
+            {
+                currentFlyoutContext = item;
+            }
+        }
+
+        private void TrackContextMenu_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+        {
+            currentFlyoutContext = null;
         }
     }
 }

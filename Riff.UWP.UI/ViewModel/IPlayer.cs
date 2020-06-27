@@ -11,6 +11,10 @@ namespace Riff.UWP.ViewModel
 
         IMediaList PlaybackList { get; }
 
-        Task PlayAsync(IList<DriveItem> items, uint startIndex);
+        Task PlayAsync(IList<DriveItem> items, uint startIndex, bool autoplay = true);
+
+        Task PlayAsync(Album album, bool autoplay = true);
+
+        Task PlayAsync(Artist artist, bool autoplay = true);
     }
 }

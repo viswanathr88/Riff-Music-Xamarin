@@ -20,6 +20,40 @@
             <Style TargetType="GridViewItem">
                 <Setter Property="Margin"
                         Value="0,0,20,20" />
+                <Setter Property="ContextFlyout">
+                    <Setter.Value>
+                        <MenuFlyout x:Name="ArtistContextMenu"
+                                    Opening="ArtistContextMenu_Opening"
+                                    Closing="ArtistContextMenu_Closing">
+                            <MenuFlyout.MenuFlyoutPresenterStyle>
+                                <Style TargetType="MenuFlyoutPresenter">
+                                    <Setter Property="Margin"
+                                            Value="0,0,20,0" />
+                                    <Setter Property="MinWidth"
+                                            Value="180" />
+                                </Style>
+                            </MenuFlyout.MenuFlyoutPresenterStyle>
+                            <MenuFlyoutItem x:Name="PlayArtistContextMenuItem"
+                                            x:Uid="PlayArtistContextMenuItem"
+                                            Text=""
+                                            Click="PlayArtistContextMenuItem_Click"
+                                            Icon="Play" />
+
+                            <MenuFlyoutSubItem x:Name="AddToSubMenuItem"
+                                               x:Uid="AddToSubMenuItem"
+                                               Text=""
+                                               Icon="Add">
+                                <MenuFlyoutItem x:Name="AddToNowPlayingListMenuItem"
+                                                x:Uid="AddToNowPlayingListMenuItem"
+                                                Text=""
+                                                Click="AddToNowPlayingListMenuItem_Click" />
+
+                                <!-- Populate all playlists when the sub menu opens -->
+                            </MenuFlyoutSubItem>
+
+                        </MenuFlyout>
+                    </Setter.Value>
+                </Setter>
             </Style>
         </GridView.ItemContainerStyle>
         <GridView.ItemTemplate>
@@ -27,6 +61,7 @@
                 <Grid Height="120"
                       Width="220"
                       Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                    
                     <ParallaxView Source="{Binding ElementName=ArtistList}"
                                   VerticalShift="100">
                         <Image Stretch="UniformToFill"
