@@ -1,4 +1,5 @@
 ﻿using Riff.Data;
+using Riff.Data.Access;
 using Riff.Sync;
 using System;
 using System.Collections.Generic;
@@ -55,18 +56,6 @@ namespace Riff.UWP.ViewModel
             private set => SetProperty(ref this.isPlayerVisible, value);
         }
 
-        public async Task PlayAsync(IList<DriveItem> items, uint startIndex)
-        {
-            PlaybackList = new MediaList(library, urlDownloader);
-            MediaPlayer.Source = list.InnerList;
-            MediaPlayer.AutoPlay = true;
-
-            await Task.Run(async () =>
-            {
-                await PlaybackList.SetItems(items, startIndex);
-            });
-        }
-
         public override Task LoadAsync()
         {
             return Task.CompletedTask;
@@ -78,6 +67,61 @@ namespace Riff.UWP.ViewModel
             {
                 CurrentTrackChanged?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        public async Task PlayAsync(Album album, bool autoplay = true)
+        {
+            var options = new DriveItemAccessOptions()
+            {
+                IncludeTrack = true,
+                IncludeTrackAlbum = true,
+                AlbumFilter = album.Id,
+                SortType = TrackSortType.ReleaseYear,
+                SortOrder = SortOrder.Descending
+            };
+
+            await PlayAsync(options, 0, autoplay);
+        }
+
+        public async Task PlayAsync(Artist artist, bool autoplay = true)
+        {
+            var options = new DriveItemAccessOptions()
+            {
+                IncludeTrack = true,
+                IncludeTrackAlbum = true,
+                AlbumArtistFilter = artist.Id,
+                SortType = TrackSortType.ReleaseYear,
+                SortOrder = SortOrder.Descending
+            };
+
+            await PlayAsync(options, 0, autoplay);
+        }
+
+        public async Task PlayAsync(IList<DriveItem> items, uint startIndex, bool autoplay = true)
+        {
+            await PlayAsync(() => items, startIndex, autoplay);
+        }
+
+        private async Task PlayAsync(DriveItemAccessOptions options, uint startIndex, bool autoplay)
+        {
+            await PlayAsync(() => library.Metadata.DriveItems.Get(options), startIndex, autoplay);
+        }
+
+        private async Task PlayAsync(Func<IList<DriveItem>> itemFetcher, uint startIndex, bool autoplay)
+        {
+            if (PlaybackList == null || MediaPlayer.Source == null || autoplay)
+            {
+                PlaybackList = new MediaList(library, urlDownloader);
+                MediaPlayer.Source = list.InnerList;
+            }
+
+            MediaPlayer.AutoPlay = autoplay;
+
+            await Task.Run(async () =>
+            {
+                var items = itemFetcher();
+                await PlaybackList.AddItems(items, startIndex);
+            });
         }
     }
 }

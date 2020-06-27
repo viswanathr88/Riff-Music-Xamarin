@@ -137,5 +137,19 @@ namespace Riff.UWP.Pages
         {
             Frame.Navigate(typeof(ArtistPage), ViewModel.AlbumInfo.Artist, new EntranceNavigationTransitionInfo());
         }
+
+        private async void AddToNowPlayingListMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            await HandlePlayClick(sender, true);
+        }
+
+        public async static Task HandlePlayClick(object sender, bool addToCurrentList)
+        {
+            if (sender is FrameworkElement element && element.Tag is Album album)
+            {
+                var player = ServiceLocator.Current.GetInstance<IPlayer>();
+                await player.PlayAsync(album, addToCurrentList);
+            }
+        }
     }
 }

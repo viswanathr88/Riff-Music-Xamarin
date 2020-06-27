@@ -58,7 +58,7 @@ namespace Riff.UWP.ViewModel
             }
         }
 
-        public async Task SetItems(IList<DriveItem> items, uint startIndex)
+        public async Task AddItems(IList<DriveItem> items, uint startIndex)
         {
             if (items == null)
             {
@@ -70,7 +70,7 @@ namespace Riff.UWP.ViewModel
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
-            int itemsCount = Math.Min(MediaListMaxSize, items.Count);
+            int itemsCount = Math.Min(MediaListMaxSize - InnerList.Items.Count, items.Count);
             int index = Convert.ToInt32(startIndex);
 
             while (itemsCount-- > 0)

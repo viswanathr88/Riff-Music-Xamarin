@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Media;
 
 namespace Riff.UWP.ViewModel
 {
-    public interface IMediaListItem
+    public interface IMediaListItem : INotifyPropertyChanged
     {
         string Album { get; }
         string AlbumArtist { get; }

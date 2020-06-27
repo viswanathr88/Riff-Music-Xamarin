@@ -1,6 +1,8 @@
 ﻿using CommonServiceLocator;
+using Riff.Data;
 using Riff.UWP.ViewModel;
-using Windows.ApplicationModel.Resources;
+using System.Threading.Tasks;
+using Windows.UI.Xaml;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -29,6 +31,20 @@ namespace Riff.UWP.Pages
         private async void ArtistToolbarPlayButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             await AlbumList.Play();
+        }
+
+        private async void AddToNowPlayingListMenuItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            await HandlePlayClick(sender, true);
+        }
+
+        public async static Task HandlePlayClick(object sender, bool addToCurrentList)
+        {
+            if (sender is FrameworkElement element && element.Tag is Artist artist)
+            {
+                var player = ServiceLocator.Current.GetInstance<IPlayer>();
+                await player.PlayAsync(artist, addToCurrentList);
+            }
         }
     }
 }

@@ -114,8 +114,12 @@ namespace Riff.UWP.Pages
         private void NavView_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateSyncStateIcon();
+            if (NavView.SelectedItem == null)
+            {
+                NavView_Navigate(pages.First().Key, new EntranceNavigationTransitionInfo());
+            }
             NavView.SelectedItem = NavView.MenuItems[0];
-            NavView_Navigate(pages.First().Key, new EntranceNavigationTransitionInfo());
+
         }
 
         private void NavView_ItemInvoked(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewItemInvokedEventArgs args)

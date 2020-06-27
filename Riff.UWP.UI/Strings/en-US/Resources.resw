@@ -126,6 +126,12 @@
   <data name="AccountSettingsRequireSignInInformationHeader.Text" xml:space="preserve">
     <value>Please login to OneDrive so that Riff Music can keep your local library up to date.</value>
   </data>
+  <data name="AddToNowPlayingListMenuItem.Text" xml:space="preserve">
+    <value>Now Playing</value>
+  </data>
+  <data name="AddToSubMenuItem.Text" xml:space="preserve">
+    <value>Add to</value>
+  </data>
   <data name="AlbumPageHeader" xml:space="preserve">
     <value>Album</value>
   </data>
@@ -161,6 +167,9 @@
   </data>
   <data name="ArtistToolbarPlayButton.Label" xml:space="preserve">
     <value>Play Artist</value>
+  </data>
+  <data name="BrowseArtistContextMenuItem.Text" xml:space="preserve">
+    <value>Browse artist</value>
   </data>
   <data name="FREAppName.Text" xml:space="preserve">
     <value>Riff Music</value>
@@ -222,8 +231,17 @@
   <data name="PauseSyncButton.Content" xml:space="preserve">
     <value>Pause sync</value>
   </data>
+  <data name="PlayAlbumContextMenuItem.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="PlayArtistContextMenuItem.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
   <data name="PlaylistPageHeader" xml:space="preserve">
     <value>Playlists</value>
+  </data>
+  <data name="PlayTrackContextMenuItem.Text" xml:space="preserve">
+    <value>Play</value>
   </data>
   <data name="ResumeSyncButton.Content" xml:space="preserve">
     <value>Resume sync</value>

@@ -1,12 +1,15 @@
 ﻿using CommonServiceLocator;
 using Riff.Data;
+using Riff.Extensions;
 using Riff.UWP.ViewModel;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
@@ -26,6 +29,7 @@ namespace Riff.UWP.Pages
     public sealed partial class AlbumsPage : AlbumsPageBase
     {
         private Album _storedItem = null;
+        private Album currentFlyoutContext = null;
         public AlbumsPage()
         {
             this.InitializeComponent();
@@ -171,6 +175,48 @@ namespace Riff.UWP.Pages
             };
 
             root.PointerExited += (sender, args) => rootVisual.StartAnimation("Scale", pointerExitedAnimation);
+        }
+
+        private void BrowseArtistContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentFlyoutContext != null)
+            {
+                var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
+                parentFrame.Navigate(typeof(ArtistPage), currentFlyoutContext.Artist, new EntranceNavigationTransitionInfo());
+            }
+        }
+
+        private async void PlayAlbumContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            await AddToPlayingListAsync(autoplay: true);
+        }
+
+        private async void AddToNowPlayingListMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            await AddToPlayingListAsync(autoplay: false);
+        }
+
+        private async Task AddToPlayingListAsync(bool autoplay)
+        {
+            if (currentFlyoutContext != null)
+            {
+                var player = ServiceLocator.Current.GetInstance<IPlayer>();
+                await player.PlayAsync(currentFlyoutContext, autoplay);
+            }
+        }
+
+        private void AlbumContextMenu_Opening(object sender, object e)
+        {
+            if (sender is MenuFlyout flyout && flyout.Target is GridViewItem gvitem)
+            {
+                var index = AlbumItems.IndexFromContainer(gvitem);
+                currentFlyoutContext = ViewModel.Items[index];
+            }
+        }
+
+        private void AlbumContextMenu_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+        {
+            currentFlyoutContext = null;
         }
     }
 }
