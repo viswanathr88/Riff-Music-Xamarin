@@ -5,8 +5,8 @@ namespace Riff.Droid.UI.MusicLibrary
 {
     public class LibraryArtistsFragment : Controls.LazyLoadedFragment
     {
-        private readonly Data.MusicLibrary library;
-        public LibraryArtistsFragment(Data.MusicLibrary library) : base(Resource.Layout.fragment_musiclibrary_artists)
+        private readonly IMusicLibrary library;
+        public LibraryArtistsFragment(IMusicLibrary library) : base(Resource.Layout.fragment_musiclibrary_artists)
         {
             this.library = library;
         }

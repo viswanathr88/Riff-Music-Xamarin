@@ -9,16 +9,16 @@ namespace Riff.Droid.UI.MusicLibrary
 {
     class ArtistListAdapter : Android.Support.V7.Widget.RecyclerView.Adapter
     {
-        private readonly Data.MusicLibrary library;
+        private readonly IMusicLibrary library;
         private readonly IList<Artist> artists = new List<Artist>();
         private readonly Random rnd = new Random(Guid.NewGuid().GetHashCode());
         private static readonly string[] separators = new string[] { " ", ".", "&", "-" };
         private readonly Action<Artist> selectionCallback;
 
-        public ArtistListAdapter(Data.MusicLibrary library, Action<Artist> selectionCallback)
+        public ArtistListAdapter(IMusicLibrary library, Action<Artist> selectionCallback)
         {
             this.library = library;
-            this.artists = this.library.GetArtists();
+            this.artists = this.library.Artists.GetAll();
             this.selectionCallback = selectionCallback;
         }
         public override int ItemCount => artists.Count;

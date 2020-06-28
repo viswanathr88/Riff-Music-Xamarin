@@ -33,7 +33,7 @@ namespace Riff.UWP.Pages
             HeaderText = Strings.Resources.AlbumPageHeader;
         }
 
-        public MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
+        public IMusicLibrary Library => ServiceLocator.Current.GetInstance<IMusicLibrary>();
 
         protected override void OnLoad(NavigationMode mode)
         {

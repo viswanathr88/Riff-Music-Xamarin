@@ -15,12 +15,12 @@ namespace Riff.UWP.ViewModel
     public sealed class MediaList : ObservableCollection<IMediaListItem>, INotifyPropertyChanged, IMediaList
     {
         private readonly ITrackUrlDownloader trackUrlDownloader;
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
         private IMediaListItem currentItem;
         private int currentIndex = -1;
         private static int MediaListMaxSize = 1000;
 
-        public MediaList(MusicLibrary library, ITrackUrlDownloader urlDownloader)
+        public MediaList(IMusicLibrary library, ITrackUrlDownloader urlDownloader)
         {
             this.library = library;
             this.trackUrlDownloader = urlDownloader;

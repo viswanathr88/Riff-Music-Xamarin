@@ -2,15 +2,12 @@
 using GalaSoft.MvvmLight.Ioc;
 using Riff.Authentication;
 using Riff.Data;
-using Riff.Data.Sqlite;
 using Riff.Sync;
 using Riff.UWP.Authentication;
 using Riff.UWP.Storage;
 using Riff.UWP.Strings;
 using Riff.UWP.ViewModel;
-using System.IO;
 using System.Net.Http;
-using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 
 namespace Riff.UWP
@@ -19,7 +16,6 @@ namespace Riff.UWP
     {
         private static readonly string DefaultPath = ApplicationData.Current.LocalCacheFolder.Path;
         private static readonly string DatabaseName = "Riff.db";
-        private static readonly string LoginDescriptionKey = "LoginDescription";
 
         static Bootstapper()
         {
@@ -34,8 +30,7 @@ namespace Riff.UWP
             var loginManager = new WindowsLoginManager(SimpleIoc.Default.GetInstance<HttpClient>(), Resources.LoginDescription);
             SimpleIoc.Default.Register<ILoginManager>(() => new CacheReadyLoginManager(loginManager, DefaultPath));
 
-            SimpleIoc.Default.Register<IMusicMetadata>(() => new MusicMetadata(Path.Combine(DefaultPath, DatabaseName)));
-            SimpleIoc.Default.Register(() => new MusicLibrary(DefaultPath, SimpleIoc.Default.GetInstance<IMusicMetadata>()));
+            SimpleIoc.Default.Register<IMusicLibrary>(() => new MusicLibrary(DefaultPath, DatabaseName));
             SimpleIoc.Default.Register<SyncEngine>();
             SimpleIoc.Default.Register<ITrackUrlDownloader>(() => SimpleIoc.Default.GetInstance<SyncEngine>());
 

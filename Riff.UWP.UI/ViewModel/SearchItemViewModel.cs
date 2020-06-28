@@ -9,10 +9,10 @@ namespace Riff.UWP.ViewModel
 {
     public sealed class SearchItemViewModel : ViewModelBase
     {
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
         private readonly SearchItem item;
         private BitmapImage image = null;
-        public SearchItemViewModel(MusicLibrary library, SearchItem item)
+        public SearchItemViewModel(IMusicLibrary library, SearchItem item)
         {
             this.library = library;
             this.item = item;

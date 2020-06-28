@@ -2,11 +2,9 @@
 using Android.Content;
 using Riff.Authentication;
 using Riff.Data;
-using Riff.Data.Sqlite;
 using Riff.Droid.Storage;
 using Riff.Sync;
 using System;
-using System.IO;
 using System.Net.Http;
 
 namespace Riff.Droid
@@ -18,8 +16,7 @@ namespace Riff.Droid
         private ITokenCache tokenCache;
         private IProfileCache profileCache;
         private IPreferences appPreferences;
-        private IMusicMetadata metadata;
-        private MusicLibrary musicLibrary;
+        private IMusicLibrary musicLibrary;
         private SyncEngine syncEngine;
         private const string tokenCachePreferenceFile = "com.riff.droid.tokencache.preferences";
         private const string appPreferenceFile = "com.riff.droid.app.preferences";
@@ -35,16 +32,16 @@ namespace Riff.Droid
             base.OnCreate();
         }
 
-        public IMusicMetadata MusicMetadata
+        public IMusicLibrary MusicLibrary
         {
             get
             {
-                if (this.metadata == null)
+                if (this.musicLibrary == null)
                 {
-                    this.metadata = new MusicMetadata(Path.Combine(DefaultPath, "Riff.db"));
+                    this.musicLibrary = new MusicLibrary(DefaultPath, "Riff.db");
                 }
 
-                return this.metadata;
+                return this.musicLibrary;
             }
         }
 
@@ -100,19 +97,6 @@ namespace Riff.Droid
                 }
 
                 return appPreferences;
-            }
-        }
-
-        public MusicLibrary MusicLibrary
-        {
-            get
-            {
-                if (musicLibrary == null)
-                {
-                    musicLibrary = new MusicLibrary(DefaultPath, MusicMetadata);
-                }
-
-                return musicLibrary;
             }
         }
 

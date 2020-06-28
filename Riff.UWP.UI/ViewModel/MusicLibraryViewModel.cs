@@ -13,16 +13,16 @@ namespace Riff.UWP.ViewModel
 
     public sealed class MusicLibraryViewModel : DataViewModel
     {
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
         private readonly Lazy<AlbumsViewModel> albums;
         private readonly Lazy<ArtistsViewModel> artists;
         private readonly Lazy<TracksViewModel> tracks;
         private MusicLibrarySection section = MusicLibrarySection.Albums;
 
-        public MusicLibraryViewModel(MusicLibrary library)
+        public MusicLibraryViewModel(IMusicLibrary library)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
-            albums = new Lazy<AlbumsViewModel>(() => new AlbumsViewModel(this.library.Metadata));
+            albums = new Lazy<AlbumsViewModel>(() => new AlbumsViewModel(this.library));
             artists = new Lazy<ArtistsViewModel>(() => new ArtistsViewModel(this.library));
             tracks = new Lazy<TracksViewModel>(() => new TracksViewModel(this.library));
         }

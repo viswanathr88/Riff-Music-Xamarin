@@ -8,14 +8,14 @@ namespace Riff.Droid.UI.MusicLibrary
 {
     class TrackListAdapter : Android.Support.V7.Widget.RecyclerView.Adapter
     {
-        private readonly Data.MusicLibrary library;
+        private readonly IMusicLibrary library;
         private readonly IList<Track> tracks;
         private readonly Action<Track> selectionHandler;
 
-        public TrackListAdapter(Data.MusicLibrary library, Action<Track> selectionHandler)
+        public TrackListAdapter(IMusicLibrary library, Action<Track> selectionHandler)
         {
             this.library = library;
-            this.tracks = this.library.GetTracks();
+            this.tracks = this.library.Tracks.Get();
             this.selectionHandler = selectionHandler;
         }
         public override int ItemCount => tracks.Count;

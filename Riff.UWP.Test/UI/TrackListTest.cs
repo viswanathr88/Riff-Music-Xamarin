@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Xunit;
@@ -20,11 +19,10 @@ namespace Riff.UWP.Test.UI
     [Collection("UITests")]
     public class TrackListTest : IAsyncLifetime, IDisposable
     {
-        private readonly Mock<IMusicMetadata> mockMetadata;
+        private readonly Mock<IMusicLibrary> mockLibrary;
         private readonly Mock<ITrackUrlDownloader> mockUrlDownloader;
         private readonly Mock<IMediaList> mockMediaList;
         private readonly Mock<IPlayer> mockPlayer;
-        private readonly MusicLibrary library;
 
         private readonly UITree view = new UITree();
 
@@ -48,17 +46,14 @@ namespace Riff.UWP.Test.UI
 
         public TrackListTest()
         {
-            mockMetadata = new Mock<IMusicMetadata>();
+            mockLibrary = new Mock<IMusicLibrary>();
             mockUrlDownloader = new Mock<ITrackUrlDownloader>();
             mockMediaList = new Mock<IMediaList>();
             mockPlayer = new Mock<IPlayer>();
             
-            SimpleIoc.Default.Register(() => mockMetadata.Object);
+            SimpleIoc.Default.Register(() => mockLibrary.Object);
             SimpleIoc.Default.Register(() => mockUrlDownloader.Object);
             SimpleIoc.Default.Register(() => mockPlayer.Object);
-
-            library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, SimpleIoc.Default.GetInstance<IMusicMetadata>());
-            SimpleIoc.Default.Register(() => library);
         }
 
         [Theory]
@@ -321,7 +316,7 @@ namespace Riff.UWP.Test.UI
 
         public void Dispose()
         {
-            SimpleIoc.Default.Unregister<IMusicMetadata>();
+            SimpleIoc.Default.Unregister<IMusicLibrary>();
             SimpleIoc.Default.Unregister<ITrackUrlDownloader>();
             SimpleIoc.Default.Unregister<MusicLibrary>();
             SimpleIoc.Default.Unregister<IPlayer>();

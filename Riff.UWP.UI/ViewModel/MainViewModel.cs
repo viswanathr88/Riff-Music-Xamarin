@@ -7,12 +7,12 @@ namespace Riff.UWP.ViewModel
 {
     public sealed class MainViewModel : DataViewModel
     {
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
 
         private readonly Lazy<SearchSuggestionsViewModel> searchSuggestionsVM;
         private readonly Lazy<SyncViewModel> syncVM;
 
-        public MainViewModel(MusicLibrary library, SyncEngine engine, IPreferences preferences)
+        public MainViewModel(IMusicLibrary library, SyncEngine engine, IPreferences preferences)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
 

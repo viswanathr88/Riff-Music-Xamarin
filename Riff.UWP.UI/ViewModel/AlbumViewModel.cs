@@ -1,5 +1,4 @@
 ﻿using Riff.Data;
-using Riff.Data.Access;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,12 +9,12 @@ namespace Riff.UWP.ViewModel
     public sealed class AlbumViewModel : DataViewModel<Album>
     {
         private Album album;
-        private readonly IMusicMetadata metadata;
+        private readonly IMusicLibrary library;
         private ObservableCollection<DriveItem> tracks;
 
-        public AlbumViewModel(IMusicMetadata metadata)
+        public AlbumViewModel(IMusicLibrary library)
         {
-            this.metadata = metadata;
+            this.library = library;
         }
 
         public Album AlbumInfo
@@ -43,7 +42,7 @@ namespace Riff.UWP.ViewModel
                     AlbumFilter = album.Id
                 };
 
-                var a = this.metadata.Albums.Get(albumOptions).First();
+                var a = this.library.Albums.Get(albumOptions).First();
                 await RunUISafe(() => AlbumInfo = a);
 
                 // Get tracks for album
@@ -55,7 +54,7 @@ namespace Riff.UWP.ViewModel
                     IncludeTrack = true
                 };
 
-                return this.metadata.DriveItems.Get(options);
+                return this.library.DriveItems.Get(options);
             });
 
             Tracks = new ObservableCollection<DriveItem>(tracks);

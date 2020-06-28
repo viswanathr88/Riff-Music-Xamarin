@@ -7,13 +7,13 @@ namespace Riff.Droid.UI.MusicLibrary
 {
     public partial class AlbumListAdapter : Android.Support.V7.Widget.RecyclerView.Adapter
     {
-        private readonly Data.MusicLibrary library;
+        private readonly IMusicLibrary library;
         private readonly IList<Album> albums;
 
-        public AlbumListAdapter(Data.MusicLibrary library)
+        public AlbumListAdapter(IMusicLibrary library)
         {
             this.library = library;
-            this.albums = library.GetAlbums();
+            this.albums = library.Albums.Get();
         }
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {

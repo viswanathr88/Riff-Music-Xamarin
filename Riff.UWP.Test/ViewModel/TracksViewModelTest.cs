@@ -1,12 +1,8 @@
-﻿using GalaSoft.MvvmLight.Ioc;
-using Moq;
+﻿using Moq;
 using Riff.Data;
-using Riff.Data.Access;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Xunit;
@@ -15,18 +11,16 @@ namespace Riff.UWP.Test.ViewModel
 {
     public sealed class TracksViewModelTest
     {
-        private readonly Mock<IMusicMetadata> mockMetadata;
         private readonly Mock<IDriveItemReadOnlyAccessor> mockDriveItemsAccessor;
-        private readonly MusicLibrary library;
+        private readonly Mock<IMusicLibrary> mockLibrary;
         private readonly TracksViewModel tracksVM;
 
         public TracksViewModelTest()
         {
-            mockMetadata = new Mock<IMusicMetadata>();
+            mockLibrary = new Mock<IMusicLibrary>();
             mockDriveItemsAccessor = new Mock<IDriveItemReadOnlyAccessor>(MockBehavior.Strict);
-            mockMetadata.Setup(data => data.DriveItems).Returns(mockDriveItemsAccessor.Object);
-            library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, mockMetadata.Object);
-            tracksVM = new TracksViewModel(library);
+            mockLibrary.Setup(data => data.DriveItems).Returns(mockDriveItemsAccessor.Object);
+            tracksVM = new TracksViewModel(mockLibrary.Object);
         }
 
         [Fact]

@@ -1,5 +1,4 @@
 ﻿using Riff.Data;
-using Riff.Data.Access;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,9 +24,9 @@ namespace Riff.UWP.ViewModel
     public sealed class ExpandedAlbumItem : IGrouping<Album, DriveItem>
     {
         private readonly IList<DriveItem> tracks;
-        private readonly ThumbnailCache cache;
+        private readonly IThumbnailReadOnlyCache cache;
 
-        public ExpandedAlbumItem(ThumbnailCache cache, Album key, IEnumerable<DriveItem> tracks)
+        public ExpandedAlbumItem(IThumbnailReadOnlyCache cache, Album key, IEnumerable<DriveItem> tracks)
         {
             this.cache = cache;
             Key = key;
@@ -47,9 +46,9 @@ namespace Riff.UWP.ViewModel
     {
         private ObservableCollection<ExpandedAlbumItem> albumTracks;
         private IList<DriveItem> tracks;
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
 
-        public ArtistViewModel(MusicLibrary library)
+        public ArtistViewModel(IMusicLibrary library)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
         }
@@ -87,7 +86,7 @@ namespace Riff.UWP.ViewModel
 
             var groups = await Task.Run(() =>
             {
-                var items = library.Metadata.DriveItems.Get(options);
+                var items = library.DriveItems.Get(options);
                 var groupedItems = items.GroupBy(item => item.Track.Album, (key, list) => new ExpandedAlbumItem(library.AlbumArts, key, list), new AlbumComparer());
                 return groupedItems;
             });

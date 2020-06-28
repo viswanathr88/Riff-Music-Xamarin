@@ -1,6 +1,5 @@
 ﻿using CommonServiceLocator;
 using Riff.Data;
-using Riff.Data.Access;
 using Riff.Sync;
 using Riff.UWP.Storage;
 using Riff.UWP.ViewModel;
@@ -60,7 +59,7 @@ namespace Riff.UWP.Pages
 
         private IAppPreferences Preferences => ServiceLocator.Current.GetInstance<IAppPreferences>();
 
-        private IMusicMetadata MusicMetadata => ServiceLocator.Current.GetInstance<IMusicMetadata>();
+        private IMusicLibrary MusicMetadata => ServiceLocator.Current.GetInstance<IMusicLibrary>();
 
         public bool CanGoBack => ContentFrame.CanGoBack;
 

@@ -38,7 +38,7 @@ namespace Riff.UWP.Pages
             PreferViewUpdateBeforeLoad = true;
         }
 
-        private MusicLibrary Library { get; } = ServiceLocator.Current.GetInstance<MusicLibrary>();
+        private IMusicLibrary Library { get; } = ServiceLocator.Current.GetInstance<IMusicLibrary>();
 
         protected async override void HandleViewModelPropertyChanged(string propertyName)
         {

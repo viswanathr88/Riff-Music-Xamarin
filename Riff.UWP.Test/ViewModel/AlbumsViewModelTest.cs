@@ -1,6 +1,5 @@
 ﻿using Moq;
 using Riff.Data;
-using Riff.Data.Access;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -13,15 +12,15 @@ namespace Riff.UWP.Test.ViewModel
 {
     public sealed class AlbumsViewModelTest
     {
-        private readonly Mock<IMusicMetadata> mockMetadata;
+        private readonly Mock<IMusicLibrary> mockMetadata;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
         private readonly AlbumsViewModel albumsVM;
 
         public AlbumsViewModelTest()
         {
-            mockMetadata = new Mock<IMusicMetadata>();
+            mockMetadata = new Mock<IMusicLibrary>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
-            mockMetadata.Setup(metadata => metadata.Albums).Returns(albumAccessor.Object);
+            mockMetadata.Setup(library => library.Albums).Returns(albumAccessor.Object);
             albumsVM = new AlbumsViewModel(mockMetadata.Object);
         }
 

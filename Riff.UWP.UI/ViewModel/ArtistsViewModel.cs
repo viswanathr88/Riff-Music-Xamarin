@@ -1,5 +1,4 @@
 ﻿using Riff.Data;
-using Riff.Data.Access;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,13 +23,13 @@ namespace Riff.UWP.ViewModel
     public sealed class ArtistsViewModel : DataViewModel
     {
         private ObservableCollection<ArtistItemViewModel> items = new ObservableCollection<ArtistItemViewModel>();
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
         private bool isCollectionEmpty = false;
 
-        public ArtistsViewModel(MusicLibrary library)
+        public ArtistsViewModel(IMusicLibrary library)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
-            this.library.Metadata.Refreshed += Metadata_Refreshed;
+            this.library.Refreshed += Metadata_Refreshed;
         }
 
         public ObservableCollection<ArtistItemViewModel> Items
@@ -72,7 +71,7 @@ namespace Riff.UWP.ViewModel
                 SortOrder = SortOrder.Descending
             };
 
-            var albums = library.Metadata.Albums.Get(options);
+            var albums = library.Albums.Get(options);
             return albums.GroupBy(album => album.Artist, new ArtistComparer()).OrderBy(group => group.Key.Name);
         }
     }
