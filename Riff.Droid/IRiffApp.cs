@@ -11,7 +11,7 @@ namespace Riff.Droid
 
         HttpClient WebClient { get; }
 
-        MusicLibrary MusicLibrary { get; }
+        IMusicLibrary MusicLibrary { get; }
 
         Data.IPreferences Preferences { get; }
 

@@ -26,7 +26,7 @@ namespace Riff.UWP.Pages
             RegisterForChanges = true;
         }
 
-        public MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
+        public IMusicLibrary Library => ServiceLocator.Current.GetInstance<IMusicLibrary>();
 
         public PlayerViewModel Player => ServiceLocator.Current.GetInstance<PlayerViewModel>();
 

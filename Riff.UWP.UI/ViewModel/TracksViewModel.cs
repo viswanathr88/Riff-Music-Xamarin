@@ -1,11 +1,9 @@
 ﻿using Riff.Data;
-using Riff.Data.Access;
 using Riff.UWP.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Riff.UWP.ViewModel
 {
@@ -24,16 +22,16 @@ namespace Riff.UWP.ViewModel
 
     public sealed class TracksViewModel : DataViewModel
     {
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
         private TrackSortType sortType = TrackSortType.ReleaseYear;
         private SortOrder sortOrder = SortOrder.Descending;
         private ObservableCollection<DriveItem> tracks = new ObservableCollection<DriveItem>();
         private int currentIndex = -1;
 
-        public TracksViewModel(MusicLibrary library)
+        public TracksViewModel(IMusicLibrary library)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
-            this.library.Metadata.Refreshed += Metadata_Refreshed;
+            this.library.Refreshed += Metadata_Refreshed;
         }
 
         public int CurrentIndex
@@ -73,13 +71,13 @@ namespace Riff.UWP.ViewModel
 
             if (Tracks.Count == 0)
             {
-                Tracks = new ObservableCollection<DriveItem>(await Task.Run(() => library.Metadata.DriveItems.Get(options)));
+                Tracks = new ObservableCollection<DriveItem>(await Task.Run(() => library.DriveItems.Get(options)));
             }
             else
             {
                 var diffList = await Task.Run(() =>
                 {
-                    var results = library.Metadata.DriveItems.Get(options);
+                    var results = library.DriveItems.Get(options);
                     return Diff.Compare(Tracks, results, new TracksEqualityComparer());
                 });
 

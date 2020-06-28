@@ -159,7 +159,7 @@ namespace Riff.Droid.UI
             else if (id == Resource.Id.nav_library)
             {
                 SetTitle(Resource.String.menu_item_library);
-                fragment = new MusicLibrary.MusicLibraryFragment(this);
+                fragment = new MusicLibraryFragment(this);
             }
             else if (id == Resource.Id.nav_recent_plays)
             {

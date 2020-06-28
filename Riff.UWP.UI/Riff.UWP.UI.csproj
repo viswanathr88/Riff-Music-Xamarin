@@ -138,6 +138,38 @@
     <Compile Include="Converters\TaglessItemsConverter.cs" />
     <Compile Include="Converters\TrackSortTypeConverter.cs" />
     <Compile Include="Device.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionBuilder.CompositionExtensions.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionBuilder.ExpressionFunctions.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.BooleanNode.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.ColorNode.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.ExpressionNode.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.Matrix3x2Node.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.Matrix4x4Node.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.QuaternionNode.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.ScalarNode.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.Vector2Node.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.Vector3Node.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionNodes\ExpressionBuilder.Vector4Node.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionValues\ExpressionBuilder.ExpressionValues.Constant.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionValues\ExpressionBuilder.ExpressionValues.CurrentValue.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionValues\ExpressionBuilder.ExpressionValues.Reference.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionValues\ExpressionBuilder.ExpressionValues.StartingValue.cs" />
+    <Compile Include="ExpressionBuilder\ExpressionValues\ExpressionBuilder.ExpressionValues.Target.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.AmbientLightReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.ColorBrushReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.DistantLightReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.DropShadowReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.InsetClipReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.InteractionTrackerReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.ManipulationPropertySetReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.NineGridBrushReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.PointerPositionPropertySet.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.PointLightReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.PropertySetReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.ReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.SpotLightReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.SurfaceBrushReferenceNode.cs" />
+    <Compile Include="ExpressionBuilder\ReferenceNodes\ExpressionBuilder.VisualReferenceNode.cs" />
     <Compile Include="Extensions\ThumbnailCacheExtensions.cs" />
     <Compile Include="Extensions\VisualTreeHelperExtensions.cs" />
     <Compile Include="Pages\AlbumPage.xaml.cs">
@@ -305,17 +337,13 @@
     </PRIResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExpressionBuilder\ExpressionBuilder.csproj">
-      <Project>{97f79cb4-fb7b-4dc3-8a08-28fa5694a73c}</Project>
-      <Name>ExpressionBuilder</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Riff.Core\Riff.Core.csproj">
       <Project>{bbd17f58-9a49-451c-87fa-9383fa7d551d}</Project>
       <Name>Riff.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Riff.Data.Sqlite\Riff.Data.Sqlite.csproj">
+    <ProjectReference Include="..\Riff.Data\Riff.Data.csproj">
       <Project>{0d0f3dbe-f0cf-4bc7-a578-1529daae80bd}</Project>
-      <Name>Riff.Data.Sqlite</Name>
+      <Name>Riff.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

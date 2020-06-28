@@ -1,5 +1,4 @@
 ﻿using Riff.Data;
-using Riff.Data.Access;
 using Riff.Sync;
 using System;
 using System.Collections.Generic;
@@ -12,11 +11,11 @@ namespace Riff.UWP.ViewModel
     public sealed class PlayerViewModel : DataViewModel, IPlayer
     {
         private bool isPlayerVisible;
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
         private readonly ITrackUrlDownloader urlDownloader;
         private MediaList list;
 
-        public PlayerViewModel(MusicLibrary library, ITrackUrlDownloader urlDownloader)
+        public PlayerViewModel(IMusicLibrary library, ITrackUrlDownloader urlDownloader)
         {
             this.library = library;
             this.urlDownloader = urlDownloader;
@@ -104,7 +103,7 @@ namespace Riff.UWP.ViewModel
 
         private async Task PlayAsync(DriveItemAccessOptions options, uint startIndex, bool autoplay)
         {
-            await PlayAsync(() => library.Metadata.DriveItems.Get(options), startIndex, autoplay);
+            await PlayAsync(() => library.DriveItems.Get(options), startIndex, autoplay);
         }
 
         private async Task PlayAsync(Func<IList<DriveItem>> itemFetcher, uint startIndex, bool autoplay)

@@ -1,14 +1,12 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
 using Moq;
 using Riff.Data;
-using Riff.Data.Access;
 using Riff.UWP.Pages;
 using Riff.UWP.Test.Infra;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using Xunit;
 
@@ -17,24 +15,23 @@ namespace Riff.UWP.Test.UI
     [Collection("UITests")]
     public class AlbumsPageTest : IAsyncLifetime, IDisposable
     {
-        private readonly Mock<IMusicMetadata> mockMetadata;
+        private readonly Mock<IMusicLibrary> mockLibrary;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
-        private readonly MusicLibrary library;
+        private readonly Mock<IThumbnailCache> mockThumbnailCache;
 
         private readonly UITree view = new UITree();
 
         public AlbumsPageTest()
         {
             // Setup mock album accessor
-            mockMetadata = new Mock<IMusicMetadata>();
+            mockLibrary = new Mock<IMusicLibrary>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
-            mockMetadata.Setup(metadata => metadata.Albums).Returns(albumAccessor.Object);
+            mockThumbnailCache = new Mock<IThumbnailCache>();
+            mockLibrary.Setup(library => library.Albums).Returns(albumAccessor.Object);
+            mockLibrary.Setup(library => library.AlbumArts).Returns(mockThumbnailCache.Object);
 
-            SimpleIoc.Default.Register(() => mockMetadata.Object);
+            SimpleIoc.Default.Register(() => mockLibrary.Object);
             SimpleIoc.Default.Register(() => albumAccessor.Object);
-
-            library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, SimpleIoc.Default.GetInstance<IMusicMetadata>());
-            SimpleIoc.Default.Register(() => library);
             SimpleIoc.Default.Register<AlbumsViewModel>();
         }
 
@@ -50,9 +47,9 @@ namespace Riff.UWP.Test.UI
 
         public void Dispose()
         {
-            SimpleIoc.Default.Unregister<IMusicMetadata>();
+            SimpleIoc.Default.Unregister<IMusicLibrary>();
             SimpleIoc.Default.Unregister<IAlbumReadOnlyAccessor>();
-            SimpleIoc.Default.Unregister<MusicLibrary>();
+            SimpleIoc.Default.Unregister<IThumbnailCache>();
             SimpleIoc.Default.Unregister<AlbumsViewModel>();
             SimpleIoc.Default.Reset();
         }

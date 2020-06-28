@@ -13,17 +13,15 @@ namespace Riff.UWP.Test.ViewModel
     public sealed class MediaListTest
     {
         private readonly Mock<ITrackUrlDownloader> mockTrackUrlDownloader;
-        private readonly Mock<IMusicMetadata> mockMetadata;
-        private readonly MusicLibrary library;
+        private readonly Mock<IMusicLibrary> mockLibrary;
         private readonly MediaList mediaList;
 
         public MediaListTest()
         {
             // Setup mocks
             mockTrackUrlDownloader = new Mock<ITrackUrlDownloader>();
-            mockMetadata = new Mock<IMusicMetadata>();
-            library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, mockMetadata.Object);
-            mediaList = new MediaList(library, mockTrackUrlDownloader.Object);
+            mockLibrary = new Mock<IMusicLibrary>();
+            mediaList = new MediaList(mockLibrary.Object, mockTrackUrlDownloader.Object);
         }
 
         [Fact]

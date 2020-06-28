@@ -7,7 +7,7 @@ namespace Riff.UWP
 {
     public static class ThumbnailCacheExtensions
     {
-        public static async Task<StorageFile> GetStorageFile(this ThumbnailCache cache, long id)
+        public static async Task<StorageFile> GetStorageFile(this IThumbnailReadOnlyCache cache, long id)
         {
             return await StorageFile.GetFileFromPathAsync(cache.GetPath(id));
         }

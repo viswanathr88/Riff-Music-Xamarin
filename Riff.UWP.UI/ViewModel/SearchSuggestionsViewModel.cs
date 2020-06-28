@@ -8,10 +8,10 @@ namespace Riff.UWP.ViewModel
 {
     public sealed class SearchSuggestionsViewModel : ViewModelBase
     {
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
         private ObservableCollection<SearchItemViewModel> items;
 
-        public SearchSuggestionsViewModel(MusicLibrary library)
+        public SearchSuggestionsViewModel(IMusicLibrary library)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
         }

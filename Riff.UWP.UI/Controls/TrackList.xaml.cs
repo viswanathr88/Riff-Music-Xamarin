@@ -358,7 +358,7 @@ namespace Riff.UWP.Controls
 
         private IPlayer Player => ServiceLocator.Current.GetInstance<IPlayer>();
 
-        private MusicLibrary Library => ServiceLocator.Current.GetInstance<MusicLibrary>();
+        private IMusicLibrary Library => ServiceLocator.Current.GetInstance<IMusicLibrary>();
 
         private void TracksList_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
         {

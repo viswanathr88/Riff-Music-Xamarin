@@ -63,15 +63,14 @@ namespace Riff.Sync
         private readonly IPreferences preferences;
         private readonly ILoginManager loginManager;
         private readonly HttpClient webClient;
-        private readonly MusicLibrary library;
+        private readonly IMusicLibrary library;
 
-        public SyncEngine(IPreferences preferences, ILoginManager loginManager, HttpClient webClient, MusicLibrary library)
+        public SyncEngine(IPreferences preferences, ILoginManager loginManager, HttpClient webClient, IMusicLibrary library)
         {
             this.preferences = preferences;
             this.loginManager = loginManager;
             this.webClient = webClient;
             this.library = library;
-            // this.library.ItemAdded += Library_ItemAdded;
 
             if (!string.IsNullOrEmpty(preferences.LastSyncTime))
             {
@@ -196,7 +195,7 @@ namespace Riff.Sync
 
             bool completed = false;
 
-            using (var session = library.Metadata.Edit())
+            using (var session = library.Edit())
             {
                 do
                 {
@@ -415,7 +414,7 @@ namespace Riff.Sync
                     {
                         using (var stream = await message.Content.ReadAsStreamAsync())
                         {
-                            await library.AlbumArts.SaveAsync(info.Id.Value, stream);
+                            await session.AlbumArts.SaveAsync(info.Id.Value, stream);
                         }
                     }
                 }

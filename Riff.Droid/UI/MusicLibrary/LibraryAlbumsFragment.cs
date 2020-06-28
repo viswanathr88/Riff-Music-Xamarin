@@ -1,12 +1,12 @@
 ﻿using Android.Support.V7.Widget;
-using Android.Views;
+using Riff.Data;
 
 namespace Riff.Droid.UI.MusicLibrary
 {
     public class LibraryAlbumsFragment : Controls.LazyLoadedFragment
     {
-        private readonly Riff.Data.MusicLibrary library;
-        public LibraryAlbumsFragment(Riff.Data.MusicLibrary library) : base(Resource.Layout.fragment_musiclibrary_albums)
+        private readonly IMusicLibrary library;
+        public LibraryAlbumsFragment(IMusicLibrary library) : base(Resource.Layout.fragment_musiclibrary_albums)
         {
             this.library = library;
         }

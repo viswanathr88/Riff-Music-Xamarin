@@ -9,17 +9,17 @@ namespace Riff.Droid.UI.MusicLibrary
 {
     class GenreListAdapter : Android.Support.V7.Widget.RecyclerView.Adapter
     {
-        private readonly Data.MusicLibrary library;
+        private readonly IMusicLibrary library;
         private readonly IList<Genre> genres = new List<Genre>();
         private readonly Random rnd = new Random(Guid.NewGuid().GetHashCode());
         private static readonly string[] separators = new string[] { " ", ".", "&", "-" };
         private readonly Action<Genre> selectionHandler;
 
-        public GenreListAdapter(Data.MusicLibrary library, Action<Genre> selectionHandler)
+        public GenreListAdapter(IMusicLibrary library, Action<Genre> selectionHandler)
         {
             this.library = library;
             this.selectionHandler = selectionHandler;
-            this.genres = this.library.GetGenres();
+            this.genres = this.library.Genres.GetAll();
         }
         public override int ItemCount => genres.Count;
 

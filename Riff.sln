@@ -3,17 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpressionBuilder", "ExpressionBuilder\ExpressionBuilder.csproj", "{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Riff.Droid", "Riff.Droid\Riff.Droid.csproj", "{4A5F1B3D-FD75-4937-A641-F93361F91BB2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Riff.UWP", "Riff.UWP\Riff.UWP.csproj", "{56B0D8D1-348F-40E7-BB05-01B6CAE92C9B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Riff.UWP.Test", "Riff.UWP.Test\Riff.UWP.Test.csproj", "{BFACAA7C-50D2-48C7-9B24-4C5E9FE04D80}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Riff.Data.Sqlite.Test", "Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.shproj", "{80D5F66C-BB40-4B86-AC9C-68CDBA56B32B}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Riff.Data.Test", "Riff.Data.Test\Riff.Data.Test.shproj", "{80D5F66C-BB40-4B86-AC9C-68CDBA56B32B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Riff.Data.Sqlite", "Riff.Data.Sqlite\Riff.Data.Sqlite.csproj", "{0D0F3DBE-F0CF-4BC7-A578-1529DAAE80BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Riff.Data", "Riff.Data\Riff.Data.csproj", "{0D0F3DBE-F0CF-4BC7-A578-1529DAAE80BD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Riff.Core", "Riff.Core\Riff.Core.csproj", "{BBD17F58-9A49-451C-87FA-9383FA7D551D}"
 EndProject
@@ -26,11 +24,11 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Riff.Core.Test\Riff.Core.Test.projitems*{333c8727-ad12-4f3c-b831-d32d6edbf9d1}*SharedItemsImports = 13
-		Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems*{80d5f66c-bb40-4b86-ac9c-68cdba56b32b}*SharedItemsImports = 13
+		Riff.Data.Test\Riff.Data.Test.projitems*{80d5f66c-bb40-4b86-ac9c-68cdba56b32b}*SharedItemsImports = 13
 		Riff.Core.Test\Riff.Core.Test.projitems*{b101c2a2-c3f0-43e1-a502-90b900f890d6}*SharedItemsImports = 4
-		Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems*{b101c2a2-c3f0-43e1-a502-90b900f890d6}*SharedItemsImports = 4
+		Riff.Data.Test\Riff.Data.Test.projitems*{b101c2a2-c3f0-43e1-a502-90b900f890d6}*SharedItemsImports = 4
 		Riff.Core.Test\Riff.Core.Test.projitems*{bfacaa7c-50d2-48c7-9b24-4c5e9fe04d80}*SharedItemsImports = 4
-		Riff.Data.Sqlite.Test\Riff.Data.Sqlite.Test.projitems*{bfacaa7c-50d2-48c7-9b24-4c5e9fe04d80}*SharedItemsImports = 4
+		Riff.Data.Test\Riff.Data.Test.projitems*{bfacaa7c-50d2-48c7-9b24-4c5e9fe04d80}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,26 +43,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|ARM.Build.0 = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|x64.Build.0 = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Debug|x86.Build.0 = Debug|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|ARM.ActiveCfg = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|ARM.Build.0 = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|ARM64.Build.0 = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|x64.ActiveCfg = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|x64.Build.0 = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|x86.ActiveCfg = Release|Any CPU
-		{97F79CB4-FB7B-4DC3-8A08-28FA5694A73C}.Release|x86.Build.0 = Release|Any CPU
 		{4A5F1B3D-FD75-4937-A641-F93361F91BB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A5F1B3D-FD75-4937-A641-F93361F91BB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A5F1B3D-FD75-4937-A641-F93361F91BB2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU

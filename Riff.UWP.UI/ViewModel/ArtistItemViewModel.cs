@@ -8,7 +8,7 @@ namespace Riff.UWP.ViewModel
     {
         private readonly IGrouping<Artist, Album> group;
 
-        public ArtistItemViewModel(IGrouping<Artist, Album> group, ThumbnailCache cache)
+        public ArtistItemViewModel(IGrouping<Artist, Album> group, IThumbnailReadOnlyCache cache)
         {
             this.group = group;
 

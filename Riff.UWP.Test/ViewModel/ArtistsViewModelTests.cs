@@ -1,31 +1,28 @@
 ﻿using Moq;
 using Riff.Data;
-using Riff.Data.Access;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Xunit;
 
 namespace Riff.UWP.Test.ViewModel
 {
     public sealed class ArtistsViewModelTest
     {
-        private readonly Mock<IMusicMetadata> mockMetadata;
+        private readonly Mock<IMusicLibrary> mockLibrary;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
-        private readonly MusicLibrary library;
+        private readonly Mock<IThumbnailCache> thumbnailCache;
         private readonly ArtistsViewModel artistsVM;
 
         public ArtistsViewModelTest()
         {
-            mockMetadata = new Mock<IMusicMetadata>();
+            mockLibrary = new Mock<IMusicLibrary>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
-            mockMetadata.Setup(metadata => metadata.Albums).Returns(albumAccessor.Object);
-            library = new MusicLibrary(ApplicationData.Current.LocalCacheFolder.Path, mockMetadata.Object);
-            artistsVM = new ArtistsViewModel(library);
+            thumbnailCache = new Mock<IThumbnailCache>();
+            mockLibrary.Setup(library => library.Albums).Returns(albumAccessor.Object);
+            mockLibrary.Setup(library => library.AlbumArts).Returns(thumbnailCache.Object);
+            artistsVM = new ArtistsViewModel(mockLibrary.Object);
         }
 
         [Fact]

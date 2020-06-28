@@ -1,5 +1,4 @@
 ﻿using Riff.Data;
-using Riff.Data.Access;
 using Riff.UWP.UI.Extensions;
 using System;
 using System.Collections.Generic;
@@ -24,15 +23,15 @@ namespace Riff.UWP.ViewModel
     public sealed class AlbumsViewModel : DataViewModel
     {
         private ObservableCollection<Album> items = new ObservableCollection<Album>();
-        private readonly IMusicMetadata metadata;
+        private readonly IMusicLibrary library;
         private AlbumSortType sortType = AlbumSortType.ReleaseYear;
         private SortOrder sortOrder = SortOrder.Descending;
         private bool isCollectionEmpty = false;
 
-        public AlbumsViewModel(IMusicMetadata metadata)
+        public AlbumsViewModel(IMusicLibrary library)
         {
-            this.metadata = metadata ?? throw new ArgumentNullException(nameof(metadata));
-            metadata.Refreshed += Metadata_Refreshed;
+            this.library = library ?? throw new ArgumentNullException(nameof(library));
+            library.Refreshed += Library_Refreshed;
         }
 
         public ObservableCollection<Album> Items
@@ -70,12 +69,12 @@ namespace Riff.UWP.ViewModel
 
             if (Items.Count == 0)
             {
-                Items = new ObservableCollection<Album>(await Task.Run(() => metadata.Albums.Get(options)));
+                Items = new ObservableCollection<Album>(await Task.Run(() => library.Albums.Get(options)));
             }
             else
             {
                 var diffList = await Task.Run(() => {
-                    var albums = metadata.Albums.Get(options);
+                    var albums = library.Albums.Get(options);
                     return Diff.Compare(Items, albums, new AlbumEqualityComparer());
                 });
 
@@ -93,7 +92,7 @@ namespace Riff.UWP.ViewModel
             await LoadAsync();
         }
 
-        private async void Metadata_Refreshed(object sender, EventArgs e)
+        private async void Library_Refreshed(object sender, EventArgs e)
         {
             await RunUISafe(() => IsLoaded = false);
         }
