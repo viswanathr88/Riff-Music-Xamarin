@@ -1,6 +1,8 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using System;
 using Windows.ApplicationModel.Core;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -86,10 +88,30 @@ namespace Riff.UWP.Controls
         private void Titlebar_Loaded(object sender, RoutedEventArgs e)
         {
             coreTitlebar.LayoutMetricsChanged += CoreTitleBar_LayoutMetricsChanged;
+            coreTitlebar.IsVisibleChanged += CoreTitlebar_IsVisibleChanged;
 
             Window.Current.SetTitleBar(TitlebarMiddleGrid);
 
             UpdateLayoutMetrics();
+            UpdateVisibility();
+        }
+
+        private void UpdateVisibility()
+        {
+            Visibility = coreTitlebar.IsVisible ? Visibility.Visible : Visibility.Collapsed;
+            if (UIViewSettings.GetForCurrentView().UserInteractionMode == UserInteractionMode.Touch && coreTitlebar.IsVisible)
+            {
+                Background = Application.Current.Resources["SystemControlBackgroundAccentBrush"] as Brush;
+            }
+            else
+            {
+                Background = null;
+            }
+        }
+
+        private void CoreTitlebar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args)
+        {
+            UpdateVisibility();
         }
 
         private void Titlebar_Unloaded(object sender, RoutedEventArgs e)
