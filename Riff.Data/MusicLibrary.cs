@@ -49,6 +49,7 @@ namespace Riff.Data
             indexedTrackTable = new IndexedTrackTable(connection, extractor);
             thumbnailInfoTable = new ThumbnailInfoTable(connection);
             thumbnailCache = new ThumbnailCache(Path.Combine(path, "Thumbnails", "Albums"));
+            Playlists = new PlaylistManager(Path.Combine(path, "Playlists"));
 
             Version version = GetVersion();
 
@@ -100,6 +101,8 @@ namespace Riff.Data
         public IThumbnailInfoReadOnlyAccessor Thumbnails => thumbnailInfoTable;
 
         public IThumbnailReadOnlyCache AlbumArts => thumbnailCache;
+
+        public IPlaylistManager Playlists { get; }
 
         public void Dispose()
         {

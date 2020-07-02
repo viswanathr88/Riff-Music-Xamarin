@@ -99,6 +99,16 @@ namespace Riff.UWP.Controls
             (d as TrackList).TrackListView.GroupStyle.Add(e.NewValue as GroupStyle);
         }
 
+        public bool EnableTrackReordering
+        {
+            get { return (bool)GetValue(EnableTrackReorderingProperty); }
+            set { SetValue(EnableTrackReorderingProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for EnableTrackReordering.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty EnableTrackReorderingProperty =
+            DependencyProperty.Register("EnableTrackReordering", typeof(bool), typeof(TrackList), new PropertyMetadata(false));
+
         #region Public Column Visibility Methods
 
         public bool EnableTrackNumbers
@@ -475,6 +485,10 @@ namespace Riff.UWP.Controls
         private void TrackContextMenu_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
         {
             currentFlyoutContext = null;
+        }
+
+        private void TrackListView_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
+        {
         }
     }
 }

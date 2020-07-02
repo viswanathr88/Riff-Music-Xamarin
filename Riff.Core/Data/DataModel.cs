@@ -1,5 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Riff.Data.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Riff.Data
 {
@@ -222,5 +227,58 @@ namespace Riff.Data
         public IList<SearchItem> Tracks => tracks;
     }
 
+    public sealed class Playlist
+    {
+        private readonly string rootPath;
 
+        public Playlist(string rootPath, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            Name = name;
+            this.rootPath = rootPath;
+            Items = new List<DriveItem>();
+        }
+
+        public string Name { get; }
+
+        public IList<DriveItem> Items { get; private set; }
+
+        public async Task LoadAsync()
+        {
+            await Task.Run(() =>
+            {
+                using (var stream = new FileStream(Path.Combine(rootPath, Name), FileMode.Open, FileAccess.Read))
+                {
+                    using (var streamReader = new StreamReader(stream))
+                    {
+                        using (var jsonReader = new JsonTextReader(streamReader))
+                        {
+                            var serializer = new JsonSerializer();
+                            var items = serializer.Deserialize<IList<DriveItem>>(jsonReader);
+                            Items = items ?? new List<DriveItem>();
+                        }
+                    }
+                }
+            });
+        }
+
+        public async Task SaveAsync()
+        {
+            await Task.Run(() =>
+            {
+                using (var stream = new FileStream(Path.Combine(rootPath, Name), FileMode.Open, FileAccess.Write))
+                {
+                    using (var streamWriter = new StreamWriter(stream))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Serialize(streamWriter, Items);
+                    }
+                }
+            });
+        }
+    }
 }

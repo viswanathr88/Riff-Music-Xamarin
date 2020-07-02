@@ -17,7 +17,11 @@
               ItemsSource="{x:Bind Items, Mode=OneWay}"
               Header="{x:Bind Header, Mode=OneWay}"
               ItemClick="TrackListView_ItemClick"
-              IsSynchronizedWithCurrentItem="False">
+              IsSynchronizedWithCurrentItem="False"
+              CanReorderItems="{x:Bind EnableTrackReordering, Mode=OneWay}"
+              AllowDrop="{x:Bind EnableTrackReordering, Mode=OneWay}"
+              CanDragItems="{x:Bind EnableTrackReordering, Mode=OneWay}"
+              DragItemsCompleted="TrackListView_DragItemsCompleted">
 
         <ListView.Resources>
             <SolidColorBrush x:Key="ListViewItemBackgroundSelected"
@@ -122,7 +126,7 @@
                                    TextWrapping="NoWrap"
                                    FontSize="13"
                                    Grid.Column="1"
-                                   Margin="10,0,20,0"
+                                   Margin="10,0,10,0"
                                    Visibility="{Binding ElementName=TrackListControl, Path=ShowTrackNumbers, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                         <!-- Track Details Mini View -->
@@ -150,6 +154,7 @@
                                        Grid.ColumnSpan="2"
                                        TextWrapping="NoWrap"
                                        MaxLines="1"
+                                       Margin="10,0,0,0"
                                        TextTrimming="CharacterEllipsis" />
 
                             <!-- Track Artist -->
@@ -165,7 +170,7 @@
                                        MaxWidth="200"
                                        TextWrapping="NoWrap"
                                        TextTrimming="CharacterEllipsis"
-                                       Margin="0,0,10,0" />
+                                       Margin="10,0,10,0" />
                         </Grid>
 
                         <!-- Track Album -->

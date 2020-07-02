@@ -147,13 +147,26 @@ namespace Riff.UWP.Strings{
 
         #region PlaylistPageHeader
         /// <summary>
-        ///   Looks up a localized string similar to: Playlists
+        ///   Looks up a localized string similar to: Playlist
         /// </summary>
         public static string PlaylistPageHeader
         {
             get
             {
                 return _resourceLoader.GetString("PlaylistPageHeader");
+            }
+        }
+        #endregion
+
+        #region PlaylistsPageHeader
+        /// <summary>
+        ///   Looks up a localized string similar to: Playlists
+        /// </summary>
+        public static string PlaylistsPageHeader
+        {
+            get
+            {
+                return _resourceLoader.GetString("PlaylistsPageHeader");
             }
         }
         #endregion
@@ -387,6 +400,7 @@ namespace Riff.UWP.Strings{
             NavViewSettingsContent,
             NowPlayingPageHeader,
             PlaylistPageHeader,
+            PlaylistsPageHeader,
             SearchItemAlbumDescriptionFormat,
             SearchItemArtistDescriptionFormat,
             SearchItemGenreDescriptionFormat,

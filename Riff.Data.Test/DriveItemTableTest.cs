@@ -1,10 +1,11 @@
 ﻿using Microsoft.Data.Sqlite;
+using Riff.Data.Sqlite;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
+using Version = Riff.Data.Sqlite.Version;
 
-namespace Riff.Data.Sqlite.Test
+namespace Riff.Data.Test
 {
     public sealed class DriveItemTableTest
     {

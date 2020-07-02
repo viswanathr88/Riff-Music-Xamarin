@@ -122,6 +122,15 @@
   <ItemGroup>
     <Compile Include="Authentication\WindowsLoginManager.cs" />
     <Compile Include="Bootstapper.cs" />
+    <Compile Include="Controls\ResponsiveHeader.xaml.cs">
+      <DependentUpon>ResponsiveHeader.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RenamePlaylistDialog.xaml.cs">
+      <DependentUpon>RenamePlaylistDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AddPlaylistDialog.xaml.cs">
+      <DependentUpon>AddPlaylistDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Titlebar.xaml.cs">
       <DependentUpon>Titlebar.xaml</DependentUpon>
     </Compile>
@@ -203,6 +212,9 @@
       <DependentUpon>NowPlayingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PageBase.cs" />
+    <Compile Include="Pages\PlaylistPage.xaml.cs">
+      <DependentUpon>PlaylistPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\PlaylistsPage.xaml.cs">
       <DependentUpon>PlaylistsPage.xaml</DependentUpon>
     </Compile>
@@ -228,6 +240,10 @@
     <Compile Include="ViewModel\ArtistItemViewModel.cs" />
     <Compile Include="ViewModel\ArtistsViewModel.cs" />
     <Compile Include="ViewModel\ArtistViewModel.cs" />
+    <Compile Include="ViewModel\Commands\AddPlaylistCommand.cs" />
+    <Compile Include="ViewModel\Commands\DeletePlaylistCommand.cs" />
+    <Compile Include="ViewModel\Commands\PlayPlaylistsCommand.cs" />
+    <Compile Include="ViewModel\Commands\RenamePlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\SyncCommand.cs" />
     <Compile Include="ViewModel\DataViewModel.cs" />
     <Compile Include="ViewModel\FirstRunExperienceViewModel.cs" />
@@ -244,6 +260,7 @@
     <Compile Include="ViewModel\MusicLibraryViewModel.cs" />
     <Compile Include="ViewModel\PlayerViewModel.cs" />
     <Compile Include="ViewModel\PlaylistsViewModel.cs" />
+    <Compile Include="ViewModel\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\SearchItemViewModel.cs" />
     <Compile Include="ViewModel\SearchSuggestionsViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
@@ -269,6 +286,18 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ResponsiveHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RenamePlaylistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\AddPlaylistDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Titlebar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -308,6 +337,10 @@
     <Page Include="Pages\NowPlayingPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\PlaylistPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\PlaylistsPage.xaml">
       <Generator>MSBuild:Compile</Generator>

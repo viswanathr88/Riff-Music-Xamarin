@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Riff.Data
 {
@@ -51,5 +52,7 @@ namespace Riff.Data
         void Search(SearchQuery query, List<SearchItem> results);
 
         IList<SearchItem> Search(SearchQuery query);
+
+        IPlaylistManager Playlists { get; }
     }
 }
