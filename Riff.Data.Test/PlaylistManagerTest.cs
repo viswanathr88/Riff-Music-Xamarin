@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
-using Windows.UI.Popups;
 using Xunit;
 
 namespace Riff.Data.Test
