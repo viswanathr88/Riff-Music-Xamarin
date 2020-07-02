@@ -17,7 +17,7 @@ namespace Riff.Data.Test
         public void Constructor_EmptyName_Throw()
         {
             Assert.Throws<ArgumentNullException>(() => new Playlist(path, string.Empty));
-            Assert.Throws<ArgumentNullException>(() => new Playlist(path, null));
+            Assert.Throws<ArgumentNullException>(() => new Playlist(path, null)); 
         }
 
         [Fact]
