@@ -87,7 +87,7 @@ namespace Riff.UWP.Test.UI
             var artist = new Artist() { Id = 1, Name = null };
             await view.LoadPage<ArtistPage>(artist);
 
-            await view.WaitForElementAndExecute<TextBlock>("ArtistName", (textBlock) => Assert.Equal(Strings.Resources.UnknownArtistText, textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("HeaderTextControl", (textBlock) => Assert.Equal(Strings.Resources.UnknownArtistText, textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("AlbumName", (textBlock) => Assert.Equal(Strings.Resources.UnknownAlbumText, textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(Strings.Resources.UnknownTitleText, textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(Strings.Resources.UnknownArtistText, textBlock.Text));
@@ -123,7 +123,7 @@ namespace Riff.UWP.Test.UI
             await view.LoadPage<ArtistPage>(artist);
 
             var track = items.First().Track;
-            await view.WaitForElementAndExecute<TextBlock>("ArtistName", (textBlock) => Assert.Equal(artist.Name, textBlock.Text));
+            await view.WaitForElementAndExecute<TextBlock>("HeaderTextControl", (textBlock) => Assert.Equal(artist.Name, textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("AlbumName", (textBlock) => Assert.Equal(track.Album.Name, textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("TrackTitle", (textBlock) => Assert.Equal(track.Title, textBlock.Text));
             await view.WaitForElementAndExecute<TextBlock>("TrackArtist", (textBlock) => Assert.Equal(track.Artist, textBlock.Text));

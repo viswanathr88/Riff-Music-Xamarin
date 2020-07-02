@@ -7,6 +7,7 @@ using Xunit;
 
 namespace Riff.Data.Test
 {
+    [Collection("PlaylistStorageTests")]
     public sealed class PlaylistTest : IDisposable
     {
         private readonly static string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Playlists");

@@ -5,6 +5,7 @@ using Xunit;
 
 namespace Riff.Data.Test
 {
+    [Collection("PlaylistStorageTests")]
     public sealed class PlaylistManagerTest : IDisposable
     {
         private readonly PlaylistManager playlistManager;

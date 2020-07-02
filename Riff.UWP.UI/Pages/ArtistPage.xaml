@@ -29,7 +29,7 @@
         <controls:TrackList.Header>
 
             <controls:ResponsiveHeader x:Name="ArtistHeader"
-                                 Text="{x:Bind ViewModel.Parameter.Name, Mode=OneWay}">
+                                 Text="{x:Bind ViewModel.Parameter.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}">
                 <controls:ResponsiveHeader.Image>
                     <!-- Artist icon -->
                     <UserControl>
