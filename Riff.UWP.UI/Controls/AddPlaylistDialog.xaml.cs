@@ -14,13 +14,5 @@ namespace Riff.UWP.Controls
         }
 
         public PlaylistsViewModel ViewModel => SimpleIoc.Default.GetInstance<PlaylistsViewModel>();
-
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-        }
-
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-        }
     }
 }

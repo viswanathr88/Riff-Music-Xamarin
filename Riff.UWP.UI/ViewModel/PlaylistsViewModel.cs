@@ -3,7 +3,6 @@ using Riff.UWP.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -11,27 +10,22 @@ namespace Riff.UWP.ViewModel
 {
     public class PlaylistsViewModel : DataViewModel
     {
-        private readonly IPlaylistManager playlistManager;
         private readonly IMusicLibrary musicLibrary;
-        private readonly IPlayer player;
 
         private ObservableCollection<Playlist> playlists;
         private string playlistName;
         private bool isEmpty;
         private bool isSelectionMode;
-        private bool areMultipleSelected;
 
-        public PlaylistsViewModel(IPlaylistManager playlistManager, IPlayer player, IMusicLibrary library)
+        public PlaylistsViewModel(IPlayer player, IMusicLibrary library)
         {
-            this.playlistManager = playlistManager;
             this.musicLibrary = library;
-            this.player = player;
-            this.playlistManager.StateChanged += PlaylistManager_StateChanged;
-            this.Add = new AddPlaylistCommand(playlistManager);
-            Delete = new DeletePlaylistCommand(playlistManager);
+            this.musicLibrary.Playlists.StateChanged += PlaylistManager_StateChanged;
+            this.Add = new AddPlaylistCommand(musicLibrary.Playlists);
+            Delete = new DeletePlaylistCommand(musicLibrary.Playlists);
             Play = new PlayPlaylistsCommand(player);
             PlayNext = new PlayPlaylistsCommand(player) { AddToNowPlayingList = true };
-            Rename = new RenamePlaylistCommand(playlistManager);
+            Rename = new RenamePlaylistCommand(musicLibrary.Playlists);
         }
 
         public ObservableCollection<Playlist> Playlists
@@ -58,12 +52,6 @@ namespace Riff.UWP.ViewModel
             set => SetProperty(ref this.isSelectionMode, value);
         }
 
-        public bool AreMultipleSelected
-        {
-            get => areMultipleSelected;
-            set => SetProperty(ref this.areMultipleSelected, value);
-        }
-
         public ICommand Add { get; }
 
         public ICommand Delete { get; }
@@ -76,7 +64,7 @@ namespace Riff.UWP.ViewModel
 
         public async override Task LoadAsync()
         {
-            var playlists = await Task.Run(() => playlistManager.GetPlaylists());
+            var playlists = await Task.Run(() => musicLibrary.Playlists.GetPlaylists());
             Playlists = new ObservableCollection<Playlist>(playlists);
             IsEmpty = (Playlists.Count == 0);
         }

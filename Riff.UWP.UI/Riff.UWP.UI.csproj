@@ -242,6 +242,7 @@
     <Compile Include="ViewModel\ArtistViewModel.cs" />
     <Compile Include="ViewModel\Commands\AddPlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\DeletePlaylistCommand.cs" />
+    <Compile Include="ViewModel\Commands\IPlaylistNameCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayPlaylistsCommand.cs" />
     <Compile Include="ViewModel\Commands\RenamePlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\SyncCommand.cs" />

@@ -139,6 +139,7 @@
     </Compile>
     <Compile Include="UI\ArtistPageTest.cs" />
     <Compile Include="UI\ArtistsPageTest.cs" />
+    <Compile Include="UI\PlaylistsPageTest.cs" />
     <Compile Include="UI\SettingsPageTest.cs" />
     <Compile Include="UI\TrackListTest.cs" />
     <Compile Include="UI\TracksPageTest.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="ViewModel\ArtistsViewModelTests.cs" />
     <Compile Include="ViewModel\MediaListTest.cs" />
     <Compile Include="ViewModel\PlayerViewModelTest.cs" />
+    <Compile Include="ViewModel\PlaylistsViewModelTest.cs" />
     <Compile Include="ViewModel\TracksViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
