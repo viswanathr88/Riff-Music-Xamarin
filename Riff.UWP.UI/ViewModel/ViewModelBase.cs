@@ -18,7 +18,7 @@ namespace Riff.UWP.ViewModel
         {
             this.name = GetType().ToString();
         }
-        public void SetValue(string propertyName, object value)
+        protected void SetValue(string propertyName, object value)
         {
             PropertyInfo info = GetProperty(propertyName);
 
@@ -30,7 +30,7 @@ namespace Riff.UWP.ViewModel
             info.SetValue(this, typedValue, null);
         }
 
-        public bool SetProperty<T>(ref T field, T value, [CallerMemberName] string member = null)
+        protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string member = null)
         {
             bool fResult = false;
             if (!EqualityComparer<T>.Default.Equals(field, value))

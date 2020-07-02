@@ -1,0 +1,19 @@
+﻿<ContentDialog x:Class="Riff.UWP.Controls.RenamePlaylistDialog"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:local="using:Riff.UWP.Controls"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               mc:Ignorable="d"
+               Title="Rename playlist"
+               PrimaryButtonText="Done"
+               PrimaryButtonCommand="{x:Bind ViewModel.Rename}"
+               PrimaryButtonCommandParameter="{x:Bind CurrentPlaylist}"
+               CloseButtonText="Cancel"
+               DefaultButton="Primary">
+
+    <Grid>
+        <TextBox x:Name="RenamePlaylistTextBox"
+                 Text="{x:Bind ViewModel.Rename.PlaylistName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
+</ContentDialog>

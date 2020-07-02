@@ -174,7 +174,14 @@ namespace Riff.UWP.Pages
             {
                 if (pageItem.Key == null)
                 {
-                    pageItem = new KeyValuePair<string, Type>("library", typeof(MusicLibraryPage));
+                    if (e.SourcePageType == typeof(PlaylistPage))
+                    {
+                        pageItem = new KeyValuePair<string, Type>("playlists", typeof(PlaylistPage));
+                    }
+                    else
+                    {
+                        pageItem = new KeyValuePair<string, Type>("library", typeof(MusicLibraryPage));
+                    }
                 }
                 NavView.SelectedItem = NavView.MenuItems
                     .OfType<Microsoft.UI.Xaml.Controls.NavigationViewItem>()

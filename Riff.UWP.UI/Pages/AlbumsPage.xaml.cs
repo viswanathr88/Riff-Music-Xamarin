@@ -5,6 +5,8 @@ using Riff.UWP.ViewModel;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -205,12 +207,40 @@ namespace Riff.UWP.Pages
             }
         }
 
-        private void AlbumContextMenu_Opening(object sender, object e)
+        private async  void AlbumContextMenu_Opening(object sender, object e)
         {
             if (sender is MenuFlyout flyout && flyout.Target is GridViewItem gvitem)
             {
                 var index = AlbumItems.IndexFromContainer(gvitem);
                 currentFlyoutContext = ViewModel.Items[index];
+
+                var playlistsVM = ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
+                await playlistsVM.LoadAsync();
+
+                if (playlistsVM.Playlists.Count > 0)
+                {
+                    var subMenuItem = flyout.Items.First(item => item.Name == "AddToSubMenuItem") as MenuFlyoutSubItem;
+                    subMenuItem.Items.Add(new MenuFlyoutSeparator());
+                    foreach (var playlist in playlistsVM.Playlists)
+                    {
+                        var flyoutItem = new MenuFlyoutItem
+                        {
+                            Text = playlist.Name,
+                            Tag = playlist
+                        };
+                        flyoutItem.Click += PlaylistFlyoutItem_Click;
+                        subMenuItem.Items.Add(flyoutItem);
+                    }
+                }
+            }
+        }
+
+        private async void PlaylistFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItemBase item && item.Tag is Playlist playlist)
+            {
+                var playlistsVM = ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
+                await playlistsVM.AddToPlaylist(currentFlyoutContext, playlist);
             }
         }
 

@@ -78,7 +78,7 @@ namespace Riff.UWP.Test.UI
             // Load Tracks Page
             await view.LoadPage<AlbumPage>(albums[0]);
 
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumName", (textBlock) => Strings.Resources.UnknownAlbumText == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("HeaderTextControl", (textBlock) => Strings.Resources.UnknownAlbumText == textBlock.Text));
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumArtist", (textBlock) => Strings.Resources.UnknownArtistText == textBlock.Text));
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumGenre", (textBlock) => Strings.Resources.UnknownGenreText == textBlock.Text));
         }
@@ -95,7 +95,7 @@ namespace Riff.UWP.Test.UI
             var album = albums.First();
             await view.LoadPage<AlbumPage>(album);
 
-            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumName", (textBlock) => album.Name == textBlock.Text));
+            Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("HeaderTextControl", (textBlock) => album.Name == textBlock.Text));
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumArtist", (textBlock) => album.Artist.Name == textBlock.Text));
             Assert.True(await view.WaitForElementAndExecute<TextBlock, bool>("AlbumGenre", (textBlock) => album.Genre.Name == textBlock.Text));
         }

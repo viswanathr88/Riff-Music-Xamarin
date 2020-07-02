@@ -20,143 +20,83 @@
                         PlayableTracks="{x:Bind ViewModel.Tracks, Mode=OneWay}"
                         Loaded="AlbumTrackList_Loaded">
         <controls:TrackList.Header>
-            <UserControl>
-                <Grid x:Name="AlbumHeader"
-                      Background="{ThemeResource SystemControlAcrylicWindowBrush}"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Top"
-                      Padding="20,0,20,20">
-
-                    <VisualStateManager.VisualStateGroups>
-                        <VisualStateGroup>
-                            <VisualState>
-                                <VisualState.StateTriggers>
-                                    <AdaptiveTrigger MinWindowWidth="641" />
-                                </VisualState.StateTriggers>
-
-                                <VisualState.Setters>
-                                    <Setter Target="AlbumHeader.ColumnDefinitions[1].Width"
-                                            Value="*" />
-                                    <Setter Target="AlbumArt.(Grid.ColumnSpan)"
-                                            Value="1" />
-                                    <Setter Target="AlbumArt.(Grid.Column)"
-                                            Value="0" />
-                                    <Setter Target="AlbumArt.(Grid.RowSpan)"
-                                            Value="4" />
-                                    <Setter Target="AlbumName.(Grid.ColumnSpan)"
-                                            Value="1" />
-                                    <Setter Target="AlbumName.(Grid.Column)"
-                                            Value="1" />
-                                    <Setter Target="AlbumDetails.(Grid.ColumnSpan)"
-                                            Value="1" />
-                                    <Setter Target="AlbumDetails.(Grid.Column)"
-                                            Value="1" />
-                                    <Setter Target="AlbumToolbar.(Grid.ColumnSpan)"
-                                            Value="1" />
-                                    <Setter Target="AlbumToolbar.(Grid.Column)"
-                                            Value="1" />
-                                    <Setter Target="AlbumArt.Width"
-                                            Value="196" />
-                                    <Setter Target="AlbumArt.Height"
-                                            Value="196" />
-                                    <Setter Target="AlbumName.HorizontalAlignment"
-                                            Value="Left" />
-                                    <Setter Target="AlbumDetails.HorizontalAlignment"
-                                            Value="Left" />
-                                    <Setter Target="AlbumDetails.Orientation"
-                                            Value="Vertical" />
-                                    <Setter Target="AlbumDetails.HorizontalAlignment"
-                                            Value="Left" />
-                                    <Setter Target="AlbumToolbar.HorizontalAlignment"
-                                            Value="Left" />
-                                    <Setter Target="Division1.Visibility"
-                                            Value="Collapsed" />
-                                    <Setter Target="Division2.Visibility"
-                                            Value="Collapsed" />
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateManager.VisualStateGroups>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+            <controls:ResponsiveHeader x:Name="AlbumHeader"
+                                 Text="{x:Bind ViewModel.AlbumInfo.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}">
+                <controls:ResponsiveHeader.Image>
                     <Image x:Name="AlbumArt"
-                           Width="128"
-                           Height="128"
                            Loaded="AlbumArt_Loaded"
-                           Grid.ColumnSpan="2"
-                           Grid.Row="0"
+                           Stretch="Uniform"
                            HorizontalAlignment="Center" />
+                </controls:ResponsiveHeader.Image>
 
-                    <TextBlock Grid.Row="1"
-                               HorizontalAlignment="Center"
-                               Text="{x:Bind ViewModel.AlbumInfo.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
-                               Style="{StaticResource TitleTextBlockStyle}"
-                               MaxLines="2"
-                               TextWrapping="Wrap"
-                               TextTrimming="CharacterEllipsis"
-                               Grid.ColumnSpan="2"
-                               x:Name="AlbumName"
-                               Margin="20,10,20,10"
-                               VerticalAlignment="Center"
-                               TextLineBounds="TrimToCapHeight" />
+                <controls:ResponsiveHeader.Subheader>
+                    <UserControl>
+                        <StackPanel x:Name="AlbumDetails"
+                                    Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
 
-                    <StackPanel x:Name="AlbumDetails"
-                                Orientation="Horizontal"
-                                Grid.Row="2"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Grid.ColumnSpan="2"
-                                Margin="20,10,20,10">
-                        <TextBlock x:Name="AlbumArtist"
-                                   VerticalAlignment="Center"
-                                   Text="{x:Bind ViewModel.AlbumInfo.Artist.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   MaxLines="1"
-                                   Margin="0,0,5,0" />
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="641" />
+                                        </VisualState.StateTriggers>
 
-                        <FontIcon x:Name="Division1"
-                                  FontFamily="Segoe MDL2 Assets"
-                                  Glyph="&#xE7C8;"
-                                  FontSize="10"
-                                  VerticalAlignment="Center"
-                                  Margin="0,0,5,0" />
+                                        <VisualState.Setters>
+                                            <Setter Target="AlbumDetails.Orientation"
+                                                    Value="Vertical" />
+                                            <Setter Target="Division1.Visibility"
+                                                    Value="Collapsed" />
+                                            <Setter Target="Division2.Visibility"
+                                                    Value="Collapsed" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
 
-                        <TextBlock Text="{x:Bind ViewModel.AlbumInfo.ReleaseYear, Mode=OneWay}"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   MaxLines="1"
-                                   VerticalAlignment="Center"
-                                   Margin="0,0,5,0" />
+                            <TextBlock x:Name="AlbumArtist"
+                                       VerticalAlignment="Center"
+                                       Text="{x:Bind ViewModel.AlbumInfo.Artist.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       MaxLines="1"
+                                       Margin="0,0,5,0" />
 
-                        <FontIcon x:Name="Division2"
-                                  FontFamily="Segoe MDL2 Assets"
-                                  Glyph="&#xE7C8;"
-                                  FontSize="10"
-                                  VerticalAlignment="Center"
-                                  Margin="0,0,5,0" />
+                            <FontIcon x:Name="Division1"
+                                      FontFamily="Segoe MDL2 Assets"
+                                      Glyph="&#xE7C8;"
+                                      FontSize="10"
+                                      VerticalAlignment="Center"
+                                      Margin="0,0,5,0" />
 
-                        <TextBlock x:Name="AlbumGenre"
-                                   Text="{x:Bind ViewModel.AlbumInfo.Genre.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
-                                   Style="{StaticResource CaptionTextBlockStyle}"
-                                   MaxLines="1"
-                                   VerticalAlignment="Center" />
-                    </StackPanel>
+                            <TextBlock Text="{x:Bind ViewModel.AlbumInfo.ReleaseYear, Mode=OneWay}"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       MaxLines="1"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,5,0" />
 
+                            <FontIcon x:Name="Division2"
+                                      FontFamily="Segoe MDL2 Assets"
+                                      Glyph="&#xE7C8;"
+                                      FontSize="10"
+                                      VerticalAlignment="Center"
+                                      Margin="0,0,5,0" />
+
+                            <TextBlock x:Name="AlbumGenre"
+                                       Text="{x:Bind ViewModel.AlbumInfo.Genre.Name, Mode=OneWay, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='genre'}"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       MaxLines="1"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+
+                    </UserControl>
+                </controls:ResponsiveHeader.Subheader>
+
+                <controls:ResponsiveHeader.Toolbar>
                     <CommandBar x:Name="AlbumToolbar"
-                                Grid.Row="3"
                                 Background="Transparent"
                                 DefaultLabelPosition="Right"
-                                Margin="5,0,5,0"
-                                HorizontalAlignment="Center"
-                                Grid.ColumnSpan="2">
+                                HorizontalAlignment="Center">
                         <CommandBar.CommandBarOverflowPresenterStyle>
                             <Style TargetType="CommandBarOverflowPresenter">
                                 <Setter Property="Margin"
@@ -210,8 +150,8 @@
                                           Margin="0,0,10,0" />
                         </CommandBar.PrimaryCommands>
                     </CommandBar>
-                </Grid>
-            </UserControl>
+                </controls:ResponsiveHeader.Toolbar>
+            </controls:ResponsiveHeader>
         </controls:TrackList.Header>
     </controls:TrackList>
 </local:AlbumPageBase>

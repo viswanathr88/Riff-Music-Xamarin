@@ -126,6 +126,9 @@
   <data name="AccountSettingsRequireSignInInformationHeader.Text" xml:space="preserve">
     <value>Please login to OneDrive so that Riff Music can keep your local library up to date.</value>
   </data>
+  <data name="AddPlaylistButton.Label" xml:space="preserve">
+    <value>New playlist</value>
+  </data>
   <data name="AddToNowPlayingListMenuItem.Text" xml:space="preserve">
     <value>Now Playing</value>
   </data>
@@ -171,6 +174,15 @@
   <data name="BrowseArtistContextMenuItem.Text" xml:space="preserve">
     <value>Browse artist</value>
   </data>
+  <data name="ClearPlaylistsSelectionButton.Label" xml:space="preserve">
+    <value>Clear selection</value>
+  </data>
+  <data name="DeletePlaylistContextMenuItem.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeletePlaylistsButton.Label" xml:space="preserve">
+    <value>Delete</value>
+  </data>
   <data name="FREAppName.Text" xml:space="preserve">
     <value>Riff Music</value>
   </data>
@@ -182,6 +194,9 @@
   </data>
   <data name="LoginDescription" xml:space="preserve">
     <value>In order to access your music stored on OneDrive, please login using your Microsoft Account</value>
+  </data>
+  <data name="ManagePlaylistsButton.Label" xml:space="preserve">
+    <value>Manage</value>
   </data>
   <data name="MusicLibraryPageHeader" xml:space="preserve">
     <value>Music Library</value>
@@ -222,6 +237,9 @@
   <data name="NavViewTracks.Content" xml:space="preserve">
     <value>Tracks</value>
   </data>
+  <data name="NoPlaylistsMessage.Text" xml:space="preserve">
+    <value>Nothing to show here. Please add tracks to a new playlist</value>
+  </data>
   <data name="NowPlayingPageDefaultMessage.Text" xml:space="preserve">
     <value>You are not playing any songs in your collection right now. You will find songs you're playing and what's coming up next here. </value>
   </data>
@@ -238,10 +256,49 @@
     <value>Play</value>
   </data>
   <data name="PlaylistPageHeader" xml:space="preserve">
+    <value>Playlist</value>
+  </data>
+  <data name="PlaylistsPageHeader" xml:space="preserve">
     <value>Playlists</value>
+  </data>
+  <data name="PlaylistToolbarDeleteButton.Label" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="PlaylistToolbarManageButton.Label" xml:space="preserve">
+    <value>Manage</value>
+  </data>
+  <data name="PlaylistToolbarPinToStartButton.Label" xml:space="preserve">
+    <value>Pin to start</value>
+  </data>
+  <data name="PlaylistToolbarPlayButton.Label" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="PlaylistToolbarPlayNextButton.Label" xml:space="preserve">
+    <value>Play next</value>
+  </data>
+  <data name="PlaylistToolbarRenameButton.Label" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="PlayPlaylistContextMenuItem.Text" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="PlayPlaylistNextContextMenuItem.Text" xml:space="preserve">
+    <value>Play next</value>
+  </data>
+  <data name="PlayPlaylistsButton.Label" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="PlayPlaylistsNextButton.Label" xml:space="preserve">
+    <value>Play next</value>
   </data>
   <data name="PlayTrackContextMenuItem.Text" xml:space="preserve">
     <value>Play</value>
+  </data>
+  <data name="RenamePlaylistButton.Label" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="RenamePlaylistContextMenuItem.Text" xml:space="preserve">
+    <value>Rename</value>
   </data>
   <data name="ResumeSyncButton.Content" xml:space="preserve">
     <value>Resume sync</value>
@@ -257,6 +314,9 @@
   </data>
   <data name="SearchItemTrackDescriptionFormat" xml:space="preserve">
     <value>Track by {0}</value>
+  </data>
+  <data name="SelectAllPlaylistsButton.Label" xml:space="preserve">
+    <value>Select all</value>
   </data>
   <data name="SettingsPageHeader" xml:space="preserve">
     <value>Settings</value>

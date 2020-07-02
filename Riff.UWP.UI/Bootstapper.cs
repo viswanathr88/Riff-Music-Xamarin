@@ -8,6 +8,7 @@ using Riff.UWP.Storage;
 using Riff.UWP.Strings;
 using Riff.UWP.ViewModel;
 using System.Net.Http;
+using Windows.Devices.Sensors;
 using Windows.Storage;
 
 namespace Riff.UWP
@@ -33,6 +34,7 @@ namespace Riff.UWP
             SimpleIoc.Default.Register<IMusicLibrary>(() => new MusicLibrary(DefaultPath, DatabaseName));
             SimpleIoc.Default.Register<SyncEngine>();
             SimpleIoc.Default.Register<ITrackUrlDownloader>(() => SimpleIoc.Default.GetInstance<SyncEngine>());
+            SimpleIoc.Default.Register(() => SimpleIoc.Default.GetInstance<IMusicLibrary>().Playlists);
 
             // Setup all ViewModels
             SimpleIoc.Default.Register<FirstRunExperienceViewModel>();
@@ -47,6 +49,7 @@ namespace Riff.UWP
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<AlbumViewModel>();
             SimpleIoc.Default.Register<ArtistViewModel>();
+            SimpleIoc.Default.Register<PlaylistViewModel>();
         }
     }
 }

@@ -1,0 +1,103 @@
+﻿<local:PlaylistPageBase
+    x:Class="Riff.UWP.Pages.PlaylistPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Riff.UWP.Pages"
+    xmlns:controls="using:Riff.UWP.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    ShellBackground="{ThemeResource SystemControlAcrylicWindowBrush}">
+
+    <controls:TrackList x:Name="PlaylistTracks"
+                        Items="{x:Bind ViewModel.Items, Mode=OneWay}"
+                        PlayableTracks="{x:Bind ViewModel.Items, Mode=OneWay}"
+                        EnableAlbum="True"
+                        EnableGenre="True"
+                        EnableReleaseYear="True"
+                        EnableTrackNumbers="False"
+                        EnableTrackReordering="True">
+
+        <controls:TrackList.Header>
+            <controls:ResponsiveHeader x:Name="PlaylistHeader"
+                                       Text="{x:Bind ViewModel.Parameter.Name, Mode=OneWay}"
+                                       Margin="0,0,0,20">
+
+                <controls:ResponsiveHeader.Image>
+                    <!-- Playlist icon -->
+                    <UserControl>
+                        <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                                CornerRadius="64"
+                                Width="128"
+                                Height="128"
+                                x:Name="ImageContainer"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup>
+                                    <VisualState>
+                                        <VisualState.StateTriggers>
+                                            <AdaptiveTrigger MinWindowWidth="641" />
+                                        </VisualState.StateTriggers>
+
+                                        <VisualState.Setters>
+                                            <Setter Target="ImageContainer.Width"
+                                                    Value="196" />
+                                            <Setter Target="ImageContainer.Height"
+                                                    Value="196" />
+                                            <Setter Target="ImageContainer.CornerRadius"
+                                                    Value="96" />
+
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+
+                            <FontIcon FontFamily="Segoe MDL2 Assets"
+                                      Glyph="&#xE90B;"
+                                      FontSize="64"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                        </Border>
+                    </UserControl>
+                </controls:ResponsiveHeader.Image>
+
+                <controls:ResponsiveHeader.Toolbar>
+                    <CommandBar x:Name="PlaylistToolbar"
+                                Background="Transparent"
+                                DefaultLabelPosition="Right"
+                                HorizontalAlignment="Center">
+                        <CommandBar.CommandBarOverflowPresenterStyle>
+                            <Style TargetType="CommandBarOverflowPresenter">
+                                <Setter Property="Margin"
+                                        Value="0,0,20,0" />
+                                <Setter Property="MinWidth"
+                                        Value="180" />
+                                <Setter Property="Width"
+                                        Value="200" />
+                            </Style>
+                        </CommandBar.CommandBarOverflowPresenterStyle>
+
+                        <CommandBar.PrimaryCommands>
+                            <AppBarButton x:Uid="PlaylistToolbarPlayButton"
+                                          x:Name="PlaylistToolbarPlayButton"
+                                          Icon="Play"
+                                          Margin="0,0,10,0"
+                                          Command="{x:Bind PlaylistsVM.Play}"
+                                          CommandParameter="{x:Bind ViewModel.Parameter}"/>
+
+                            <AppBarButton x:Uid="PlaylistToolbarPlayNextButton"
+                                          x:Name="PlaylistToolbarPlayNextButton"
+                                          Icon="Next"
+                                          Margin="0,0,10,0"
+                                          Command="{x:Bind PlaylistsVM.PlayNext}"
+                                          CommandParameter="{x:Bind ViewModel.Parameter}" />
+                        </CommandBar.PrimaryCommands>
+                    </CommandBar>
+                </controls:ResponsiveHeader.Toolbar>
+            </controls:ResponsiveHeader>
+        </controls:TrackList.Header>
+    </controls:TrackList>
+</local:PlaylistPageBase>
