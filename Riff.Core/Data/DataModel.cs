@@ -281,4 +281,21 @@ namespace Riff.Data
             });
         }
     }
+
+    public sealed class Playlist2
+    {
+        public long? Id { get; set; }
+        public string Name { get; set; }
+        public IList<PlaylistItem> Items { get; set; } = new List<PlaylistItem>();
+        public DateTime LastModified { get; set; }
+    }
+
+    public sealed class PlaylistItem
+    {
+        public long? Id { get; set; }
+        public long PlaylistId { get; set; }
+        public DriveItem DriveItem { get; set; }
+        public long? Previous { get; set; }
+        public long? Next { get; set; }
+    }
 }

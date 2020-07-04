@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)DriveItemTableTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GenreTableTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlaylistManagerTest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlaylistTableTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlaylistTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TrackTableTest.cs" />
   </ItemGroup>
