@@ -2,6 +2,7 @@
 using Riff.UWP.Controls;
 using Riff.UWP.ViewModel;
 using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -17,7 +18,7 @@ namespace Riff.UWP.Pages
     /// </summary>
     public sealed partial class PlaylistsPage : PlaylistsPageBase
     {
-        private Playlist currentContextMenuSelection;
+        private Playlist2 currentContextMenuSelection;
 
         public PlaylistsPage()
         {
@@ -34,7 +35,7 @@ namespace Riff.UWP.Pages
         {
             if (e.ClickedItem != null)
             {
-                Frame.Navigate(typeof(PlaylistPage), e.ClickedItem as Playlist, new EntranceNavigationTransitionInfo());
+                Frame.Navigate(typeof(PlaylistPage), e.ClickedItem as Playlist2, new EntranceNavigationTransitionInfo());
             }
         }
 
@@ -43,7 +44,33 @@ namespace Riff.UWP.Pages
             var dialog = new AddPlaylistDialog();
             var result = await dialog.ShowAsync();
 
-            ViewModel.PlaylistName = string.Empty;
+            if (result == ContentDialogResult.Primary)
+            {
+                ViewModel.Add.Execute(null);
+
+                if (ViewModel.Add.Error != null)
+                {
+                    // Create playlist failed
+                    await ShowAddPlaylistErrorMessageDialog();
+                }
+                else
+                {
+                    // Create playlist succeeded
+                    await ViewModel.LoadAsync();
+                }
+            }
+        }
+
+        private async Task ShowAddPlaylistErrorMessageDialog()
+        {
+            ContentDialog dialog = new ContentDialog
+            {
+                Title = Strings.Resources.AddPlaylistErrorDialogTitle,
+                Content = Strings.Resources.AddPlaylistErrorDialogContent,
+                CloseButtonText = Strings.Resources.AddPlaylistErrorDialogCloseButtonText
+            };
+
+            await dialog.ShowAsync();
         }
 
         private Windows.UI.Xaml.Controls.ListViewSelectionMode SetSelectionMode(bool isSelectionMode)
@@ -68,9 +95,9 @@ namespace Riff.UWP.Pages
 
         private void PlaylistContextMenu_Opening(object sender, object e)
         {
-            if (sender is MenuFlyout flyout && flyout.Target is ListViewItem lvitem)
+            if (sender is MenuFlyout flyout && flyout.Target is GridViewItem item)
             {
-                var index = PlaylistsView.IndexFromContainer(lvitem);
+                var index = PlaylistsView.IndexFromContainer(item);
                 currentContextMenuSelection = ViewModel.Playlists[index];
             }
         }
@@ -84,6 +111,7 @@ namespace Riff.UWP.Pages
         {
             var dialog = new RenamePlaylistDialog(currentContextMenuSelection);
             await dialog.ShowAsync();
+            await ViewModel.LoadAsync();
         }
 
         private void PlayPlaylistContextMenuItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -96,9 +124,33 @@ namespace Riff.UWP.Pages
             ViewModel.PlayNext.Execute(currentContextMenuSelection);
         }
 
-        private void DeletePlaylistContextMenuItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void DeletePlaylistContextMenuItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.Delete.Execute(currentContextMenuSelection);
+            var contextMenuItem = currentContextMenuSelection;
+            var result = await ShowDeleteConfirmation();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                ViewModel.Delete.Execute(contextMenuItem);
+                await ViewModel.LoadAsync();
+            }
+        }
+
+        private async void DeletePlaylistsButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var result = await ShowDeleteConfirmation();
+
+            if (result == ContentDialogResult.Primary)
+            {
+                ViewModel.Delete.Execute(PlaylistsView.SelectedItems);
+                await ViewModel.LoadAsync();
+            }
+        }
+
+        private async Task<ContentDialogResult> ShowDeleteConfirmation()
+        {
+            var dialog = new DeletePlaylistConfirmationDialog();
+            return await dialog.ShowAsync();
         }
     }
 }

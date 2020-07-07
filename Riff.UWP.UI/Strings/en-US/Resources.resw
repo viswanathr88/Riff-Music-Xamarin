@@ -129,6 +129,27 @@
   <data name="AddPlaylistButton.Label" xml:space="preserve">
     <value>New playlist</value>
   </data>
+  <data name="AddPlaylistDialogCancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AddPlaylistDialogCreateButtonText" xml:space="preserve">
+    <value>Create playlist</value>
+  </data>
+  <data name="AddPlaylistDialogTextBoxPlaceholder" xml:space="preserve">
+    <value>Name your new playlist</value>
+  </data>
+  <data name="AddPlaylistDialogTitle" xml:space="preserve">
+    <value>New playlist</value>
+  </data>
+  <data name="AddPlaylistErrorDialogCloseButtonText" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="AddPlaylistErrorDialogContent" xml:space="preserve">
+    <value>Please ensure that the name of the playlist is unique and try again</value>
+  </data>
+  <data name="AddPlaylistErrorDialogTitle" xml:space="preserve">
+    <value>Failed to create playlist</value>
+  </data>
   <data name="AddToNowPlayingListMenuItem.Text" xml:space="preserve">
     <value>Now Playing</value>
   </data>
@@ -176,6 +197,18 @@
   </data>
   <data name="ClearPlaylistsSelectionButton.Label" xml:space="preserve">
     <value>Clear selection</value>
+  </data>
+  <data name="DeletePlaylistConfirmationDialogCancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DeletePlaylistConfirmationDialogDeleteButtonText" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DeletePlaylistConfirmationDialogMessage" xml:space="preserve">
+    <value>This cannot be undone. Are you sure you want to delete?</value>
+  </data>
+  <data name="DeletePlaylistConfirmationDialogTitle" xml:space="preserve">
+    <value>Delete Permanently</value>
   </data>
   <data name="DeletePlaylistContextMenuItem.Text" xml:space="preserve">
     <value>Delete</value>

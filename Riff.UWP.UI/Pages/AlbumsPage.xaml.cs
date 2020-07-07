@@ -237,7 +237,7 @@ namespace Riff.UWP.Pages
 
         private async void PlaylistFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItemBase item && item.Tag is Playlist playlist)
+            if (sender is MenuFlyoutItemBase item && item.Tag is Playlist2 playlist)
             {
                 var playlistsVM = ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
                 await playlistsVM.AddToPlaylist(currentFlyoutContext, playlist);

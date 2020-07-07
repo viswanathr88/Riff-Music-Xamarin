@@ -12,7 +12,7 @@
 
     <controls:TrackList x:Name="PlaylistTracks"
                         Items="{x:Bind ViewModel.Items, Mode=OneWay}"
-                        PlayableTracks="{x:Bind ViewModel.Items, Mode=OneWay}"
+                        PlayableTracks="{x:Bind ViewModel.Tracks, Mode=OneWay}"
                         EnableAlbum="True"
                         EnableGenre="True"
                         EnableReleaseYear="True"
@@ -86,14 +86,14 @@
                                           Icon="Play"
                                           Margin="0,0,10,0"
                                           Command="{x:Bind PlaylistsVM.Play}"
-                                          CommandParameter="{x:Bind ViewModel.Parameter}"/>
+                                          CommandParameter="{x:Bind ViewModel.Tracks, Mode=OneWay}"/>
 
                             <AppBarButton x:Uid="PlaylistToolbarPlayNextButton"
                                           x:Name="PlaylistToolbarPlayNextButton"
                                           Icon="Next"
                                           Margin="0,0,10,0"
                                           Command="{x:Bind PlaylistsVM.PlayNext}"
-                                          CommandParameter="{x:Bind ViewModel.Parameter}" />
+                                          CommandParameter="{x:Bind ViewModel.Tracks, Mode=OneWay}" />
                         </CommandBar.PrimaryCommands>
                     </CommandBar>
                 </controls:ResponsiveHeader.Toolbar>

@@ -510,6 +510,7 @@ namespace Riff.Data.Test
 
         internal static void CompareAndAssert(Track x, Track y)
         {
+            if (x == y) return;
             Assert.Equal(x.Id, y.Id);
             Assert.Equal(x.Number, y.Number);
             Assert.Equal(x.ReleaseYear, y.ReleaseYear);

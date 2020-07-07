@@ -122,6 +122,9 @@
   <ItemGroup>
     <Compile Include="Authentication\WindowsLoginManager.cs" />
     <Compile Include="Bootstapper.cs" />
+    <Compile Include="Controls\DeletePlaylistConfirmationDialog.xaml.cs">
+      <DependentUpon>DeletePlaylistConfirmationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ResponsiveHeader.xaml.cs">
       <DependentUpon>ResponsiveHeader.xaml</DependentUpon>
     </Compile>
@@ -287,6 +290,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\DeletePlaylistConfirmationDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ResponsiveHeader.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

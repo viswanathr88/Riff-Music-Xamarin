@@ -15,6 +15,97 @@ namespace Riff.UWP.Strings{
             _resourceLoader = ResourceLoader.GetForViewIndependentUse("Riff.UWP.UI/Resources");
         }
 
+        #region AddPlaylistDialogCancelButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Cancel
+        /// </summary>
+        public static string AddPlaylistDialogCancelButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddPlaylistDialogCancelButtonText");
+            }
+        }
+        #endregion
+
+        #region AddPlaylistDialogCreateButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Create playlist
+        /// </summary>
+        public static string AddPlaylistDialogCreateButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddPlaylistDialogCreateButtonText");
+            }
+        }
+        #endregion
+
+        #region AddPlaylistDialogTextBoxPlaceholder
+        /// <summary>
+        ///   Looks up a localized string similar to: Name your new playlist
+        /// </summary>
+        public static string AddPlaylistDialogTextBoxPlaceholder
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddPlaylistDialogTextBoxPlaceholder");
+            }
+        }
+        #endregion
+
+        #region AddPlaylistDialogTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: New playlist
+        /// </summary>
+        public static string AddPlaylistDialogTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddPlaylistDialogTitle");
+            }
+        }
+        #endregion
+
+        #region AddPlaylistErrorDialogCloseButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Ok
+        /// </summary>
+        public static string AddPlaylistErrorDialogCloseButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddPlaylistErrorDialogCloseButtonText");
+            }
+        }
+        #endregion
+
+        #region AddPlaylistErrorDialogContent
+        /// <summary>
+        ///   Looks up a localized string similar to: Please ensure that the name of the playlist is unique and try again
+        /// </summary>
+        public static string AddPlaylistErrorDialogContent
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddPlaylistErrorDialogContent");
+            }
+        }
+        #endregion
+
+        #region AddPlaylistErrorDialogTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Failed to create playlist
+        /// </summary>
+        public static string AddPlaylistErrorDialogTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddPlaylistErrorDialogTitle");
+            }
+        }
+        #endregion
+
         #region AlbumPageHeader
         /// <summary>
         ///   Looks up a localized string similar to: Album
@@ -76,6 +167,58 @@ namespace Riff.UWP.Strings{
             get
             {
                 return _resourceLoader.GetString("ArtistsPageOneAlbumFormat");
+            }
+        }
+        #endregion
+
+        #region DeletePlaylistConfirmationDialogCancelButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Cancel
+        /// </summary>
+        public static string DeletePlaylistConfirmationDialogCancelButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("DeletePlaylistConfirmationDialogCancelButtonText");
+            }
+        }
+        #endregion
+
+        #region DeletePlaylistConfirmationDialogDeleteButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Delete
+        /// </summary>
+        public static string DeletePlaylistConfirmationDialogDeleteButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("DeletePlaylistConfirmationDialogDeleteButtonText");
+            }
+        }
+        #endregion
+
+        #region DeletePlaylistConfirmationDialogMessage
+        /// <summary>
+        ///   Looks up a localized string similar to: This cannot be undone. Are you sure you want to delete?
+        /// </summary>
+        public static string DeletePlaylistConfirmationDialogMessage
+        {
+            get
+            {
+                return _resourceLoader.GetString("DeletePlaylistConfirmationDialogMessage");
+            }
+        }
+        #endregion
+
+        #region DeletePlaylistConfirmationDialogTitle
+        /// <summary>
+        ///   Looks up a localized string similar to: Delete Permanently
+        /// </summary>
+        public static string DeletePlaylistConfirmationDialogTitle
+        {
+            get
+            {
+                return _resourceLoader.GetString("DeletePlaylistConfirmationDialogTitle");
             }
         }
         #endregion
@@ -389,11 +532,22 @@ namespace Riff.UWP.Strings{
         public enum KeyEnum
         {
             __Undefined = 0,
+            AddPlaylistDialogCancelButtonText,
+            AddPlaylistDialogCreateButtonText,
+            AddPlaylistDialogTextBoxPlaceholder,
+            AddPlaylistDialogTitle,
+            AddPlaylistErrorDialogCloseButtonText,
+            AddPlaylistErrorDialogContent,
+            AddPlaylistErrorDialogTitle,
             AlbumPageHeader,
             AppDisplayName,
             ArtistPageHeader,
             ArtistsPageMultipleAlbumFormat,
             ArtistsPageOneAlbumFormat,
+            DeletePlaylistConfirmationDialogCancelButtonText,
+            DeletePlaylistConfirmationDialogDeleteButtonText,
+            DeletePlaylistConfirmationDialogMessage,
+            DeletePlaylistConfirmationDialogTitle,
             HomePageHeader,
             LoginDescription,
             MusicLibraryPageHeader,

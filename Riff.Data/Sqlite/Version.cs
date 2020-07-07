@@ -4,6 +4,7 @@
     {
         None = 0,
         Initial = 1,
-        AddIndexes = 2
+        AddIndexes = 2,
+        AddPlaylists = 3
     };
 }

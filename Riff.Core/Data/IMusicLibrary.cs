@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Riff.Data.Sqlite;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Riff.Data
 {
@@ -21,6 +21,10 @@ namespace Riff.Data
         IThumbnailInfoAccessor Thumbnails { get; }
 
         IThumbnailCache AlbumArts { get; }
+
+        IPlaylistAccessor Playlists { get; }
+
+        IPlaylistItemAccessor PlaylistItems { get; }
 
         void Save();
 
@@ -45,6 +49,10 @@ namespace Riff.Data
 
         IThumbnailReadOnlyCache AlbumArts { get; }
 
+        IPlaylistReadOnlyAccessor Playlists2 { get; }
+
+        IPlaylistItemReadOnlyAccessor PlaylistItems { get; }
+
         IEditSession Edit();
 
         event EventHandler<EventArgs> Refreshed;
@@ -52,7 +60,5 @@ namespace Riff.Data
         void Search(SearchQuery query, List<SearchItem> results);
 
         IList<SearchItem> Search(SearchQuery query);
-
-        IPlaylistManager Playlists { get; }
     }
 }

@@ -118,6 +118,19 @@ namespace Riff.Data.Sqlite
             return album;
         }
 
+        public PlaylistItem ExtractPlaylistItem(SqliteDataReader reader)
+        {
+            int index = 0;
+            return new PlaylistItem()
+            {
+                Id = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemId") ? (long?)reader.GetInt64(index++) : null,
+                PlaylistId = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemPlaylistId") ? reader.GetInt64(index++) : -1,
+                Previous = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemPrevious") && !reader.IsDBNull(index++) ? (long?)reader.GetInt64(index - 1) : null,
+                Next = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemNext") && !reader.IsDBNull(index++) ? (long?)reader.GetInt64(index - 1) : null,
+                DriveItem = ExtractDriveItem(reader, ref index)
+            };
+        }
+
         public Track ExtractTrack(SqliteDataReader reader)
         {
             int index = 0;
@@ -204,6 +217,17 @@ namespace Riff.Data.Sqlite
             };
         }
 
+        public Playlist2 ExtractPlaylist(SqliteDataReader reader)
+        {
+            int index = 0;
+            return new Playlist2()
+            {
+                Id = reader.GetInt64(index++),
+                Name = reader.GetString(index++),
+                LastModified = new DateTime(reader.GetInt64(index++))
+            };
+        }
+
         public AlbumQueryItem ExtractAlbumQueryItem(SqliteDataReader reader)
         {
             int index = 0;
@@ -252,6 +276,5 @@ namespace Riff.Data.Sqlite
                 AlbumId = reader.GetInt64(index++)
             };
         }
-
     }
 }

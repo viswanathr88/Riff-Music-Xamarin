@@ -10,7 +10,7 @@ namespace Riff.Data
 {
     public sealed class MusicLibrary : IMusicLibrary, IEditSessionHandler
     {
-        private static readonly Version LatestVersion = Version.AddIndexes;
+        private static readonly Version LatestVersion = Version.AddPlaylists;
         private readonly SqliteConnection connection;
         private readonly DataExtractor extractor = new DataExtractor();
 
@@ -21,6 +21,8 @@ namespace Riff.Data
         private readonly DriveItemTable driveItemTable;
         private readonly IndexedTrackTable indexedTrackTable;
         private readonly ThumbnailInfoTable thumbnailInfoTable;
+        private readonly PlaylistTable playlistTable;
+        private readonly PlaylistItemTable playlistItemTable;
         private readonly ThumbnailCache thumbnailCache;
 
         public event EventHandler<EventArgs> Refreshed;
@@ -48,8 +50,10 @@ namespace Riff.Data
             driveItemTable = new DriveItemTable(connection, extractor);
             indexedTrackTable = new IndexedTrackTable(connection, extractor);
             thumbnailInfoTable = new ThumbnailInfoTable(connection);
+            playlistItemTable = new PlaylistItemTable(connection, extractor);
+            playlistTable = new PlaylistTable(connection, extractor);
+
             thumbnailCache = new ThumbnailCache(Path.Combine(path, "Thumbnails", "Albums"));
-            Playlists = new PlaylistManager(Path.Combine(path, "Playlists"));
 
             Version version = GetVersion();
 
@@ -72,6 +76,8 @@ namespace Riff.Data
                             driveItemTable.HandleUpgrade(ver);
                             indexedTrackTable.HandleUpgrade(ver);
                             thumbnailInfoTable.HandleUpgrade(ver);
+                            playlistTable.HandleUpgrade(ver);
+                            playlistItemTable.HandleUpgrade(ver);
                             
                             SetVersion(ver);
                             transaction.Commit();
@@ -99,10 +105,11 @@ namespace Riff.Data
         public IIndexReadOnlyAccessor Index => indexedTrackTable;
 
         public IThumbnailInfoReadOnlyAccessor Thumbnails => thumbnailInfoTable;
-
         public IThumbnailReadOnlyCache AlbumArts => thumbnailCache;
 
-        public IPlaylistManager Playlists { get; }
+        public IPlaylistReadOnlyAccessor Playlists2 => playlistTable;
+
+        public IPlaylistItemReadOnlyAccessor PlaylistItems => playlistItemTable;
 
         public void Dispose()
         {
@@ -146,7 +153,9 @@ namespace Riff.Data
                 DriveItems = driveItemTable,
                 Index = indexedTrackTable,
                 Thumbnails = thumbnailInfoTable,
-                AlbumArts = thumbnailCache
+                AlbumArts = thumbnailCache,
+                Playlists = playlistTable,
+                PlaylistItems = playlistItemTable
             };
         }
 

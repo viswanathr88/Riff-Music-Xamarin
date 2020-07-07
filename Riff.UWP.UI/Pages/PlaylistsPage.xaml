@@ -24,7 +24,7 @@
         </GridView.ItemsPanel>
 
         <GridView.ItemTemplate>
-            <DataTemplate x:DataType="data:Playlist">
+            <DataTemplate x:DataType="data:Playlist2">
                 <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                       Width="128"
                       Height="128">
@@ -55,7 +55,7 @@
         <GridView.ItemContainerStyle>
             <Style TargetType="GridViewItem">
                 <Setter Property="Margin"
-                        Value="0,0,10,10" />
+                        Value="0,0,20,10" />
                 <Setter Property="ContextFlyout">
                     <Setter.Value>
                         <MenuFlyout x:Name="PlaylistContextMenu"
@@ -129,8 +129,7 @@
                                   x:Uid="DeletePlaylistsButton"
                                   Icon="Delete"
                                   Visibility="{x:Bind ViewModel.IsSelectionMode, Mode=OneWay}"
-                                  Command="{x:Bind ViewModel.Delete}"
-                                  CommandParameter="{x:Bind PlaylistsView.SelectedItems}" />
+                                  Click="DeletePlaylistsButton_Click"/>
 
                     <AppBarButton x:Name="PlayPlaylistsButton"
                                   x:Uid="PlayPlaylistsButton"

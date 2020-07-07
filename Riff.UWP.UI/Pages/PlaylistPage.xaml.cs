@@ -23,21 +23,5 @@ namespace Riff.UWP.Pages
         }
 
         private PlaylistsViewModel PlaylistsVM => ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
-
-        private void PlaylistToolbarDeleteButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-
-        }
-
-        private async void PlaylistToolbarRenameButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            var dialog = new RenamePlaylistDialog(ViewModel.Parameter);
-            await dialog.ShowAsync();
-        }
-
-        private void PlaylistToolbarPinToStartButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-
-        }
     }
 }

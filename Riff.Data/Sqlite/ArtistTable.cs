@@ -141,5 +141,6 @@ namespace Riff.Data.Sqlite
 
             return artist;
         }
+
     }
 }

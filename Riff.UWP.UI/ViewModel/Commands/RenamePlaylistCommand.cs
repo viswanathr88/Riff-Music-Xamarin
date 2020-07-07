@@ -11,19 +11,19 @@ namespace Riff.UWP.ViewModel.Commands
 {
     public sealed class RenamePlaylistCommand : ICommand
     {
-        private readonly IPlaylistManager playlistManager;
+        private readonly IMusicLibrary musicLibrary;
         private bool canExecute = true;
 
-        public RenamePlaylistCommand(IPlaylistManager playlistManager)
+        public RenamePlaylistCommand(IMusicLibrary musicLibrary)
         {
-            this.playlistManager = playlistManager;
+            this.musicLibrary = musicLibrary;
         }
 
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
-            return parameter != null && parameter is Playlist && CanExecuteCommand;
+            return parameter != null && parameter is Playlist2 && CanExecuteCommand;
         }
 
         public string PlaylistName
@@ -36,19 +36,27 @@ namespace Riff.UWP.ViewModel.Commands
         {
 
             CanExecuteCommand = false;
-            try
+            using (var session = musicLibrary.Edit())
             {
-                if (parameter != null && parameter is Playlist playlist && playlist.Name != PlaylistName)
+                try
                 {
-                    playlistManager.RenamePlaylist(playlist.Name, PlaylistName);
+                    if (parameter != null && parameter is Playlist2 playlist && playlist.Name != PlaylistName)
+                    {
+                        var clonedPlaylist = playlist.Clone();
+                        clonedPlaylist.Name = PlaylistName;
+                        session.Playlists.Update(clonedPlaylist);
+                        session.Save();
+                    }
                 }
-            }
-            catch (Exception)
-            { }
-            finally
-            {
-                PlaylistName = string.Empty;
-                CanExecuteCommand = true;
+                catch (Exception)
+                {
+                    session.Revert();
+                }
+                finally
+                {
+                    PlaylistName = string.Empty;
+                    CanExecuteCommand = true;
+                }
             }
         }
 

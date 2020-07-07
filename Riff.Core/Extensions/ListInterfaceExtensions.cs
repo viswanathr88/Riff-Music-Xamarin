@@ -24,5 +24,18 @@ namespace Riff.Extensions
 
             return index;
         }
+
+        public static void Append<TElement>(this IList<TElement> list, IList<TElement> list2)
+        {
+            if (list == null || list2 == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            foreach (var element in list2)
+            {
+                list.Add(element);
+            }
+        }
     }
 }
