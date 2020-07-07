@@ -1,4 +1,5 @@
 ﻿using Riff.Data;
+using Riff.UWP.UI.Extensions;
 using Riff.UWP.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
@@ -8,27 +9,40 @@ using System.Windows.Input;
 
 namespace Riff.UWP.ViewModel
 {
+    class PlaylistComparer : IEqualityComparer<Playlist2>
+    {
+        public bool Equals(Playlist2 x, Playlist2 y)
+        {
+            return x.Id == y.Id &&
+                x.Name == y.Name &&
+                x.LastModified == y.LastModified;
+        }
+
+        public int GetHashCode(Playlist2 obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
+
     public class PlaylistsViewModel : DataViewModel
     {
         private readonly IMusicLibrary musicLibrary;
 
-        private ObservableCollection<Playlist> playlists;
-        private string playlistName;
+        private ObservableCollection<Playlist2> playlists = new ObservableCollection<Playlist2>();
         private bool isEmpty;
         private bool isSelectionMode;
 
         public PlaylistsViewModel(IPlayer player, IMusicLibrary library)
         {
             this.musicLibrary = library;
-            this.musicLibrary.Playlists.StateChanged += PlaylistManager_StateChanged;
-            this.Add = new AddPlaylistCommand(musicLibrary.Playlists);
-            Delete = new DeletePlaylistCommand(musicLibrary.Playlists);
-            Play = new PlayPlaylistsCommand(player);
-            PlayNext = new PlayPlaylistsCommand(player) { AddToNowPlayingList = true };
-            Rename = new RenamePlaylistCommand(musicLibrary.Playlists);
+            this.Add = new AddPlaylistCommand(musicLibrary);
+            Delete = new DeletePlaylistCommand(musicLibrary);
+            Play = new PlayPlaylistsCommand(player, musicLibrary);
+            PlayNext = new PlayPlaylistsCommand(player, musicLibrary) { AddToNowPlayingList = true };
+            Rename = new RenamePlaylistCommand(musicLibrary);
         }
 
-        public ObservableCollection<Playlist> Playlists
+        public ObservableCollection<Playlist2> Playlists
         {
             get => playlists;
             private set => SetProperty(ref this.playlists, value);
@@ -40,19 +54,13 @@ namespace Riff.UWP.ViewModel
             private set => SetProperty(ref this.isEmpty, value);
         }
 
-        public string PlaylistName
-        {
-            get => playlistName;
-            set => SetProperty(ref this.playlistName, value);
-        }
-
         public bool IsSelectionMode
         {
             get => isSelectionMode;
             set => SetProperty(ref this.isSelectionMode, value);
         }
 
-        public ICommand Add { get; }
+        public AddPlaylistCommand Add { get; }
 
         public ICommand Delete { get; }
 
@@ -64,8 +72,11 @@ namespace Riff.UWP.ViewModel
 
         public async override Task LoadAsync()
         {
-            var playlists = await Task.Run(() => musicLibrary.Playlists.GetPlaylists());
-            Playlists = new ObservableCollection<Playlist>(playlists);
+            var diffList = await Task.Run(() => {
+                var playlists = musicLibrary.Playlists2.Get(new PlaylistAccessOptions());
+                return Diff.Compare(Playlists, playlists, new PlaylistComparer());
+            });
+            Playlists.ApplyDiff(diffList);
             IsEmpty = (Playlists.Count == 0);
         }
 
@@ -74,7 +85,7 @@ namespace Riff.UWP.ViewModel
             await LoadAsync();
         }
 
-        public async Task AddToPlaylist(Album album, Playlist playlist)
+        public async Task AddToPlaylist(Album album, Playlist2 playlist)
         {
             var options = new DriveItemAccessOptions()
             {
@@ -89,7 +100,7 @@ namespace Riff.UWP.ViewModel
             await AddToPlaylist(options, playlist);
         }
 
-        public async Task AddToPlaylist(Artist artist, Playlist playlist)
+        public async Task AddToPlaylist(Artist artist, Playlist2 playlist)
         {
             var options = new DriveItemAccessOptions()
             {
@@ -104,27 +115,35 @@ namespace Riff.UWP.ViewModel
             await AddToPlaylist(options, playlist);
         }
 
-        public async Task AddToPlaylist(IList<DriveItem> items, Playlist playlist)
+        public async Task AddToPlaylist(IList<DriveItem> items, Playlist2 playlist)
         {
             await AddToPlaylist(() => items, playlist);
         }
 
-        private async Task AddToPlaylist(DriveItemAccessOptions options, Playlist playlist)
+        private async Task AddToPlaylist(DriveItemAccessOptions options, Playlist2 playlist)
         {
             await AddToPlaylist(() => musicLibrary.DriveItems.Get(options), playlist);
         }
 
-        private async Task AddToPlaylist(Func<IList<DriveItem>> itemFetcher, Playlist playlist)
+        private async Task AddToPlaylist(Func<IList<DriveItem>> itemFetcher, Playlist2 playlist)
         {
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
                 var items = itemFetcher();
-                foreach (var item in items)
+                using (var session = musicLibrary.Edit())
                 {
-                    playlist.Items.Add(item);
-                }
+                    IList<PlaylistItem> playlistItems = new List<PlaylistItem>();
+                    foreach (var driveItem in items)
+                    {
+                        playlistItems.Add(new PlaylistItem()
+                        {
+                            DriveItem = driveItem,
+                            PlaylistId = playlist.Id.Value
+                        });
+                    }
 
-                await playlist.SaveAsync();
+                    session.PlaylistItems.Add(playlist, playlistItems);
+                }
             });
         }
     }

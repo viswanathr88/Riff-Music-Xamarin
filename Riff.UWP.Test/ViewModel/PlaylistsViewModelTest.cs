@@ -14,7 +14,7 @@ namespace Riff.UWP.Test.ViewModel
     public sealed class PlaylistsViewModelTest : IDisposable
     {
         private readonly Mock<IMusicLibrary> mockMusicLibrary;
-        private readonly Mock<IPlaylistManager> mockPlaylistManager;
+        private readonly Mock<IPlaylistReadOnlyAccessor> mockPlaylistAccessor;
         private readonly Mock<IPlayer> mockPlayer;
 
         private PlaylistsViewModel playlistsVM;
@@ -22,8 +22,8 @@ namespace Riff.UWP.Test.ViewModel
         public PlaylistsViewModelTest()
         {
             mockMusicLibrary = new Mock<IMusicLibrary>();
-            mockPlaylistManager = new Mock<IPlaylistManager>();
-            mockMusicLibrary.Setup(library => library.Playlists).Returns(mockPlaylistManager.Object);
+            mockPlaylistAccessor = new Mock<IPlaylistReadOnlyAccessor>();
+            mockMusicLibrary.Setup(library => library.Playlists2).Returns(mockPlaylistAccessor.Object);
             mockPlayer = new Mock<IPlayer>();
 
             playlistsVM = new PlaylistsViewModel(mockPlayer.Object, mockMusicLibrary.Object);
@@ -37,14 +37,13 @@ namespace Riff.UWP.Test.ViewModel
             Assert.NotNull(playlistsVM.Play);
             Assert.NotNull(playlistsVM.PlayNext);
             Assert.NotNull(playlistsVM.Rename);
-            Assert.True(string.IsNullOrEmpty(playlistsVM.PlaylistName));
             Assert.Null(playlistsVM.Playlists);
         }
 
         [Fact]
         public async Task LoadAsync_NoPlaylists_VerifyPlaylistsCollectionEmpty()
         {
-            mockPlaylistManager.Setup(manager => manager.GetPlaylists()).Returns(new List<Playlist>());
+            mockPlaylistAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(new List<Playlist2>());
             await playlistsVM.LoadAsync();
             Assert.Empty(playlistsVM.Playlists);
             Assert.True(playlistsVM.IsEmpty);
@@ -53,12 +52,12 @@ namespace Riff.UWP.Test.ViewModel
         [Fact]
         public async Task LoadAsync_FewPlaylists_EnsurePlaylistCollectionCount()
         {
-            IList<Playlist> playlists = new List<Playlist>()
+            IList<Playlist2> playlists = new List<Playlist2>()
             {
-                new Playlist(string.Empty, "TestPlaylist"),
-                new Playlist(string.Empty, "TestPlaylist2")
+                new Playlist2() { Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now },
+                new Playlist2() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now }
             };
-            mockPlaylistManager.Setup(manager => manager.GetPlaylists()).Returns(playlists);
+            mockPlaylistAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(playlists);
             await playlistsVM.LoadAsync();
             Assert.Collection(playlistsVM.Playlists, (item1) => Assert.Equal("TestPlaylist", item1.Name), (item2) => Assert.Equal("TestPlaylist2", item2.Name));
             Assert.False(playlistsVM.IsEmpty);

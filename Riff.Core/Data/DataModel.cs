@@ -64,7 +64,7 @@ namespace Riff.Data
         }
     }
 
-    public sealed class DriveItem
+    public sealed class DriveItem : ITrackContainer
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -77,6 +77,7 @@ namespace Riff.Data
         public int Size { get; set; }
         public DriveItemSource Source { get; set; }
         public Track Track { get; set; }
+        public string DownloadIdentifier => Id;
     }
 
     public class ThumbnailInfo
@@ -227,75 +228,27 @@ namespace Riff.Data
         public IList<SearchItem> Tracks => tracks;
     }
 
-    public sealed class Playlist
-    {
-        private readonly string rootPath;
-
-        public Playlist(string rootPath, string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            Name = name;
-            this.rootPath = rootPath;
-            Items = new List<DriveItem>();
-        }
-
-        public string Name { get; }
-
-        public IList<DriveItem> Items { get; private set; }
-
-        public async Task LoadAsync()
-        {
-            await Task.Run(() =>
-            {
-                using (var stream = new FileStream(Path.Combine(rootPath, Name), FileMode.Open, FileAccess.Read))
-                {
-                    using (var streamReader = new StreamReader(stream))
-                    {
-                        using (var jsonReader = new JsonTextReader(streamReader))
-                        {
-                            var serializer = new JsonSerializer();
-                            var items = serializer.Deserialize<IList<DriveItem>>(jsonReader);
-                            Items = items ?? new List<DriveItem>();
-                        }
-                    }
-                }
-            });
-        }
-
-        public async Task SaveAsync()
-        {
-            await Task.Run(() =>
-            {
-                using (var stream = new FileStream(Path.Combine(rootPath, Name), FileMode.Open, FileAccess.Write))
-                {
-                    using (var streamWriter = new StreamWriter(stream))
-                    {
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Serialize(streamWriter, Items);
-                    }
-                }
-            });
-        }
-    }
-
     public sealed class Playlist2
     {
         public long? Id { get; set; }
         public string Name { get; set; }
-        public IList<PlaylistItem> Items { get; set; } = new List<PlaylistItem>();
         public DateTime LastModified { get; set; }
+
+        public Playlist2 Clone()
+        {
+            return (Playlist2)MemberwiseClone();
+        }
     }
 
-    public sealed class PlaylistItem
+    public sealed class PlaylistItem : ITrackContainer
     {
         public long? Id { get; set; }
         public long PlaylistId { get; set; }
-        public DriveItem DriveItem { get; set; }
         public long? Previous { get; set; }
         public long? Next { get; set; }
+        public DriveItem DriveItem { get; set; }
+
+        public Track Track => DriveItem?.Track;
+        public string DownloadIdentifier => DriveItem?.Id;
     }
 }

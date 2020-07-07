@@ -10,7 +10,6 @@ namespace Riff.Data
 
     public sealed class PlaylistAccessOptions
     {
-        public bool ExpandItems { get; set; }
         public long? PlaylistFilter { get; set; }
         public PlaylistSortType SortType { get; set; } = PlaylistSortType.LastModified;
         public SortOrder SortOrder { get; set; } = SortOrder.Descending;

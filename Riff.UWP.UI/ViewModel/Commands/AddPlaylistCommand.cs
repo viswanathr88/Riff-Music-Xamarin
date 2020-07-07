@@ -1,37 +1,79 @@
 ﻿using Riff.Data;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Controls;
 
 namespace Riff.UWP.ViewModel.Commands
 {
     public sealed class AddPlaylistCommand : ICommand
     {
         public event EventHandler CanExecuteChanged;
-        private IPlaylistManager playlistManager;
-        private bool canExecute = false;
+        private IMusicLibrary musicLibrary;
+        private bool canExecute = true;
 
-        public AddPlaylistCommand(IPlaylistManager playlistManager)
+        public AddPlaylistCommand(IMusicLibrary musicLibrary)
         {
-            this.playlistManager = playlistManager;
+            this.musicLibrary = musicLibrary;
+        }
+
+        public Exception Error
+        {
+            get;
+            private set;
+        }
+
+        public string PlaylistName
+        {
+            get;
+            set;
+        }
+
+        public bool CanExecuteCommand
+        {
+            get => canExecute;
+            private set
+            {
+                if (this.canExecute != value)
+                {
+                    this.canExecute = value;
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
         }
 
         public bool CanExecute(object parameter)
         {
-            var val = parameter is string content && !string.IsNullOrEmpty(content);
-            if (val != canExecute)
-            {
-                canExecute = val;
-                CanExecuteChanged.Invoke(this, EventArgs.Empty);
-            }
-
-            return val;
+            return CanExecuteCommand;
         }
 
         public void Execute(object parameter)
         {
-            if (parameter is string content)
+            Error = null;
+            CanExecuteCommand = false;
+            var playlist = new Playlist2()
             {
-                playlistManager.CreatePlaylist(content);
+                Name = PlaylistName,
+                LastModified = DateTime.Now
+            };
+
+            using (var editor = musicLibrary.Edit())
+            {
+                try
+                {
+                    editor.Playlists.Add(playlist);
+                    editor.Save();
+                }
+                catch (Exception ex)
+                {
+                    Error = ex;
+                    editor.Revert();
+                }
+                finally
+                {
+                    CanExecuteCommand = true;
+                    PlaylistName = string.Empty;
+                }
             }
         }
     }

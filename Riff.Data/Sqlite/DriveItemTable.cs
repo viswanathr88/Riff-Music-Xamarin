@@ -334,11 +334,11 @@ namespace Riff.Data.Sqlite
             command.Parameters.AddWithValue("@Id", item.Id);
             command.Parameters.AddWithNullableValue("@Name", item.Name);
             command.Parameters.AddWithNullableValue("@Description", item.Description);
-            command.Parameters.AddWithValue("@CTag", item.CTag);
-            command.Parameters.AddWithValue("@ETag", item.ETag);
+            command.Parameters.AddWithNullableValue("@CTag", item.CTag);
+            command.Parameters.AddWithNullableValue("@ETag", item.ETag);
             command.Parameters.AddWithValue("@AddedDate", item.AddedDate.Ticks);
             command.Parameters.AddWithValue("@LastModified", item.LastModified.Ticks);
-            command.Parameters.AddWithValue("@DownloadUrl", item.DownloadUrl);
+            command.Parameters.AddWithNullableValue("@DownloadUrl", item.DownloadUrl);
             command.Parameters.AddWithValue("@Size", item.Size);
             command.Parameters.AddWithValue("@Source", item.Source);
             command.Parameters.AddWithValue("@TrackId", item.Track.Id);

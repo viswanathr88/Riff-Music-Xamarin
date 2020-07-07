@@ -20,8 +20,7 @@
               IsSynchronizedWithCurrentItem="False"
               CanReorderItems="{x:Bind EnableTrackReordering, Mode=OneWay}"
               AllowDrop="{x:Bind EnableTrackReordering, Mode=OneWay}"
-              CanDragItems="{x:Bind EnableTrackReordering, Mode=OneWay}"
-              DragItemsCompleted="TrackListView_DragItemsCompleted">
+              CanDragItems="{x:Bind EnableTrackReordering, Mode=OneWay}">
 
         <ListView.Resources>
             <SolidColorBrush x:Key="ListViewItemBackgroundSelected"
@@ -86,7 +85,7 @@
         </ListView.ItemContainerStyle>
 
         <ListView.ItemTemplate>
-            <DataTemplate x:DataType="data:DriveItem">
+            <DataTemplate x:DataType="data:ITrackContainer">
                 <UserControl>
                     <Grid>
                         <Grid.ColumnDefinitions>

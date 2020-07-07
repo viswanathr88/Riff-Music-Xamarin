@@ -125,9 +125,9 @@ namespace Riff.Data.Sqlite
             {
                 Id = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemId") ? (long?)reader.GetInt64(index++) : null,
                 PlaylistId = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemPlaylistId") ? reader.GetInt64(index++) : -1,
-                DriveItem = ExtractDriveItem(reader, ref index),
                 Previous = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemPrevious") && !reader.IsDBNull(index++) ? (long?)reader.GetInt64(index - 1) : null,
-                Next = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemNext") && !reader.IsDBNull(index++) ? (long?)reader.GetInt64(index - 1) : null
+                Next = (index < reader.FieldCount && reader.GetName(index) == "PlaylistItemNext") && !reader.IsDBNull(index++) ? (long?)reader.GetInt64(index - 1) : null,
+                DriveItem = ExtractDriveItem(reader, ref index)
             };
         }
 

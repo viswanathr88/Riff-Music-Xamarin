@@ -15,11 +15,6 @@ namespace Riff.Data.Sqlite
             this.extractor = extractor;
         }
 
-        static ArtistTable()
-        {
-
-        }
-
         public string Name { get; } = "Artist";
 
         public void HandleUpgrade(Version version)

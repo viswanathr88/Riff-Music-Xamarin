@@ -32,6 +32,10 @@ namespace Riff.Data.Sqlite
 
         public IThumbnailCache AlbumArts { get; set; }
 
+        public IPlaylistAccessor Playlists { get; set; }
+
+        public IPlaylistItemAccessor PlaylistItems { get; set; }
+
         public void Revert()
         {
             transaction.Rollback();
@@ -49,7 +53,6 @@ namespace Riff.Data.Sqlite
         {
             RemoveOrphans();
             SaveInternal(false);
-            transaction.Dispose();
             handler?.HandleSessionDisposed();
         }
 
@@ -65,6 +68,8 @@ namespace Riff.Data.Sqlite
 
         private void RemoveOrphans()
         {
+            Query("DELETE FROM PlaylistItem WHERE PlaylistId NOT IN (SELECT DISTINCT Id FROM Playlist)");
+            Query("DELETE FROM PlaylistItem WHERE DriveItemId NOT IN (SELECT DISTINCT Id FROM DriveItem)");
             Query("DELETE FROM Track WHERE Id NOT IN (SELECT DISTINCT TrackId FROM DriveItem)");
             Query("DELETE FROM IndexedTrack WHERE docid NOT IN (SELECT DISTINCT TrackId FROM DriveItem)");
             Query("DELETE FROM Genre WHERE Id NOT IN (SELECT DISTINCT GenreId FROM Track)");

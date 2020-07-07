@@ -352,8 +352,20 @@ namespace Riff.UWP.Controls
             {
                 if (PlayableTracks != null && PlayableTracks.Count > 0)
                 {
-                    var index = Convert.ToUInt32(PlayableTracks.IndexOf(args.ClickedItem as DriveItem));
-                    await Player.PlayAsync(PlayableTracks, index);
+                    uint? index = null;
+                    if (args.ClickedItem is DriveItem item)
+                    {
+                        index = Convert.ToUInt32(PlayableTracks.IndexOf(item));
+                    }
+                    else if (args.ClickedItem is PlaylistItem playlistItem)
+                    {
+                        index = Convert.ToUInt32(PlayableTracks.IndexOf(playlistItem.DriveItem));
+                    }
+
+                    if (index.HasValue)
+                    {
+                        await Player.PlayAsync(PlayableTracks, index.Value);
+                    }
                 }
             }
         }
@@ -470,25 +482,28 @@ namespace Riff.UWP.Controls
         {
             if (currentFlyoutContext != null)
             {
-                await Player.PlayAsync(new List<DriveItem>() { currentFlyoutContext }, 0, true);
+                await Player.PlayAsync(new List<DriveItem>() { currentFlyoutContext }, 0, autoplay:false);
             }
         }
 
         private void TrackContextMenu_Opening(object sender, object e)
         {
-            if (sender is MenuFlyout flyout && flyout.Target is ListViewItem lvitem && lvitem.Content is DriveItem item)
+            if (sender is MenuFlyout flyout && flyout.Target is ListViewItem lvitem)
             {
-                currentFlyoutContext = item;
+                if (lvitem.Content is DriveItem item)
+                {
+                    currentFlyoutContext = item;
+                }
+                else if (lvitem.Content is PlaylistItem playlistItem)
+                {
+                    currentFlyoutContext = playlistItem.DriveItem;
+                }
             }
         }
 
         private void TrackContextMenu_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
         {
             currentFlyoutContext = null;
-        }
-
-        private void TrackListView_DragItemsCompleted(ListViewBase sender, DragItemsCompletedEventArgs args)
-        {
         }
     }
 }

@@ -74,7 +74,6 @@ namespace Riff.Data.Sqlite
 
         public void Delete(long id)
         {
-
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = $"DELETE FROM {Name} WHERE Id = @Id;";
@@ -88,7 +87,6 @@ namespace Riff.Data.Sqlite
             var options = new PlaylistAccessOptions()
             {
                 PlaylistFilter = id,
-                ExpandItems = false
             };
 
             return Get(options).FirstOrDefault();

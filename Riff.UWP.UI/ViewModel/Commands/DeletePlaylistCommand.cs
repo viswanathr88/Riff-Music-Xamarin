@@ -1,42 +1,62 @@
 ﻿using Riff.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace Riff.UWP.ViewModel.Commands
 {
     public sealed class DeletePlaylistCommand : ICommand
     {
-        private readonly IPlaylistManager playlistManager;
+        private readonly IMusicLibrary musicLibrary;
+        private bool canExecute = true;
 
-        public DeletePlaylistCommand(IPlaylistManager playlistManager)
+        public DeletePlaylistCommand(IMusicLibrary musicLibrary)
         {
-            this.playlistManager = playlistManager;
+            this.musicLibrary = musicLibrary;
         }
 
         public event EventHandler CanExecuteChanged;
 
         public bool CanExecute(object parameter)
         {
-            return true;
+            return CanExecuteCommand;
         }
 
         public void Execute(object parameter)
         {
-            if (parameter != null && parameter is IList<object> items)
+            CanExecuteCommand = false;
+            using (var session = musicLibrary.Edit())
             {
-                foreach (var item in items)
+                if (parameter != null && parameter is IList<object> items)
                 {
-                    playlistManager.DeletePlaylist((item as Playlist).Name);
+                    foreach (var item in items)
+                    {
+                        var playlist = item as Playlist2;
+                        session.PlaylistItems.Delete(playlist);
+                        session.Playlists.Delete(playlist.Id.Value);
+                    }
                 }
+                else if (parameter != null && parameter is Playlist2 playlist)
+                {
+                    session.PlaylistItems.Delete(playlist);
+                    session.Playlists.Delete(playlist.Id.Value);
+                }
+
+                session.Save();
             }
-            else if (parameter != null && parameter is Playlist playlist)
+            CanExecuteCommand = true;
+        }
+
+        private bool CanExecuteCommand
+        {
+            get => canExecute;
+            set
             {
-                playlistManager.DeletePlaylist(playlist.Name);
+                if (canExecute != value)
+                {
+                    this.canExecute = value;
+                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
     }

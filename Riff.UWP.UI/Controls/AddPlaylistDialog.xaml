@@ -2,19 +2,18 @@
                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:local="using:Riff.UWP.Controls"
+               xmlns:strings="using:Riff.UWP.Strings"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                mc:Ignorable="d"
-               Title="New playlist"
-               PrimaryButtonText="Create playlist"
-               PrimaryButtonCommand="{x:Bind ViewModel.Add}"
-               PrimaryButtonCommandParameter="{x:Bind ViewModel.PlaylistName, Mode=OneWay}"
-               CloseButtonText="Cancel"
+               Title="{x:Bind strings:Resources.AddPlaylistDialogTitle}"
+               PrimaryButtonText="{x:Bind strings:Resources.AddPlaylistDialogCreateButtonText}"
+               CloseButtonText="{x:Bind strings:Resources.AddPlaylistDialogCancelButtonText}"
                DefaultButton="Primary">
 
     <Grid>
         <TextBox x:Name="NewPlaylistTextBox"
-                 Text="{x:Bind ViewModel.PlaylistName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 PlaceholderText="Name your new playlist"/>
+                 Text="{x:Bind ViewModel.Add.PlaylistName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 PlaceholderText="{x:Bind strings:Resources.AddPlaylistDialogTextBoxPlaceholder}"/>
     </Grid>
 </ContentDialog>
