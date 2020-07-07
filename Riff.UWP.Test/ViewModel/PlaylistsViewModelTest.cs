@@ -37,7 +37,7 @@ namespace Riff.UWP.Test.ViewModel
             Assert.NotNull(playlistsVM.Play);
             Assert.NotNull(playlistsVM.PlayNext);
             Assert.NotNull(playlistsVM.Rename);
-            Assert.Null(playlistsVM.Playlists);
+            Assert.Empty(playlistsVM.Playlists);
         }
 
         [Fact]
