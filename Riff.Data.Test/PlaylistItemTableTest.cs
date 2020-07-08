@@ -57,7 +57,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Add_NullPlaylistItem_Throw()
         {
-            var playlist = new Playlist2() { Id = 1, Name = "Test" };
+            var playlist = new Playlist() { Id = 1, Name = "Test" };
             PlaylistItem item = null;
             Assert.Throws<ArgumentNullException>(() => playlistItemTable.Add(playlist, item));
         }
@@ -65,7 +65,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Add_NullPlaylistId_Throw()
         {
-            var playlist = new Playlist2() { Name = "Test" };
+            var playlist = new Playlist() { Name = "Test" };
             var playlistItem = new PlaylistItem() { DriveItem = new DriveItem() { Id = "TestId" }, PlaylistId = 1 };
             Assert.Throws<ArgumentNullException>(() => playlistItemTable.Add(playlist, playlistItem));
         }
@@ -78,7 +78,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value };
 
             Assert.Null(playlistItem.Id);
@@ -100,7 +100,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem1 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem3 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
@@ -124,7 +124,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = new Artist() { Id = artist.Id }, Genre = new Genre() { Id = genre.Id }, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = new Album() { Id = album.Id }, Genre = new Genre() { Id = genre.Id } });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = new Track() { Id = track.Id } });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem1 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value, Previous = playlistItem1.Id });
             var playlistItem3 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value, Previous = playlistItem2.Id });
@@ -158,7 +158,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = new Artist() { Id = artist.Id }, Genre = new Genre() { Id = genre.Id }, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = new Album() { Id = album.Id }, Genre = new Genre() { Id = genre.Id } });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = new Track() { Id = track.Id } });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem1 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value, Previous = playlistItem1.Id });
             driveItem.Track = null; // Don't expect Track to be returned
@@ -183,7 +183,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = new Artist() { Id = artist.Id }, Genre = new Genre() { Id = genre.Id }, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = new Album() { Id = album.Id }, Genre = new Genre() { Id = genre.Id } });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = new Track() { Id = track.Id } });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem1 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value, Previous = playlistItem1.Id });
             driveItem.Track = null; // Don't expect Track to be returned
@@ -208,8 +208,8 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = new Artist() { Id = artist.Id }, Genre = new Genre() { Id = genre.Id }, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = new Album() { Id = album.Id }, Genre = new Genre() { Id = genre.Id } });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = new Track() { Id = track.Id } });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
-            var playlist2 = playlistTable.Add(new Playlist2() { Name = "Test Playlist 2", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist2 = playlistTable.Add(new Playlist() { Name = "Test Playlist 2", LastModified = DateTime.Now });
 
             var playlistItem1 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist2.Id.Value, Previous = playlistItem1.Id });
@@ -235,8 +235,8 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = new Artist() { Id = artist.Id }, Genre = new Genre() { Id = genre.Id }, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = new Album() { Id = album.Id }, Genre = new Genre() { Id = genre.Id } });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = new Track() { Id = track.Id } });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
-            var playlist2 = playlistTable.Add(new Playlist2() { Name = "Test Playlist 2", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist2 = playlistTable.Add(new Playlist() { Name = "Test Playlist 2", LastModified = DateTime.Now });
 
             var playlistItem1 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist2.Id.Value, Previous = playlistItem1.Id });
@@ -263,7 +263,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
             // Deeper Album properties wont be returned
@@ -316,7 +316,7 @@ namespace Riff.Data.Test
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
             var driveItem2 = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId2", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
             Assert.Equal(playlistItem.DriveItem.Id, driveItem.Id);
@@ -335,8 +335,8 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
-            var playlist2 = playlistTable.Add(new Playlist2() { Name = "Test Playlist 2", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist2 = playlistTable.Add(new Playlist() { Name = "Test Playlist 2", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
             Assert.Equal(playlistItem.PlaylistId, playlist.Id);
@@ -355,7 +355,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             Assert.Equal(playlistItem.Id, playlistItemTable.Get(playlistItem2.Id.Value).Previous);
@@ -375,7 +375,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             Assert.Equal(playlistItem2.Id, playlistItemTable.Get(playlistItem.Id.Value).Next);
@@ -396,7 +396,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
             Assert.Equal(1, playlistItem.Id);
@@ -411,7 +411,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
             Assert.NotNull(playlistItemTable.Get(playlistItem.Id.Value));
@@ -427,7 +427,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
@@ -444,7 +444,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
@@ -461,7 +461,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem3 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
@@ -486,7 +486,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Reorder_NullPlaylist_Throw()
         {
-            Playlist2 playlist = null;
+            Playlist playlist = null;
             Assert.Throws<ArgumentNullException>(() => playlistItemTable.Reorder(playlist, 0, 1, 4));
         }
 
@@ -498,7 +498,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
@@ -513,7 +513,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
@@ -528,7 +528,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
@@ -543,7 +543,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
@@ -563,7 +563,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
 
@@ -583,7 +583,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem3 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
@@ -614,7 +614,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
             var playlistItem = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem2 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
             var playlistItem3 = playlistItemTable.Add(playlist, new PlaylistItem() { DriveItem = driveItem, PlaylistId = playlist.Id.Value });
@@ -645,7 +645,7 @@ namespace Riff.Data.Test
             var album = albumTable.Add(new Album() { Name = "Test Album", Artist = artist, Genre = genre, ReleaseYear = 2000 });
             var track = trackTable.Add(new Track() { Title = "Test Track", Artist = "Test Track Artist", Album = album, Genre = genre });
             var driveItem = driveItemTable.Add(new DriveItem() { Id = "TestDriveItemId", Track = track });
-            var playlist = playlistTable.Add(new Playlist2() { Name = "Test Playlist", LastModified = DateTime.Now });
+            var playlist = playlistTable.Add(new Playlist() { Name = "Test Playlist", LastModified = DateTime.Now });
 
             var items = playlistItemTable.Get(new PlaylistItemAccessOptions() { PlaylistFilter = playlist.Id });
             Assert.Empty(items);

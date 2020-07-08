@@ -18,12 +18,12 @@ namespace Riff.Data.Sqlite
 
     public interface IPlaylistItemAccessor : IPlaylistItemReadOnlyAccessor
     {
-        IList<PlaylistItem> Add(Playlist2 playlist, IList<PlaylistItem> items);
-        PlaylistItem Add(Playlist2 playlist, PlaylistItem item);
-        void Delete(Playlist2 playlist);
+        IList<PlaylistItem> Add(Playlist playlist, IList<PlaylistItem> items);
+        PlaylistItem Add(Playlist playlist, PlaylistItem item);
+        void Delete(Playlist playlist);
         void Delete(long id);
         void Update(PlaylistItem item);
-        void Reorder(Playlist2 playlist, int newIndex, int oldIndex, int count);
+        void Reorder(Playlist playlist, int newIndex, int oldIndex, int count);
         void Reorder(IList<PlaylistItem> sourceItems, int newIndex, int oldIndex, int count);
     }
 }

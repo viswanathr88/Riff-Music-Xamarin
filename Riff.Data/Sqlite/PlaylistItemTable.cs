@@ -49,7 +49,7 @@ namespace Riff.Data.Sqlite
             }
         }
 
-        public PlaylistItem Add(Playlist2 playlist, PlaylistItem item)
+        public PlaylistItem Add(Playlist playlist, PlaylistItem item)
         {
             if (item == null)
             {
@@ -59,7 +59,7 @@ namespace Riff.Data.Sqlite
             return Add(playlist, new List<PlaylistItem>() { item }).FirstOrDefault();
         }
 
-        public IList<PlaylistItem> Add(Playlist2 playlist, IList<PlaylistItem> items)
+        public IList<PlaylistItem> Add(Playlist playlist, IList<PlaylistItem> items)
         {
             if (playlist == null || !playlist.Id.HasValue)
             {
@@ -223,7 +223,7 @@ namespace Riff.Data.Sqlite
             }
         }
 
-        public void Delete(Playlist2 playlist)
+        public void Delete(Playlist playlist)
         {
             using (var command = connection.CreateCommand())
             {
@@ -233,7 +233,7 @@ namespace Riff.Data.Sqlite
             }
         }
 
-        public void Reorder(Playlist2 playlist, int newIndex, int oldIndex, int count)
+        public void Reorder(Playlist playlist, int newIndex, int oldIndex, int count)
         {
             if (playlist == null)
             {

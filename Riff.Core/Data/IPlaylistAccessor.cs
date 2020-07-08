@@ -17,14 +17,14 @@ namespace Riff.Data
 
     public interface IPlaylistReadOnlyAccessor
     {
-        Playlist2 Get(long id);
-        IList<Playlist2> Get(PlaylistAccessOptions options);
+        Playlist Get(long id);
+        IList<Playlist> Get(PlaylistAccessOptions options);
     }
 
    public interface IPlaylistAccessor : IPlaylistReadOnlyAccessor
     {
-        Playlist2 Add(Playlist2 playlist);
-        Playlist2 Update(Playlist2 playlist);
+        Playlist Add(Playlist playlist);
+        Playlist Update(Playlist playlist);
         void Delete(long id);
     }
 }

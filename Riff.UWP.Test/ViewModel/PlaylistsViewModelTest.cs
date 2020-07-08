@@ -43,7 +43,7 @@ namespace Riff.UWP.Test.ViewModel
         [Fact]
         public async Task LoadAsync_NoPlaylists_VerifyPlaylistsCollectionEmpty()
         {
-            mockPlaylistAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(new List<Playlist2>());
+            mockPlaylistAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(new List<Playlist>());
             await playlistsVM.LoadAsync();
             Assert.Empty(playlistsVM.Playlists);
             Assert.True(playlistsVM.IsEmpty);
@@ -52,10 +52,10 @@ namespace Riff.UWP.Test.ViewModel
         [Fact]
         public async Task LoadAsync_FewPlaylists_EnsurePlaylistCollectionCount()
         {
-            IList<Playlist2> playlists = new List<Playlist2>()
+            IList<Playlist> playlists = new List<Playlist>()
             {
-                new Playlist2() { Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now },
-                new Playlist2() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now }
+                new Playlist() { Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now },
+                new Playlist() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now }
             };
             mockPlaylistAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(playlists);
             await playlistsVM.LoadAsync();

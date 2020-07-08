@@ -57,13 +57,13 @@ namespace Riff.UWP.ViewModel.Commands
             {
                 foreach (var item in items)
                 {
-                    if (item is Playlist2 playlist)
+                    if (item is Playlist playlist)
                     {
                         ExtractDriveItems(tracks, playlist);
                     }
                 }
             }
-            else if (parameter != null && parameter is Playlist2 playlist)
+            else if (parameter != null && parameter is Playlist playlist)
             {
                 ExtractDriveItems(tracks, playlist);
             }
@@ -76,7 +76,7 @@ namespace Riff.UWP.ViewModel.Commands
             CanExecuteCommand = true;
         }
 
-        private void ExtractDriveItems(IList<DriveItem> tracks, Playlist2 playlist)
+        private void ExtractDriveItems(IList<DriveItem> tracks, Playlist playlist)
         {
             var options = new PlaylistItemAccessOptions()
             {

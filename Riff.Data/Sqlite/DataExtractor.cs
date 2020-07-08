@@ -217,10 +217,10 @@ namespace Riff.Data.Sqlite
             };
         }
 
-        public Playlist2 ExtractPlaylist(SqliteDataReader reader)
+        public Playlist ExtractPlaylist(SqliteDataReader reader)
         {
             int index = 0;
-            return new Playlist2()
+            return new Playlist()
             {
                 Id = reader.GetInt64(index++),
                 Name = reader.GetString(index++),

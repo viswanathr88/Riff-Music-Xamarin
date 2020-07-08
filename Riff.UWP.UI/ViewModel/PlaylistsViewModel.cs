@@ -9,16 +9,16 @@ using System.Windows.Input;
 
 namespace Riff.UWP.ViewModel
 {
-    class PlaylistComparer : IEqualityComparer<Playlist2>
+    class PlaylistComparer : IEqualityComparer<Playlist>
     {
-        public bool Equals(Playlist2 x, Playlist2 y)
+        public bool Equals(Playlist x, Playlist y)
         {
             return x.Id == y.Id &&
                 x.Name == y.Name &&
                 x.LastModified == y.LastModified;
         }
 
-        public int GetHashCode(Playlist2 obj)
+        public int GetHashCode(Playlist obj)
         {
             return obj.GetHashCode();
         }
@@ -28,7 +28,7 @@ namespace Riff.UWP.ViewModel
     {
         private readonly IMusicLibrary musicLibrary;
 
-        private ObservableCollection<Playlist2> playlists = new ObservableCollection<Playlist2>();
+        private ObservableCollection<Playlist> playlists = new ObservableCollection<Playlist>();
         private bool isEmpty;
         private bool isSelectionMode;
 
@@ -42,7 +42,7 @@ namespace Riff.UWP.ViewModel
             Rename = new RenamePlaylistCommand(musicLibrary);
         }
 
-        public ObservableCollection<Playlist2> Playlists
+        public ObservableCollection<Playlist> Playlists
         {
             get => playlists;
             private set => SetProperty(ref this.playlists, value);
@@ -85,7 +85,7 @@ namespace Riff.UWP.ViewModel
             await LoadAsync();
         }
 
-        public async Task AddToPlaylist(Album album, Playlist2 playlist)
+        public async Task AddToPlaylist(Album album, Playlist playlist)
         {
             var options = new DriveItemAccessOptions()
             {
@@ -100,7 +100,7 @@ namespace Riff.UWP.ViewModel
             await AddToPlaylist(options, playlist);
         }
 
-        public async Task AddToPlaylist(Artist artist, Playlist2 playlist)
+        public async Task AddToPlaylist(Artist artist, Playlist playlist)
         {
             var options = new DriveItemAccessOptions()
             {
@@ -115,17 +115,17 @@ namespace Riff.UWP.ViewModel
             await AddToPlaylist(options, playlist);
         }
 
-        public async Task AddToPlaylist(IList<DriveItem> items, Playlist2 playlist)
+        public async Task AddToPlaylist(IList<DriveItem> items, Playlist playlist)
         {
             await AddToPlaylist(() => items, playlist);
         }
 
-        private async Task AddToPlaylist(DriveItemAccessOptions options, Playlist2 playlist)
+        private async Task AddToPlaylist(DriveItemAccessOptions options, Playlist playlist)
         {
             await AddToPlaylist(() => musicLibrary.DriveItems.Get(options), playlist);
         }
 
-        private async Task AddToPlaylist(Func<IList<DriveItem>> itemFetcher, Playlist2 playlist)
+        private async Task AddToPlaylist(Func<IList<DriveItem>> itemFetcher, Playlist playlist)
         {
             await Task.Run(() =>
             {
