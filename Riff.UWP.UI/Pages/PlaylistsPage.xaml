@@ -24,7 +24,7 @@
         </GridView.ItemsPanel>
 
         <GridView.ItemTemplate>
-            <DataTemplate x:DataType="data:Playlist2">
+            <DataTemplate x:DataType="data:Playlist">
                 <Grid Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                       Width="128"
                       Height="128">

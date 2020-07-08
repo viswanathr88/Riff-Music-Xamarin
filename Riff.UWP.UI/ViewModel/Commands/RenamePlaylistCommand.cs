@@ -23,7 +23,7 @@ namespace Riff.UWP.ViewModel.Commands
 
         public bool CanExecute(object parameter)
         {
-            return parameter != null && parameter is Playlist2 && CanExecuteCommand;
+            return parameter != null && parameter is Playlist && CanExecuteCommand;
         }
 
         public string PlaylistName
@@ -40,7 +40,7 @@ namespace Riff.UWP.ViewModel.Commands
             {
                 try
                 {
-                    if (parameter != null && parameter is Playlist2 playlist && playlist.Name != PlaylistName)
+                    if (parameter != null && parameter is Playlist playlist && playlist.Name != PlaylistName)
                     {
                         var clonedPlaylist = playlist.Clone();
                         clonedPlaylist.Name = PlaylistName;

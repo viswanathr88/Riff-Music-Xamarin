@@ -18,7 +18,7 @@ namespace Riff.UWP.Pages
     /// </summary>
     public sealed partial class PlaylistsPage : PlaylistsPageBase
     {
-        private Playlist2 currentContextMenuSelection;
+        private Playlist currentContextMenuSelection;
 
         public PlaylistsPage()
         {
@@ -35,7 +35,7 @@ namespace Riff.UWP.Pages
         {
             if (e.ClickedItem != null)
             {
-                Frame.Navigate(typeof(PlaylistPage), e.ClickedItem as Playlist2, new EntranceNavigationTransitionInfo());
+                Frame.Navigate(typeof(PlaylistPage), e.ClickedItem as Playlist, new EntranceNavigationTransitionInfo());
             }
         }
 

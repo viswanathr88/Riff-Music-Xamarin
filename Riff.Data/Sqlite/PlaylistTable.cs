@@ -41,7 +41,7 @@ namespace Riff.Data.Sqlite
             }
         }
 
-        public Playlist2 Add(Playlist2 playlist)
+        public Playlist Add(Playlist playlist)
         {
             if (playlist.Id.HasValue)
             {
@@ -82,7 +82,7 @@ namespace Riff.Data.Sqlite
             }
         }
 
-        public Playlist2 Get(long id)
+        public Playlist Get(long id)
         {
             var options = new PlaylistAccessOptions()
             {
@@ -92,14 +92,14 @@ namespace Riff.Data.Sqlite
             return Get(options).FirstOrDefault();
         }
 
-        public IList<Playlist2> Get(PlaylistAccessOptions options)
+        public IList<Playlist> Get(PlaylistAccessOptions options)
         {
             if (options == null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
 
-            IList<Playlist2> playlists = new List<Playlist2>();
+            IList<Playlist> playlists = new List<Playlist>();
 
             using (var command = connection.CreateCommand())
             {
@@ -140,7 +140,7 @@ namespace Riff.Data.Sqlite
             builder.AppendLine($"SELECT Id, Name, LastModified FROM {Name}");
         }
 
-        public Playlist2 Update(Playlist2 playlist)
+        public Playlist Update(Playlist playlist)
         {
             if (!playlist.Id.HasValue)
             {
@@ -170,7 +170,7 @@ namespace Riff.Data.Sqlite
             return playlist;
         }
 
-        private void AddParameters(Playlist2 playlist, SqliteCommand command)
+        private void AddParameters(Playlist playlist, SqliteCommand command)
         {
             command.Parameters.AddWithNullableValue("@Name", playlist.Name);
             command.Parameters.AddWithValue("@LastModified", playlist.LastModified.Ticks);

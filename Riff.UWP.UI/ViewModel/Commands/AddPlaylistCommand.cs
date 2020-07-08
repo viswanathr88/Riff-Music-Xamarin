@@ -51,7 +51,7 @@ namespace Riff.UWP.ViewModel.Commands
         {
             Error = null;
             CanExecuteCommand = false;
-            var playlist = new Playlist2()
+            var playlist = new Playlist()
             {
                 Name = PlaylistName,
                 LastModified = DateTime.Now

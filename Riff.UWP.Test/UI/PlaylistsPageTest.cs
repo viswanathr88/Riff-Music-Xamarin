@@ -56,7 +56,7 @@ namespace Riff.UWP.Test.UI
         [Fact]
         public async Task Navigate_NoItems_VerifyNoPlaylistsMessageIsVisible()
         {
-            mockPlaylistsAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(new List<Playlist2>());
+            mockPlaylistsAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(new List<Playlist>());
             Assert.True(await view.LoadPage<PlaylistsPage>(null));
 
             await view.WaitForElementAndCondition<TextBlock>("NoPlaylistsMessage", textblock => textblock.Visibility == Windows.UI.Xaml.Visibility.Visible);
@@ -65,10 +65,10 @@ namespace Riff.UWP.Test.UI
         [Fact]
         public async Task Navigate_FewItems_VerifyNoPlaylistsMessageIsCollapsed()
         {
-            IList<Playlist2> playlists = new List<Playlist2>()
+            IList<Playlist> playlists = new List<Playlist>()
             {
-                new Playlist2(){ Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now},
-                new Playlist2() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now}
+                new Playlist(){ Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now},
+                new Playlist() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now}
             };
 
             mockPlaylistsAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(playlists);
@@ -81,10 +81,10 @@ namespace Riff.UWP.Test.UI
         [Fact]
         public async Task PlaylistsPage_Navigate_VerifyPlaylistsGridCount()
         {
-            IList<Playlist2> playlists = new List<Playlist2>()
+            IList<Playlist> playlists = new List<Playlist>()
             {
-                new Playlist2(){ Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now},
-                new Playlist2() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now}
+                new Playlist(){ Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now},
+                new Playlist() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now}
             };
 
             mockPlaylistsAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(playlists);
@@ -92,8 +92,8 @@ namespace Riff.UWP.Test.UI
             Assert.True(await view.LoadPage<PlaylistsPage>(null));
 
             await view.WaitForElementAndCondition<GridView>("PlaylistsView", gridView => gridView.Items.Count == playlists.Count);
-            await view.WaitForElementAndCondition<GridView>("PlaylistsView", gridView => (gridView.Items[0] as Playlist2).Name == playlists[0].Name);
-            await view.WaitForElementAndCondition<GridView>("PlaylistsView", gridView => (gridView.Items[1] as Playlist2).Name == playlists[1].Name);
+            await view.WaitForElementAndCondition<GridView>("PlaylistsView", gridView => (gridView.Items[0] as Playlist).Name == playlists[0].Name);
+            await view.WaitForElementAndCondition<GridView>("PlaylistsView", gridView => (gridView.Items[1] as Playlist).Name == playlists[1].Name);
         }
 
         [Fact]
@@ -126,10 +126,10 @@ namespace Riff.UWP.Test.UI
         [Fact]
         public async Task ManageMode_ClickSelectAll_VerifySelection()
         {
-            IList<Playlist2> playlists = new List<Playlist2>()
+            IList<Playlist> playlists = new List<Playlist>()
             {
-                new Playlist2(){ Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now},
-                new Playlist2() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now}
+                new Playlist(){ Id = 1, Name = "TestPlaylist", LastModified = DateTime.Now},
+                new Playlist() { Id = 2, Name = "TestPlaylist2", LastModified = DateTime.Now}
             };
 
             mockPlaylistsAccessor.Setup(accessor => accessor.Get(It.IsAny<PlaylistAccessOptions>())).Returns(playlists);

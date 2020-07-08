@@ -228,15 +228,15 @@ namespace Riff.Data
         public IList<SearchItem> Tracks => tracks;
     }
 
-    public sealed class Playlist2
+    public sealed class Playlist
     {
         public long? Id { get; set; }
         public string Name { get; set; }
         public DateTime LastModified { get; set; }
 
-        public Playlist2 Clone()
+        public Playlist Clone()
         {
-            return (Playlist2)MemberwiseClone();
+            return (Playlist)MemberwiseClone();
         }
     }
 

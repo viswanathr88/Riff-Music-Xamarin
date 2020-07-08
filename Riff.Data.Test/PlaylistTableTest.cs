@@ -27,21 +27,21 @@ namespace Riff.Data.Test
         [Fact]
         public void Add_NonEmptyId_Throw()
         {
-            var playlist = new Playlist2() { Id = 1, Name = "TestPlaylist" };
+            var playlist = new Playlist() { Id = 1, Name = "TestPlaylist" };
             Assert.Throws<ArgumentException>(() => playlistTable.Add(playlist));
         }
 
         [Fact]
         public void Add_NullName_Throw()
         {
-            var playlist = new Playlist2() { Name = null };
+            var playlist = new Playlist() { Name = null };
             Assert.Throws<ArgumentException>(() => playlistTable.Add(playlist));
         }
 
         [Fact]
         public void Add_Success_ValidateId()
         {
-            var playlist = new Playlist2() { Name = "TestPlaylist", LastModified = DateTime.Now };
+            var playlist = new Playlist() { Name = "TestPlaylist", LastModified = DateTime.Now };
             var p = playlistTable.Add(playlist);
             Assert.NotNull(p);
             Assert.Equal(1, p.Id);
@@ -50,14 +50,14 @@ namespace Riff.Data.Test
         [Fact]
         public void Add_ExistingPlaylistWithSameName_Throw()
         {
-            playlistTable.Add(new Playlist2() { Name = "TestPlaylist" });
-            Assert.ThrowsAny<Exception>(() => playlistTable.Add(new Playlist2() { Name = "TestPlaylist" }));
+            playlistTable.Add(new Playlist() { Name = "TestPlaylist" });
+            Assert.ThrowsAny<Exception>(() => playlistTable.Add(new Playlist() { Name = "TestPlaylist" }));
         }
 
         [Fact]
         public void Get_NonExistentId_ReturnNull()
         {
-            var playlist = new Playlist2() { Name = "TestPlaylist" };
+            var playlist = new Playlist() { Name = "TestPlaylist" };
             playlistTable.Add(playlist);
 
             Assert.Null(playlistTable.Get(2));
@@ -66,7 +66,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Get_ExistingId_ValidateFields()
         {
-            var playlist = new Playlist2() { Name = "TestPlaylist", LastModified = DateTime.Now };
+            var playlist = new Playlist() { Name = "TestPlaylist", LastModified = DateTime.Now };
             playlistTable.Add(playlist);
 
             var actualPlaylist = playlistTable.Get(playlist.Id.Value);
@@ -82,7 +82,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Get_PlaylistFilter_ValidateFields()
         {
-            var playlist = new Playlist2() { Name = "TestPlaylist", LastModified = DateTime.Now };
+            var playlist = new Playlist() { Name = "TestPlaylist", LastModified = DateTime.Now };
             playlistTable.Add(playlist);
 
             var options = new PlaylistAccessOptions()
@@ -102,12 +102,12 @@ namespace Riff.Data.Test
 
         public void Get_VariousSortType_ValidateOrder(PlaylistSortType type, SortOrder order)
         {
-            List<Playlist2> items = new List<Playlist2>();
-            items.Add(playlistTable.Add(new Playlist2() { Name = "TestPlaylist1" }));
-            items.Add(playlistTable.Add(new Playlist2() { Name = "TestPlaylist4" }));
-            items.Add(playlistTable.Add(new Playlist2() { Name = "TestPlaylist2" }));
-            items.Add(playlistTable.Add(new Playlist2() { Name = "TestPlaylist7" }));
-            items.Add(playlistTable.Add(new Playlist2() { Name = "TestPlaylist5" }));
+            List<Playlist> items = new List<Playlist>();
+            items.Add(playlistTable.Add(new Playlist() { Name = "TestPlaylist1" }));
+            items.Add(playlistTable.Add(new Playlist() { Name = "TestPlaylist4" }));
+            items.Add(playlistTable.Add(new Playlist() { Name = "TestPlaylist2" }));
+            items.Add(playlistTable.Add(new Playlist() { Name = "TestPlaylist7" }));
+            items.Add(playlistTable.Add(new Playlist() { Name = "TestPlaylist5" }));
 
             if (type == PlaylistSortType.Name)
             {
@@ -127,7 +127,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Delete_ExistingId_Success()
         {
-            var playlist = new Playlist2() { Name = "TestPlaylist" };
+            var playlist = new Playlist() { Name = "TestPlaylist" };
             playlistTable.Add(playlist);
             playlistTable.Delete(playlist.Id.Value);
             Assert.Null(playlistTable.Get(playlist.Id.Value));
@@ -136,7 +136,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Update_NoId_Throw()
         {
-            var playlist = new Playlist2() { Name = "TestPlaylist" };
+            var playlist = new Playlist() { Name = "TestPlaylist" };
             playlistTable.Add(playlist);
 
             playlist.Id = null;
@@ -147,7 +147,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Update_NullName_Throw()
         {
-            var playlist = new Playlist2() { Name = "TestPlaylist" };
+            var playlist = new Playlist() { Name = "TestPlaylist" };
             playlistTable.Add(playlist);
 
             playlist.Name = string.Empty;
@@ -160,7 +160,7 @@ namespace Riff.Data.Test
         [Fact]
         public void Update_ValidName_Success()
         {
-            var playlist = new Playlist2() { Name = "TestPlaylist" };
+            var playlist = new Playlist() { Name = "TestPlaylist" };
             playlistTable.Add(playlist);
 
             playlist.Name = "TestPlaylist2";
@@ -169,21 +169,21 @@ namespace Riff.Data.Test
             Assert.Equal(playlist, playlistTable.Get(1), new PlaylistEqualityComparer());
         }
 
-        class PlaylistEqualityComparer : IEqualityComparer<Playlist2>
+        class PlaylistEqualityComparer : IEqualityComparer<Playlist>
         {
-            public bool Equals(Playlist2 x, Playlist2 y)
+            public bool Equals(Playlist x, Playlist y)
             {
                 CompareAndAssert(x, y);
                 return true;
             }
 
-            public int GetHashCode(Playlist2 obj)
+            public int GetHashCode(Playlist obj)
             {
                 return obj.GetHashCode();
             }
         }
 
-        internal static void CompareAndAssert(Playlist2 first, Playlist2 second)
+        internal static void CompareAndAssert(Playlist first, Playlist second)
         {
             if (first == second) return;
             Assert.Equal(first.Id, second.Id);

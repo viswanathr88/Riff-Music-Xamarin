@@ -31,12 +31,12 @@ namespace Riff.UWP.ViewModel.Commands
                 {
                     foreach (var item in items)
                     {
-                        var playlist = item as Playlist2;
+                        var playlist = item as Playlist;
                         session.PlaylistItems.Delete(playlist);
                         session.Playlists.Delete(playlist.Id.Value);
                     }
                 }
-                else if (parameter != null && parameter is Playlist2 playlist)
+                else if (parameter != null && parameter is Playlist playlist)
                 {
                     session.PlaylistItems.Delete(playlist);
                     session.Playlists.Delete(playlist.Id.Value);

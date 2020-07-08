@@ -9,7 +9,7 @@ namespace Riff.UWP.Controls
 {
     public sealed partial class RenamePlaylistDialog : ContentDialog
     {
-        public RenamePlaylistDialog(Playlist2 playlist)
+        public RenamePlaylistDialog(Playlist playlist)
         {
             this.InitializeComponent();
             CurrentPlaylist = playlist;
@@ -24,6 +24,6 @@ namespace Riff.UWP.Controls
 
         public PlaylistsViewModel ViewModel => SimpleIoc.Default.GetInstance<PlaylistsViewModel>();
 
-        public Playlist2 CurrentPlaylist { get; }
+        public Playlist CurrentPlaylist { get; }
     }
 }

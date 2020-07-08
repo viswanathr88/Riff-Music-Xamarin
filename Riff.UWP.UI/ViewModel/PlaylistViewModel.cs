@@ -8,7 +8,7 @@ using Windows.UI.StartScreen;
 
 namespace Riff.UWP.ViewModel
 {
-    public sealed class PlaylistViewModel : DataViewModel<Playlist2>
+    public sealed class PlaylistViewModel : DataViewModel<Playlist>
     {
         private readonly IMusicLibrary musicLibrary;
         private ObservableCollection<PlaylistItem> items;
@@ -70,7 +70,7 @@ namespace Riff.UWP.ViewModel
             }
         }
 
-        public override async Task LoadAsync(Playlist2 playlist)
+        public override async Task LoadAsync(Playlist playlist)
         {
             var items = await Task.Run(() =>
             {
