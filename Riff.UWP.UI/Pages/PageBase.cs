@@ -40,7 +40,7 @@ namespace Riff.UWP.Pages
                 }
                 else
                 {
-                    await ViewModel.LoadAsync(e.Parameter ?? VoidType.Empty);
+                    await ViewModel.LoadAsync(e.Parameter);
                 }
             }
         }

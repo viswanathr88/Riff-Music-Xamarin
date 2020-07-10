@@ -2,12 +2,6 @@
 {
     public class VoidType
     {
-        public static VoidType Empty
-        {
-            get
-            {
-                return new VoidType();
-            }
-        }
+        public static VoidType Empty { get; } = new VoidType();
     }
 }
