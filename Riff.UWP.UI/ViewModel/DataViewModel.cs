@@ -65,7 +65,12 @@ namespace Riff.UWP.ViewModel
             try
             {
                 IsLoading = true;
-                TParam param = default(TParam);
+                TParam param = default;
+
+                if (typeof(TParam) == typeof(VoidType))
+                {
+                    parameter = VoidType.Empty;
+                }
 
                 // Perform parameter validation
                 if (parameter == null)
