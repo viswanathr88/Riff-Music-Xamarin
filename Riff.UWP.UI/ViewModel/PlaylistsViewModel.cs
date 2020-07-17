@@ -1,11 +1,12 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Mirage.ViewModel.Commands;
+using Riff.Data;
 using Riff.UWP.UI.Extensions;
 using Riff.UWP.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace Riff.UWP.ViewModel
 {
@@ -24,7 +25,7 @@ namespace Riff.UWP.ViewModel
         }
     }
 
-    public class PlaylistsViewModel : DataViewModel
+    public class PlaylistsViewModel : DataViewModel, IPlaylistCommands
     {
         private readonly IMusicLibrary musicLibrary;
 
@@ -37,8 +38,13 @@ namespace Riff.UWP.ViewModel
             this.musicLibrary = library;
             this.Add = new AddPlaylistCommand(musicLibrary);
             Delete = new DeletePlaylistCommand(musicLibrary);
-            Play = new PlayPlaylistsCommand(player, musicLibrary);
-            PlayNext = new PlayPlaylistsCommand(player, musicLibrary) { AddToNowPlayingList = true };
+            DeleteMultiple = new DeletePlaylistsCommand(musicLibrary);
+            Play = new PlayPlaylistCommand(player, musicLibrary);
+            PlayMultiple = new PlayPlaylistsCommand(player, musicLibrary);
+            PlayNext = new PlayPlaylistCommand(player, musicLibrary) { AddToNowPlayingList = true };
+            PlayNextMultiple = new PlayPlaylistsCommand(player, musicLibrary) { AddToNowPlayingList = true };
+            PlayItems = new PlayDriveItemsCommand(player);
+            PlayItemsNext = new PlayDriveItemsCommand(player) { AddToNowPlayingList = true };
             Rename = new RenamePlaylistCommand(musicLibrary);
         }
 
@@ -62,13 +68,23 @@ namespace Riff.UWP.ViewModel
 
         public AddPlaylistCommand Add { get; }
 
-        public ICommand Delete { get; }
+        public ICommand<Playlist> Delete { get; }
 
-        public ICommand Play { get; }
+        public ICommand<IList<object>> DeleteMultiple { get; }
 
-        public ICommand PlayNext { get; }
+        public IAsyncCommand<Playlist> Play { get; }
+
+        public IAsyncCommand<IList<object>> PlayMultiple { get; }
+
+        public IAsyncCommand<Playlist> PlayNext { get; }
+
+        public IAsyncCommand<IList<object>> PlayNextMultiple { get; }
 
         public RenamePlaylistCommand Rename { get; }
+
+        public IAsyncCommand<IList<DriveItem>> PlayItems { get; }
+
+        public IAsyncCommand<IList<DriveItem>> PlayItemsNext { get; }
 
         public async override Task LoadAsync()
         {

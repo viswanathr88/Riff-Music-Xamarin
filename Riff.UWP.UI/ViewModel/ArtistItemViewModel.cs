@@ -1,5 +1,5 @@
-﻿using Riff.Data;
-using System.Collections.ObjectModel;
+﻿using Mirage.ViewModel;
+using Riff.Data;
 using System.Linq;
 
 namespace Riff.UWP.ViewModel

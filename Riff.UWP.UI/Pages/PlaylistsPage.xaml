@@ -134,14 +134,14 @@
                     <AppBarButton x:Name="PlayPlaylistsButton"
                                   x:Uid="PlayPlaylistsButton"
                                   Icon="Play"
-                                  Command="{x:Bind ViewModel.Play}"
+                                  Command="{x:Bind ViewModel.PlayMultiple}"
                                   CommandParameter="{x:Bind PlaylistsView.SelectedItems}"
                                   Visibility="{x:Bind ViewModel.IsSelectionMode, Mode=OneWay}" />
 
                     <AppBarButton x:Name="PlayPlaylistsNextButton"
                                   x:Uid="PlayPlaylistsNextButton"
                                   Icon="Next"
-                                  Command="{x:Bind ViewModel.PlayNext}"
+                                  Command="{x:Bind ViewModel.PlayNextMultiple}"
                                   CommandParameter="{x:Bind PlaylistsView.SelectedItems}"
                                   Visibility="{x:Bind ViewModel.IsSelectionMode, Mode=OneWay}" />
 

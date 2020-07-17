@@ -1,13 +1,11 @@
-﻿using Riff.Sync;
+﻿using Mirage.ViewModel.Commands;
+using Riff.Sync;
 using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
 
 namespace Riff.UWP.ViewModel.Commands
 {
-    public sealed class SyncCommand : ICommand
+    public sealed class SyncCommand : Command
     {
         private readonly SyncEngine syncEngine;
 
@@ -17,18 +15,16 @@ namespace Riff.UWP.ViewModel.Commands
             this.syncEngine.StateChanged += SyncEngine_StateChanged;
         }
 
-        public event EventHandler CanExecuteChanged;
-
-        public bool CanExecute(object parameter)
+        protected override bool CanExecute()
         {
             return syncEngine.State != SyncState.NotStarted || syncEngine.State != SyncState.Syncing;
         }
 
-        public void Execute(object parameter)
+        protected override void Run()
         {
             Task.Run(() => syncEngine.RunAsync());
         }
 
-        private async void SyncEngine_StateChanged(object sender, SyncState e) => await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
+        private async void SyncEngine_StateChanged(object sender, SyncState e) => await UIHelper.RunUISafe(() => EvaluateCanExecute());
     }
 }

@@ -1,4 +1,5 @@
-﻿using Riff.UWP.ViewModel;
+﻿using Mirage.ViewModel;
+using Riff.UWP.ViewModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

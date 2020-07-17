@@ -1,7 +1,4 @@
-﻿using CommonServiceLocator;
-using Riff.UWP.Controls;
-using Riff.UWP.ViewModel;
-using System;
+﻿using Riff.UWP.ViewModel;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,7 +18,5 @@ namespace Riff.UWP.Pages
             this.InitializeComponent();
             HeaderText = Strings.Resources.PlaylistPageHeader;
         }
-
-        private PlaylistsViewModel PlaylistsVM => ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
     }
 }

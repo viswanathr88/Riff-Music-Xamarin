@@ -1,29 +1,16 @@
-﻿using Riff.Data;
-using Riff.UWP.Controls;
+﻿using Mirage.ViewModel.Commands;
+using Riff.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace Riff.UWP.ViewModel.Commands
 {
-    public sealed class RenamePlaylistCommand : ICommand
+    public sealed class RenamePlaylistCommand : Command<Playlist>
     {
         private readonly IMusicLibrary musicLibrary;
-        private bool canExecute = true;
 
         public RenamePlaylistCommand(IMusicLibrary musicLibrary)
         {
             this.musicLibrary = musicLibrary;
-        }
-
-        public event EventHandler CanExecuteChanged;
-
-        public bool CanExecute(object parameter)
-        {
-            return parameter != null && parameter is Playlist && CanExecuteCommand;
         }
 
         public string PlaylistName
@@ -32,43 +19,30 @@ namespace Riff.UWP.ViewModel.Commands
             set;
         }
 
-        public void Execute(object parameter)
+        public override bool CanExecute(Playlist playlist)
         {
+            return playlist != null && playlist.Id.HasValue && !string.IsNullOrEmpty(PlaylistName);
+        }
 
-            CanExecuteCommand = false;
+        protected override void Run(Playlist playlist)
+        {
             using (var session = musicLibrary.Edit())
             {
                 try
                 {
-                    if (parameter != null && parameter is Playlist playlist && playlist.Name != PlaylistName)
-                    {
-                        var clonedPlaylist = playlist.Clone();
-                        clonedPlaylist.Name = PlaylistName;
-                        session.Playlists.Update(clonedPlaylist);
-                        session.Save();
-                    }
+                    var clonedPlaylist = playlist.Clone();
+                    clonedPlaylist.Name = PlaylistName;
+                    session.Playlists.Update(clonedPlaylist);
+                    session.Save();
                 }
                 catch (Exception)
                 {
                     session.Revert();
+                    throw;
                 }
                 finally
                 {
                     PlaylistName = string.Empty;
-                    CanExecuteCommand = true;
-                }
-            }
-        }
-
-        private bool CanExecuteCommand
-        {
-            get => canExecute;
-            set
-            {
-                if (this.canExecute != value)
-                {
-                    canExecute = value;
-                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }

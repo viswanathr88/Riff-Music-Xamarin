@@ -125,7 +125,7 @@ namespace Riff.UWP.ViewModel
 
         private async void List_CurrentItemChanged(MediaPlaybackList sender, CurrentMediaPlaybackItemChangedEventArgs args)
         {
-            await ViewModelBase.RunUISafe(async () =>
+            await UIHelper.RunUISafe(async () =>
             {
                 var index = InnerList.CurrentItemIndex;
                 if (index < Items.Count && index >= 0)
@@ -140,7 +140,7 @@ namespace Riff.UWP.ViewModel
 
         private async void Items_VectorChanged(Windows.Foundation.Collections.IObservableVector<MediaPlaybackItem> sender, Windows.Foundation.Collections.IVectorChangedEventArgs args)
         {
-            await ViewModelBase.RunUISafe(() =>
+            await UIHelper.RunUISafe(() =>
             {
                 int index = Convert.ToInt32(args.Index);
 

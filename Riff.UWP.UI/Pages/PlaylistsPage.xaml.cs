@@ -142,7 +142,7 @@ namespace Riff.UWP.Pages
 
             if (result == ContentDialogResult.Primary)
             {
-                ViewModel.Delete.Execute(PlaylistsView.SelectedItems);
+                ViewModel.DeleteMultiple.Execute(PlaylistsView.SelectedItems);
                 await ViewModel.LoadAsync();
             }
         }

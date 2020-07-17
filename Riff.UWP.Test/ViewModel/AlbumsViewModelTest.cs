@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Mirage.ViewModel;
+using Moq;
 using Riff.Data;
 using Riff.UWP.ViewModel;
 using System;

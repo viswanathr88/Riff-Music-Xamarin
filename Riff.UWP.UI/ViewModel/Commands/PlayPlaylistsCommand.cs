@@ -1,16 +1,14 @@
-﻿using Riff.Data;
-using Riff.Data.Sqlite;
-using System;
+﻿using Mirage.ViewModel.Commands;
+using Riff.Data;
 using System.Collections.Generic;
-using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace Riff.UWP.ViewModel.Commands
 {
-    public sealed class PlayPlaylistsCommand : ICommand
+    public sealed class PlayPlaylistsCommand : AsyncCommand<IList<object>>
     {
         private readonly IPlayer player;
         private readonly IMusicLibrary musicLibrary;
-        private bool canExecute = true;
 
         public PlayPlaylistsCommand(IPlayer player, IMusicLibrary musicLibrary)
         {
@@ -24,69 +22,21 @@ namespace Riff.UWP.ViewModel.Commands
             set;
         }
 
-        private bool CanExecuteCommand
+        public override bool CanExecute(IList<object> playlists)
         {
-            get => canExecute;
-            set
+            return true;
+        }
+
+        protected override async Task RunAsync(IList<object> playlists)
+        {
+            int index = 0;
+            foreach (var item in playlists)
             {
-                if (this.canExecute != value)
+                if (item is Playlist playlist)
                 {
-                    this.canExecute = value;
-                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                    bool autoplay = AddToNowPlayingList ? false : index++ == 0;
+                    await player.PlayAsync(playlist, autoplay);
                 }
-            }
-        }
-
-        public event EventHandler CanExecuteChanged;
-
-        public bool CanExecute(object parameter)
-        {
-            return CanExecuteCommand;
-        }
-
-        public async void Execute(object parameter)
-        {
-            CanExecuteCommand = false;
-            IList<DriveItem> tracks = new List<DriveItem>();
-
-            if (parameter != null && parameter is IList<DriveItem> driveItems)
-            {
-                tracks = driveItems;
-            }
-            else if (parameter != null && parameter is IList<object> items)
-            {
-                foreach (var item in items)
-                {
-                    if (item is Playlist playlist)
-                    {
-                        ExtractDriveItems(tracks, playlist);
-                    }
-                }
-            }
-            else if (parameter != null && parameter is Playlist playlist)
-            {
-                ExtractDriveItems(tracks, playlist);
-            }
-
-            if (tracks.Count > 0)
-            {
-                await player.PlayAsync(tracks, 0, autoplay: !AddToNowPlayingList);
-            }
-
-            CanExecuteCommand = true;
-        }
-
-        private void ExtractDriveItems(IList<DriveItem> tracks, Playlist playlist)
-        {
-            var options = new PlaylistItemAccessOptions()
-            {
-                PlaylistFilter = playlist.Id,
-                IncludeDriveItem = true
-            };
-            var playlistItems = musicLibrary.PlaylistItems.Get(options);
-            foreach (var playlistItem in playlistItems)
-            {
-                tracks.Add(playlistItem.DriveItem);
             }
         }
     }

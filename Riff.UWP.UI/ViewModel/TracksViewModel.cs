@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Riff.Data;
 using Riff.UWP.UI.Extensions;
 using System;
 using System.Collections.Generic;
@@ -94,7 +95,7 @@ namespace Riff.UWP.ViewModel
 
         private async void Metadata_Refreshed(object sender, EventArgs e)
         {
-            await RunUISafe(() => IsLoaded = false);
+            await UIHelper.RunUISafe(() => IsLoaded = false);
         }
     }
 }

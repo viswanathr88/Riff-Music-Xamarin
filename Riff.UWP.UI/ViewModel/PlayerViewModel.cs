@@ -1,4 +1,6 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Riff.Data;
+using Riff.Data.Sqlite;
 using Riff.Sync;
 using System;
 using System.Collections.Generic;
@@ -94,6 +96,26 @@ namespace Riff.UWP.ViewModel
             };
 
             await PlayAsync(options, 0, autoplay);
+        }
+
+        public async Task PlayAsync(Playlist playlist, bool autoplay = true)
+        {
+            IList<DriveItem> items = new List<DriveItem>();
+            var options = new PlaylistItemAccessOptions()
+            {
+                PlaylistFilter = playlist.Id,
+                IncludeDriveItem = true
+            };
+            var playlistItems = library.PlaylistItems.Get(options);
+            foreach (var playlistItem in playlistItems)
+            {
+                items.Add(playlistItem.DriveItem);
+            }
+
+            if (playlistItems.Count > 0)
+            {
+                await PlayAsync(items, 0, autoplay);
+            }
         }
 
         public async Task PlayAsync(IList<DriveItem> items, uint startIndex, bool autoplay = true)

@@ -1,61 +1,37 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel.Commands;
+using Riff.Data;
 using System;
-using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace Riff.UWP.ViewModel.Commands
 {
-    public sealed class DeletePlaylistCommand : ICommand
+    public sealed class DeletePlaylistCommand : Command<Playlist>
     {
         private readonly IMusicLibrary musicLibrary;
-        private bool canExecute = true;
 
         public DeletePlaylistCommand(IMusicLibrary musicLibrary)
         {
             this.musicLibrary = musicLibrary;
         }
 
-        public event EventHandler CanExecuteChanged;
-
-        public bool CanExecute(object parameter)
+        public override bool CanExecute(Playlist param)
         {
-            return CanExecuteCommand;
+            return param != null && param.Id.HasValue;
         }
 
-        public void Execute(object parameter)
+        protected override void Run(Playlist playlist)
         {
-            CanExecuteCommand = false;
             using (var session = musicLibrary.Edit())
             {
-                if (parameter != null && parameter is IList<object> items)
-                {
-                    foreach (var item in items)
-                    {
-                        var playlist = item as Playlist;
-                        session.PlaylistItems.Delete(playlist);
-                        session.Playlists.Delete(playlist.Id.Value);
-                    }
-                }
-                else if (parameter != null && parameter is Playlist playlist)
+                try
                 {
                     session.PlaylistItems.Delete(playlist);
                     session.Playlists.Delete(playlist.Id.Value);
+                    session.Save();
                 }
-
-                session.Save();
-            }
-            CanExecuteCommand = true;
-        }
-
-        private bool CanExecuteCommand
-        {
-            get => canExecute;
-            set
-            {
-                if (canExecute != value)
+                catch (Exception)
                 {
-                    this.canExecute = value;
-                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                    session.Revert();
+                    throw;
                 }
             }
         }

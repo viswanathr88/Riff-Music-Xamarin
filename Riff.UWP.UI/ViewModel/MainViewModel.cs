@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Riff.Data;
 using Riff.Sync;
 using System;
 using System.Threading.Tasks;

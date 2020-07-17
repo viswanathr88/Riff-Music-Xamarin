@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Riff.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -73,8 +74,6 @@ namespace Riff.UWP.ViewModel
 
         public async override Task LoadAsync(Artist artist)
         {
-            Parameter = artist;
-
             var options = new DriveItemAccessOptions()
             {
                 IncludeTrack = true,
