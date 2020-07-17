@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Riff.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -59,7 +60,7 @@ namespace Riff.UWP.ViewModel
 
         private async void Metadata_Refreshed(object sender, EventArgs e)
         {
-            await RunUISafe(() => IsLoaded = false);
+            await UIHelper.RunUISafe(() => IsLoaded = false);
         }
 
         private IEnumerable<IGrouping<Artist, Album>> GetArtists()

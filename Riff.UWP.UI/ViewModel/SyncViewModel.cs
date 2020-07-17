@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Riff.Data;
 using Riff.Sync;
 using Riff.UWP.ViewModel.Commands;
 using System;
@@ -86,7 +87,7 @@ namespace Riff.UWP.ViewModel
 
         private async void SyncEngine_StateChanged(object sender, SyncState e)
         {
-            await RunUISafe(() => State = e);
+            await UIHelper.RunUISafe(() => State = e);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Riff.Data;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace Riff.UWP.ViewModel
                 };
 
                 var a = this.library.Albums.Get(albumOptions).First();
-                await RunUISafe(() => AlbumInfo = a);
+                await UIHelper.RunUISafe(() => AlbumInfo = a);
 
                 // Get tracks for album
                 var options = new DriveItemAccessOptions()

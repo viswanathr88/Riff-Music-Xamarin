@@ -44,6 +44,7 @@ namespace Riff.UWP
             SimpleIoc.Default.Register<ArtistsViewModel>();
             SimpleIoc.Default.Register<TracksViewModel>();
             SimpleIoc.Default.Register<PlaylistsViewModel>();
+            SimpleIoc.Default.Register<IPlaylistCommands>(() => SimpleIoc.Default.GetInstance<PlaylistsViewModel>());
             SimpleIoc.Default.Register<PlayerViewModel>();
             SimpleIoc.Default.Register<IPlayer>(() => SimpleIoc.Default.GetInstance<PlayerViewModel>());
             SimpleIoc.Default.Register<SettingsViewModel>();

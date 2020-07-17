@@ -1,5 +1,8 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Mirage.ViewModel.Commands;
+using Riff.Data;
 using Riff.Data.Sqlite;
+using Riff.UWP.ViewModel.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -15,10 +18,16 @@ namespace Riff.UWP.ViewModel
         private IList<DriveItem> tracks;
         private int? oldIndex = null;
 
-        public PlaylistViewModel(IMusicLibrary musicLibrary)
+        public PlaylistViewModel(IMusicLibrary musicLibrary, IPlayer player)
         {
             this.musicLibrary = musicLibrary;
+            Play = new PlayDriveItemsCommand(player);
+            PlayNext = new PlayDriveItemsCommand(player) { AddToNowPlayingList = true };
         }
+
+        public IAsyncCommand<IList<DriveItem>> Play { get; }
+
+        public IAsyncCommand<IList<DriveItem>> PlayNext { get; }
 
         public ObservableCollection<PlaylistItem> Items
         {
@@ -83,6 +92,8 @@ namespace Riff.UWP.ViewModel
             });
             Items = new ObservableCollection<PlaylistItem>(items);
             Tracks = items.Select(playlistItem => playlistItem.DriveItem).ToList();
+            Play.EvaluateCanExecute();
+            PlayNext.EvaluateCanExecute();
         }
     }
 }

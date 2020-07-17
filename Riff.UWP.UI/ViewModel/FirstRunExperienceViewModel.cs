@@ -1,4 +1,5 @@
-﻿using Riff.Authentication;
+﻿using Mirage.ViewModel;
+using Riff.Authentication;
 using Riff.Data;
 using System;
 using System.IO;

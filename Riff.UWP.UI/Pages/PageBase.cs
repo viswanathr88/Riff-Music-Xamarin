@@ -1,4 +1,5 @@
 ﻿using CommonServiceLocator;
+using Mirage.ViewModel;
 using Riff.UWP.ViewModel;
 using System;
 using Windows.UI.Xaml.Controls;

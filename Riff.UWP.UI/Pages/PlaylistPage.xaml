@@ -85,14 +85,14 @@
                                           x:Name="PlaylistToolbarPlayButton"
                                           Icon="Play"
                                           Margin="0,0,10,0"
-                                          Command="{x:Bind PlaylistsVM.Play}"
+                                          Command="{x:Bind ViewModel.Play}"
                                           CommandParameter="{x:Bind ViewModel.Tracks, Mode=OneWay}"/>
 
                             <AppBarButton x:Uid="PlaylistToolbarPlayNextButton"
                                           x:Name="PlaylistToolbarPlayNextButton"
                                           Icon="Next"
                                           Margin="0,0,10,0"
-                                          Command="{x:Bind PlaylistsVM.PlayNext}"
+                                          Command="{x:Bind ViewModel.PlayNext}"
                                           CommandParameter="{x:Bind ViewModel.Tracks, Mode=OneWay}" />
                         </CommandBar.PrimaryCommands>
                     </CommandBar>

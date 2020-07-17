@@ -1,56 +1,39 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel.Commands;
+using Riff.Data;
 using System;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.UI.Xaml.Controls;
 
 namespace Riff.UWP.ViewModel.Commands
 {
-    public sealed class AddPlaylistCommand : ICommand
+    public sealed class AddPlaylistCommand : Command
     {
-        public event EventHandler CanExecuteChanged;
         private IMusicLibrary musicLibrary;
-        private bool canExecute = true;
+        private string playlistName;
 
         public AddPlaylistCommand(IMusicLibrary musicLibrary)
         {
             this.musicLibrary = musicLibrary;
         }
 
-        public Exception Error
-        {
-            get;
-            private set;
-        }
-
         public string PlaylistName
         {
-            get;
-            set;
-        }
-
-        public bool CanExecuteCommand
-        {
-            get => canExecute;
-            private set
+            get => playlistName;
+            set
             {
-                if (this.canExecute != value)
+                if (playlistName != value)
                 {
-                    this.canExecute = value;
-                    CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+                    playlistName = value;
+                    EvaluateCanExecute();
                 }
             }
         }
 
-        public bool CanExecute(object parameter)
+        protected override bool CanExecute()
         {
-            return CanExecuteCommand;
+            return !string.IsNullOrEmpty(PlaylistName);
         }
 
-        public void Execute(object parameter)
+        protected override void Run()
         {
-            Error = null;
-            CanExecuteCommand = false;
             var playlist = new Playlist()
             {
                 Name = PlaylistName,
@@ -64,14 +47,13 @@ namespace Riff.UWP.ViewModel.Commands
                     editor.Playlists.Add(playlist);
                     editor.Save();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Error = ex;
                     editor.Revert();
+                    throw;
                 }
                 finally
                 {
-                    CanExecuteCommand = true;
                     PlaylistName = string.Empty;
                 }
             }

@@ -245,19 +245,18 @@
     <Compile Include="ViewModel\ArtistViewModel.cs" />
     <Compile Include="ViewModel\Commands\AddPlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\DeletePlaylistCommand.cs" />
+    <Compile Include="ViewModel\Commands\DeletePlaylistsCommand.cs" />
     <Compile Include="ViewModel\Commands\IPlaylistNameCommand.cs" />
+    <Compile Include="ViewModel\Commands\PlayDriveItemsCommand.cs" />
+    <Compile Include="ViewModel\Commands\PlayPlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayPlaylistsCommand.cs" />
     <Compile Include="ViewModel\Commands\RenamePlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\SyncCommand.cs" />
-    <Compile Include="ViewModel\DataViewModel.cs" />
     <Compile Include="ViewModel\FirstRunExperienceViewModel.cs" />
-    <Compile Include="ViewModel\IDataViewModel.cs" />
     <Compile Include="ViewModel\IMediaList.cs" />
     <Compile Include="ViewModel\IMediaListItem.cs" />
     <Compile Include="ViewModel\IPlayer.cs" />
-    <Compile Include="ViewModel\ItemCache.cs" />
-    <Compile Include="ViewModel\ItemIndexRangeExtensions.cs" />
-    <Compile Include="ViewModel\ItemIndexRangeList.cs" />
+    <Compile Include="ViewModel\IPlaylistCommands.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MediaList.cs" />
     <Compile Include="ViewModel\MediaListItem.cs" />
@@ -270,9 +269,7 @@
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SyncViewModel.cs" />
     <Compile Include="ViewModel\TracksViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
-    <Compile Include="ViewModel\VirtualDataSource.cs" />
-    <Compile Include="ViewModel\VoidType.cs" />
+    <Compile Include="ViewModel\UIHelper.cs" />
     <EmbeddedResource Include="Properties\Riff.UWP.UII.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -284,6 +281,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.3.200213001</Version>
+    </PackageReference>
+    <PackageReference Include="Mirage.Mvvm">
+      <Version>3.0.25</Version>
     </PackageReference>
     <PackageReference Include="MvvmLightLibs">
       <Version>5.4.1.1</Version>

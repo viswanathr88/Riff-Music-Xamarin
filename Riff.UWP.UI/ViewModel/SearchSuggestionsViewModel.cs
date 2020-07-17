@@ -1,4 +1,5 @@
-﻿using Riff.Data;
+﻿using Mirage.ViewModel;
+using Riff.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

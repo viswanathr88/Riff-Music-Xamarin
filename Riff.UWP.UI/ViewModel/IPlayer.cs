@@ -16,5 +16,7 @@ namespace Riff.UWP.ViewModel
         Task PlayAsync(Album album, bool autoplay = true);
 
         Task PlayAsync(Artist artist, bool autoplay = true);
+
+        Task PlayAsync(Playlist playlist, bool autoplay = true);
     }
 }
