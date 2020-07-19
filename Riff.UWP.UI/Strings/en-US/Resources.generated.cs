@@ -106,6 +106,71 @@ namespace Riff.UWP.Strings{
         }
         #endregion
 
+        #region AddToNewPlaylistTextBoxHeaderText
+        /// <summary>
+        ///   Looks up a localized string similar to: Add to new playlist
+        /// </summary>
+        public static string AddToNewPlaylistTextBoxHeaderText
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddToNewPlaylistTextBoxHeaderText");
+            }
+        }
+        #endregion
+
+        #region AddToPlaylistButtonTooltip
+        /// <summary>
+        ///   Looks up a localized string similar to: Add to playlist (Ctrl+Shift+A)
+        /// </summary>
+        public static string AddToPlaylistButtonTooltip
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddToPlaylistButtonTooltip");
+            }
+        }
+        #endregion
+
+        #region AddToPlaylistDialogCancelButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Cancel
+        /// </summary>
+        public static string AddToPlaylistDialogCancelButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddToPlaylistDialogCancelButtonText");
+            }
+        }
+        #endregion
+
+        #region AddToPlaylistDialogOkButtonText
+        /// <summary>
+        ///   Looks up a localized string similar to: Ok
+        /// </summary>
+        public static string AddToPlaylistDialogOkButtonText
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddToPlaylistDialogOkButtonText");
+            }
+        }
+        #endregion
+
+        #region AddToPlaylistDialogTitleText
+        /// <summary>
+        ///   Looks up a localized string similar to: Add to playlist
+        /// </summary>
+        public static string AddToPlaylistDialogTitleText
+        {
+            get
+            {
+                return _resourceLoader.GetString("AddToPlaylistDialogTitleText");
+            }
+        }
+        #endregion
+
         #region AlbumPageHeader
         /// <summary>
         ///   Looks up a localized string similar to: Album
@@ -284,6 +349,32 @@ namespace Riff.UWP.Strings{
             get
             {
                 return _resourceLoader.GetString("NowPlayingPageHeader");
+            }
+        }
+        #endregion
+
+        #region PlayAlbumButtonTooltip
+        /// <summary>
+        ///   Looks up a localized string similar to: Play (Ctrl+P)
+        /// </summary>
+        public static string PlayAlbumButtonTooltip
+        {
+            get
+            {
+                return _resourceLoader.GetString("PlayAlbumButtonTooltip");
+            }
+        }
+        #endregion
+
+        #region PlayAlbumNextButtonTooltip
+        /// <summary>
+        ///   Looks up a localized string similar to: Play next (Ctrl+Q)
+        /// </summary>
+        public static string PlayAlbumNextButtonTooltip
+        {
+            get
+            {
+                return _resourceLoader.GetString("PlayAlbumNextButtonTooltip");
             }
         }
         #endregion
@@ -539,6 +630,11 @@ namespace Riff.UWP.Strings{
             AddPlaylistErrorDialogCloseButtonText,
             AddPlaylistErrorDialogContent,
             AddPlaylistErrorDialogTitle,
+            AddToNewPlaylistTextBoxHeaderText,
+            AddToPlaylistButtonTooltip,
+            AddToPlaylistDialogCancelButtonText,
+            AddToPlaylistDialogOkButtonText,
+            AddToPlaylistDialogTitleText,
             AlbumPageHeader,
             AppDisplayName,
             ArtistPageHeader,
@@ -553,6 +649,8 @@ namespace Riff.UWP.Strings{
             MusicLibraryPageHeader,
             NavViewSettingsContent,
             NowPlayingPageHeader,
+            PlayAlbumButtonTooltip,
+            PlayAlbumNextButtonTooltip,
             PlaylistPageHeader,
             PlaylistsPageHeader,
             SearchItemAlbumDescriptionFormat,

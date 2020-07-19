@@ -1,4 +1,5 @@
-﻿using Mirage.ViewModel;
+﻿using GalaSoft.MvvmLight.Ioc;
+using Mirage.ViewModel;
 using Moq;
 using Riff.Data;
 using Riff.UWP.ViewModel;
@@ -14,6 +15,7 @@ namespace Riff.UWP.Test.ViewModel
     public sealed class AlbumsViewModelTest
     {
         private readonly Mock<IMusicLibrary> mockMetadata;
+        private readonly Mock<IPlayer> mockPlayer;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
         private readonly AlbumsViewModel albumsVM;
 
@@ -21,14 +23,15 @@ namespace Riff.UWP.Test.ViewModel
         {
             mockMetadata = new Mock<IMusicLibrary>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
+            mockPlayer = new Mock<IPlayer>();
             mockMetadata.Setup(library => library.Albums).Returns(albumAccessor.Object);
-            albumsVM = new AlbumsViewModel(mockMetadata.Object);
-        }
 
-        [Fact]
-        public void Constructor_NullParameter_Throw()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AlbumsViewModel(null));
+            SimpleIoc.Default.Register(() => mockMetadata.Object);
+            SimpleIoc.Default.Register(() => mockPlayer.Object);
+            SimpleIoc.Default.Register<PlaylistsViewModel>();
+            SimpleIoc.Default.Register<AlbumsViewModel>();
+
+            albumsVM = SimpleIoc.Default.GetInstance<AlbumsViewModel>();
         }
 
         [Fact]

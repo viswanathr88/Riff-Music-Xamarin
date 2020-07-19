@@ -144,6 +144,27 @@ namespace Riff.UWP.UI.Extensions
             }
         }
 
+        public static void ApplyDiff<TDest, TSource>(this IList<TDest> list, DiffList<TSource> diffs, Func<TSource, TDest> createDestFn)
+        {
+            int index = 0;
+            foreach (var diff in diffs)
+            {
+                if (diff.Action == DiffAction.Add)
+                {
+                    list.Insert(index, createDestFn(diff.TargetItem));
+                    index++;
+                }
+                else if (diff.Action == DiffAction.Remove)
+                {
+                    list.RemoveAt(index);
+                }
+                else
+                {
+                    index++;
+                }
+            }
+        }
+
         public static void TransformInfo<T>(this IList<T> source, IList<T> target)
         {
             TransformInfo(source, target, EqualityComparer<T>.Default);

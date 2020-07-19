@@ -1,0 +1,28 @@
+﻿<ContentDialog x:Class="Riff.UWP.Controls.AddToPlaylistDialog"
+               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:local="using:Riff.UWP.Controls"
+               xmlns:strings="using:Riff.UWP.Strings"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               mc:Ignorable="d"
+               Title="{x:Bind strings:Resources.AddToPlaylistDialogTitleText}"
+               PrimaryButtonText="{x:Bind strings:Resources.AddToPlaylistDialogOkButtonText}"
+               SecondaryButtonText="{x:Bind strings:Resources.AddToPlaylistDialogCancelButtonText}"
+               DefaultButton="Primary"
+               IsPrimaryButtonEnabled="{x:Bind IsOKButtonEnabled, Mode=OneWay}"
+               MaxHeight="400">
+
+    <ListView x:Name="PlaylistsView"
+              ItemsSource="{x:Bind Playlists.Playlists}"
+              DisplayMemberPath="Name"
+              SelectedItem="{x:Bind SelectedPlaylist, Mode=TwoWay}">
+        <ListView.Footer>
+            <TextBox x:Name="NewPlaylistTextBox"
+                     Margin="10"
+                     Text="{x:Bind NewPlaylistName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     PlaceholderText="{x:Bind strings:Resources.AddPlaylistDialogTextBoxPlaceholder}"
+                     Header="{x:Bind strings:Resources.AddToNewPlaylistTextBoxHeaderText}" />
+        </ListView.Footer>
+    </ListView>
+</ContentDialog>
