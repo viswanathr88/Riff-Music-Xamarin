@@ -17,7 +17,7 @@
             </ResourceDictionary.MergedDictionaries>
             <conv:AlbumSortTypeConverter x:Key="AlbumSortTypeConverter" />
             <conv:SortOrderConverter x:Key="SortOrderConverter" />
-            
+
             <!-- Context Menu -->
             <MenuFlyout x:Name="AlbumContextMenu"
                         x:Uid="AlbumContextMenu"
@@ -38,7 +38,7 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Modifiers="Control"
                                              Key="P"
-                                             ScopeOwner="{x:Bind AlbumItems}"/>
+                                             ScopeOwner="{x:Bind AlbumItems}" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
                 <MenuFlyoutItem x:Name="PlayAlbumNextContextMenuItem"
@@ -70,12 +70,12 @@
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Modifiers="Control,Shift"
                                              Key="B"
-                                             ScopeOwner="{x:Bind AlbumItems}"/>
+                                             ScopeOwner="{x:Bind AlbumItems}" />
                     </MenuFlyoutItem.KeyboardAccelerators>
                 </MenuFlyoutItem>
-                
+
             </MenuFlyout>
-            
+
         </ResourceDictionary>
 
     </Page.Resources>
@@ -147,95 +147,121 @@
             </GridView.ItemContainerStyle>
             <GridView.ItemTemplate>
                 <DataTemplate x:DataType="viewmodel:AlbumItemViewModel">
-                    <Grid x:Name="AlbumRootContainer"
-                          PointerEntered="RelativePanel_PointerEntered"
-                          PointerExited="RelativePanel_PointerExited">
+                    <Grid x:Name="AlbumRootContainer">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
-                        <Border Width="128"
-                                Height="128"
-                                Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
-                                x:Name="AlbumArtContainer">
+                        <Grid Width="128"
+                              Height="128"
+                              Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+                              x:Name="AlbumArtContainer"
+                              PointerEntered="AlbumItem_PointerEntered"
+                              PointerCanceled="AlbumItem_PointerExited"
+                              PointerExited="AlbumItem_PointerExited">
                             <Image x:Name="AlbumArt"
                                    Width="128"
                                    Height="128"
                                    Source="{x:Bind AlbumArtPath}"
                                    x:Phase="2" />
-                        </Border>
+
+                            <Grid x:Name="AlbumOverlayContainer"
+                                  Visibility="{x:Bind ShowOverlayControls, Mode=OneWay}"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  Canvas.ZIndex="3">
+
+                                <Grid x:Name="AlbumOverlayBackground"
+                                      Background="Black"
+                                      Opacity="0.5" />
+
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center">
+                                    <Button x:Name="AlbumPlayOverlayButton"
+                                            Margin="0,0,5,0"
+                                            Style="{ThemeResource AccentButtonStyle}"
+                                            Command="{x:Bind Play}"
+                                            CommandParameter="{x:Bind}"
+                                            ToolTipService.ToolTip="{x:Bind strings:Resources.PlayAlbumButtonTooltip}">
+                                        <Button.Content>
+                                            <FontIcon Glyph="&#xE768;"
+                                                      FontFamily="Segoe MDL2 Assets"
+                                                      FontSize="18" />
+                                        </Button.Content>
+                                    </Button>
+
+                                    <Button x:Name="AlbumPlayNextOverlayButton"
+                                            Margin="0,0,5,0"
+                                            Style="{ThemeResource AccentButtonStyle}"
+                                            Command="{x:Bind AddToNowPlaying}"
+                                            CommandParameter="{x:Bind}"
+                                            ToolTipService.ToolTip="{x:Bind strings:Resources.PlayAlbumNextButtonTooltip}">
+                                        <Button.Content>
+                                            <FontIcon Glyph="&#xE893;"
+                                                      FontFamily="Segoe MDL2 Assets"
+                                                      FontSize="18" />
+                                        </Button.Content>
+                                    </Button>
+
+                                    <Button x:Name="AlbumAddToOverlayButton"
+                                            Style="{ThemeResource AccentButtonStyle}"
+                                            Command="{x:Bind AddToPlaylist}"
+                                            CommandParameter="{x:Bind}"
+                                            ToolTipService.ToolTip="{x:Bind strings:Resources.AddToPlaylistButtonTooltip}">
+                                        <Button.Content>
+                                            <FontIcon Glyph="&#xE710;"
+                                                      FontFamily="Segoe MDL2 Assets"
+                                                      FontSize="18" />
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
                         <TextBlock Text="{x:Bind Item.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='album'}"
                                    x:Name="AlbumName"
                                    MaxLines="1"
                                    Grid.Row="1"
                                    TextTrimming="CharacterEllipsis"
-                                   RelativePanel.Below="AlbumArtContainer"
-                                   RelativePanel.AlignLeftWithPanel="True"
                                    x:Phase="0"
                                    Style="{StaticResource BaseTextBlockStyle}" />
 
-                        <TextBlock Text="{x:Bind Item.Artist.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
-                                   x:Name="ArtistName"
-                                   MaxLines="1"
-                                   x:Phase="1"
-                                   Grid.Row="2"
-                                   TextTrimming="CharacterEllipsis"
-                                   RelativePanel.Below="AlbumName"
-                                   RelativePanel.AlignLeftWithPanel="True"
-                                   Style="{StaticResource BodyTextBlockStyle}" />
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
 
-                        <Grid x:Name="AlbumOverlayContainer"
-                              Visibility="{x:Bind ShowOverlayControls, Mode=OneWay}"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Stretch"
-                              Canvas.ZIndex="3">
+                            <Button x:Name="ArtistButton"
+                                    Padding="0"
+                                    Style="{ThemeResource TextBlockButtonStyle}"
+                                    Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+                                    Click="BrowseArtistContextMenuItem_Click">
+                                <TextBlock Text="{x:Bind Item.Artist.Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}"
+                                           x:Name="ArtistName"
+                                           MaxLines="1"
+                                           x:Phase="1"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="WordEllipsis"
+                                           TextLineBounds="TrimToCapHeight"
+                                           Style="{StaticResource BodyTextBlockStyle}" />
+                            </Button>
 
-                            <Grid x:Name="AlbumOverlayBackground"
-                                  Background="Black"
-                                  Opacity="0.5" />
+                            
+                            <Button x:Name="MoreOptionsButton"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    Style="{ThemeResource TextBlockButtonStyle}"
+                                    Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+                                    Click="MoreOptionsButton_Click"
+                                    Margin="5,0,0,0"
+                                    Padding="0">
+                                <Button.Content>
+                                    <SymbolIcon Symbol="More" />
+                                </Button.Content>
+                            </Button>
 
-                            <StackPanel Orientation="Horizontal"
-                                        HorizontalAlignment="Center">
-                                <Button x:Name="AlbumPlayOverlayButton"
-                                        Margin="0,0,5,0"
-                                        Style="{ThemeResource AccentButtonStyle}"
-                                        Command="{x:Bind Play}"
-                                        CommandParameter="{x:Bind}"
-                                        ToolTipService.ToolTip="{x:Bind strings:Resources.PlayAlbumButtonTooltip}">
-                                    <Button.Content>
-                                        <FontIcon Glyph="&#xE768;"
-                                                  FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="18" />
-                                    </Button.Content>
-                                </Button>
-
-                                <Button x:Name="AlbumPlayNextOverlayButton"
-                                        Margin="0,0,5,0"
-                                        Style="{ThemeResource AccentButtonStyle}"
-                                        Command="{x:Bind AddToNowPlaying}"
-                                        CommandParameter="{x:Bind}"
-                                        ToolTipService.ToolTip="{x:Bind strings:Resources.PlayAlbumNextButtonTooltip}">
-                                    <Button.Content>
-                                        <FontIcon Glyph="&#xE893;"
-                                                  FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="18" />
-                                    </Button.Content>
-                                </Button>
-
-                                <Button x:Name="AlbumAddToOverlayButton"
-                                        Style="{ThemeResource AccentButtonStyle}"
-                                        Command="{x:Bind AddToPlaylist}"
-                                        CommandParameter="{x:Bind}"
-                                        ToolTipService.ToolTip="{x:Bind strings:Resources.AddToPlaylistButtonTooltip}">
-                                    <Button.Content>
-                                        <FontIcon Glyph="&#xE710;"
-                                                  FontFamily="Segoe MDL2 Assets"
-                                                  FontSize="18" />
-                                    </Button.Content>
-                                </Button>
-                            </StackPanel>
                         </Grid>
                     </Grid>
                 </DataTemplate>

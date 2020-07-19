@@ -7,7 +7,6 @@ namespace Riff.UWP.Pages
 {
     public static class MenuFlyoutExtensions
     {
-        public static int incr = 1;
         public static ListViewBase GetAssociatedList(DependencyObject obj)
         {
             return (ListViewBase)obj.GetValue(AssociatedListProperty);
@@ -50,11 +49,19 @@ namespace Riff.UWP.Pages
         private static void OnMenuFlyoutOpening(object sender, object e)
         {
             var menuFlyout = (MenuFlyout)sender;
-            var currentItem = (menuFlyout.Target as ContentControl)?.Content;
+            object currentItem = null;
+            if (menuFlyout.Target is SelectorItem selectorItem)
+            {
+                currentItem = selectorItem.Content;
+            }
+            else
+            {
+                currentItem = menuFlyout.Target.DataContext;
+            }
             UpdateMenuFlyoutCommandParameter(menuFlyout, currentItem);
         }
 
-        private static void UpdateMenuFlyoutCommandParameter(MenuFlyout menuFlyout, object commandParameter)
+        public static void UpdateMenuFlyoutCommandParameter(MenuFlyout menuFlyout, object commandParameter)
         {
             foreach (var item in menuFlyout.Items)
             {

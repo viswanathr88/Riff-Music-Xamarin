@@ -1,8 +1,11 @@
 ﻿using CommonServiceLocator;
 using Riff.UWP.ViewModel;
 using System;
+using Windows.System;
+using Windows.UI.Input.Preview.Injection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -72,14 +75,14 @@ namespace Riff.UWP.Pages
             if (e.ClickedItem != null)
             {
                 _storedItem = e.ClickedItem as AlbumItemViewModel;
-                var animation = AlbumItems.PrepareConnectedAnimation("ca1", _storedItem, "AlbumArt");
+                _ = AlbumItems.PrepareConnectedAnimation("ca1", _storedItem, "AlbumArt");
 
                 var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
                 parentFrame.Navigate(typeof(AlbumPage), _storedItem.Item, new SuppressNavigationTransitionInfo());
             }
         }
 
-        private void RelativePanel_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void AlbumItem_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (sender is FrameworkElement element && element.DataContext is AlbumItemViewModel itemVM)
             {
@@ -87,7 +90,7 @@ namespace Riff.UWP.Pages
             }
         }
 
-        private void RelativePanel_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void AlbumItem_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (sender is FrameworkElement element && element.DataContext is AlbumItemViewModel itemVM)
             {
@@ -120,16 +123,28 @@ namespace Riff.UWP.Pages
             }
         }
 
-        private PlaylistsViewModel Playlists => ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
-
         private void BrowseArtistContextMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItem flyoutItem && 
-                flyoutItem.CommandParameter != null && 
-                flyoutItem.CommandParameter is AlbumItemViewModel itemVM)
+            AlbumItemViewModel itemVM = null;
+            if (sender is MenuFlyoutItem flyoutItem && flyoutItem.CommandParameter != null)
             {
-                var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
-                parentFrame.Navigate(typeof(ArtistPage), itemVM.Item.Artist, new EntranceNavigationTransitionInfo());
+                itemVM = flyoutItem.CommandParameter as AlbumItemViewModel;
+            }
+            else if (sender is FrameworkElement element && element.DataContext != null)
+            {
+                itemVM = element.DataContext as AlbumItemViewModel;
+            }
+
+            var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
+            parentFrame.Navigate(typeof(ArtistPage), itemVM.Item.Artist, new EntranceNavigationTransitionInfo());
+        }
+
+        private void MoreOptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement element && element.DataContext != null && element.DataContext is AlbumItemViewModel itemVM)
+            {
+                var container = AlbumItems.ContainerFromItem(itemVM) as GridViewItem;
+                container.ContextFlyout.ShowAt(element);
             }
         }
     }
