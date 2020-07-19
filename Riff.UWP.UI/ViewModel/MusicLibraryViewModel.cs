@@ -20,10 +20,10 @@ namespace Riff.UWP.ViewModel
         private readonly Lazy<TracksViewModel> tracks;
         private MusicLibrarySection section = MusicLibrarySection.Albums;
 
-        public MusicLibraryViewModel(IMusicLibrary library)
+        public MusicLibraryViewModel(IMusicLibrary library, IPlayer player, PlaylistsViewModel playlistsVM)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
-            albums = new Lazy<AlbumsViewModel>(() => new AlbumsViewModel(this.library));
+            albums = new Lazy<AlbumsViewModel>(() => new AlbumsViewModel(this.library, player, playlistsVM));
             artists = new Lazy<ArtistsViewModel>(() => new ArtistsViewModel(this.library));
             tracks = new Lazy<TracksViewModel>(() => new TracksViewModel(this.library));
         }

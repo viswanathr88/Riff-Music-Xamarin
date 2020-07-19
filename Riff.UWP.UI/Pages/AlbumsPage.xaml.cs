@@ -1,19 +1,12 @@
 ﻿using CommonServiceLocator;
-using Riff.Data;
-using Riff.Extensions;
 using Riff.UWP.ViewModel;
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading.Tasks;
+using Windows.System;
+using Windows.UI.Input.Preview.Injection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
@@ -30,8 +23,7 @@ namespace Riff.UWP.Pages
     /// </summary>
     public sealed partial class AlbumsPage : AlbumsPageBase
     {
-        private Album _storedItem = null;
-        private Album currentFlyoutContext = null;
+        private AlbumItemViewModel _storedItem = null;
         public AlbumsPage()
         {
             this.InitializeComponent();
@@ -39,8 +31,6 @@ namespace Riff.UWP.Pages
             RegisterForChanges = true;
             PreferViewUpdateBeforeLoad = true;
         }
-
-        private IMusicLibrary Library { get; } = ServiceLocator.Current.GetInstance<IMusicLibrary>();
 
         protected async override void HandleViewModelPropertyChanged(string propertyName)
         {
@@ -65,68 +55,10 @@ namespace Riff.UWP.Pages
                     await AlbumItems.TryStartConnectedAnimationAsync(animation, _storedItem, "AlbumArt");
                 }
 
+                _storedItem.IsSelected = false;
                 _storedItem = null;
             }
-        }
-
-        private void GridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.InRecycleQueue)
-            {
-                var templateRoot = args.ItemContainer.ContentTemplateRoot as FrameworkElement;
-                var image = (Image)templateRoot.FindName("AlbumArt");
-
-                image.Source = null;
-            }
-
-            if (args.Phase == 0)
-            {
-                args.RegisterUpdateCallback(2, LoadImageAsync);
-                args.Handled = true;
-            }
-        }
-
-        private async void LoadImageAsync(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.Phase == 2)
-            {
-                var templateRoot = args.ItemContainer.ContentTemplateRoot as FrameworkElement;
-                var image = (Image)templateRoot.FindName("AlbumArt");
-
-                image.Opacity = 1;
-
-                var item = ViewModel.Items[args.ItemIndex] as Album;
-                if (item != null)
-                {
-                    await LoadArtAsync(image, item);
-                }
-            }
-        }
-
-        private async Task<bool> LoadArtAsync(Image image, Album album)
-        {
-            bool loaded = false;
-            if (Library.AlbumArts.Exists(album.Id.Value))
-            {
-                using (var stream = Library.AlbumArts.Get(album.Id.Value))
-                {
-                    using (var rtStream = stream.AsRandomAccessStream())
-                    {
-                        var bm = new BitmapImage
-                        {
-                            DecodePixelHeight = 128,
-                            DecodePixelWidth = 128,
-                            DecodePixelType = DecodePixelType.Logical
-                        };
-                        await bm.SetSourceAsync(rtStream);
-                        image.Source = bm;
-                        loaded = true;
-                    }
-                }
-            }
-
-            return loaded;
-        }
+        }      
 
         private async void SortFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
@@ -142,111 +74,78 @@ namespace Riff.UWP.Pages
         {
             if (e.ClickedItem != null)
             {
-                _storedItem = e.ClickedItem as Album;
-                var animation = AlbumItems.PrepareConnectedAnimation("ca1", _storedItem, "AlbumArt");
+                _storedItem = e.ClickedItem as AlbumItemViewModel;
+                _ = AlbumItems.PrepareConnectedAnimation("ca1", _storedItem, "AlbumArt");
 
                 var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
-                parentFrame.Navigate(typeof(AlbumPage), _storedItem, new SuppressNavigationTransitionInfo());
+                parentFrame.Navigate(typeof(AlbumPage), _storedItem.Item, new SuppressNavigationTransitionInfo());
             }
         }
 
-        private void AlbumGridItem_Loaded(object sender, RoutedEventArgs e)
+        private void AlbumItem_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            var root = (UIElement)sender;
-            InitializeAnimation(VisualTreeHelperExtensions.FindVisualChild<Border>(root, string.Empty));
-        }
-
-        private void InitializeAnimation(UIElement root)
-        {
-            var rootVisual = ElementCompositionPreview.GetElementVisual(root);
-            var compositor = rootVisual.Compositor;
-
-            // Create animation to scale up the rectangle
-            var pointerEnteredAnimation = compositor.CreateVector3KeyFrameAnimation();
-            pointerEnteredAnimation.InsertKeyFrame(1.0f, new System.Numerics.Vector3(1.05f));
-
-            // Create animation to scale the rectangle back down
-            var pointerExitedAnimation = compositor.CreateVector3KeyFrameAnimation();
-            pointerExitedAnimation.InsertKeyFrame(1.0f, new System.Numerics.Vector3(1.0f));
-
-            // Play animations on pointer enter and exit
-            root.PointerEntered += (sender, args) =>
+            if (sender is FrameworkElement element && element.DataContext is AlbumItemViewModel itemVM)
             {
-                rootVisual.CenterPoint = new System.Numerics.Vector3(rootVisual.Size / 2, 0);
-                rootVisual.StartAnimation("Scale", pointerEnteredAnimation);
-            };
-
-            root.PointerExited += (sender, args) => rootVisual.StartAnimation("Scale", pointerExitedAnimation);
-        }
-
-        private void BrowseArtistContextMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentFlyoutContext != null)
-            {
-                var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
-                parentFrame.Navigate(typeof(ArtistPage), currentFlyoutContext.Artist, new EntranceNavigationTransitionInfo());
+                itemVM.IsPointerOver = true;
             }
         }
 
-        private async void PlayAlbumContextMenuItem_Click(object sender, RoutedEventArgs e)
+        private void AlbumItem_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            await AddToPlayingListAsync(autoplay: true);
-        }
-
-        private async void AddToNowPlayingListMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            await AddToPlayingListAsync(autoplay: false);
-        }
-
-        private async Task AddToPlayingListAsync(bool autoplay)
-        {
-            if (currentFlyoutContext != null)
+            if (sender is FrameworkElement element && element.DataContext is AlbumItemViewModel itemVM)
             {
-                var player = ServiceLocator.Current.GetInstance<IPlayer>();
-                await player.PlayAsync(currentFlyoutContext, autoplay);
+                itemVM.IsPointerOver = false;
             }
         }
 
-        private async  void AlbumContextMenu_Opening(object sender, object e)
+        private void AlbumItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is MenuFlyout flyout && flyout.Target is GridViewItem gvitem)
+            if (e.RemovedItems.Count > 0)
             {
-                var index = AlbumItems.IndexFromContainer(gvitem);
-                currentFlyoutContext = ViewModel.Items[index];
-
-                var playlistsVM = ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
-                await playlistsVM.LoadAsync();
-
-                if (playlistsVM.Playlists.Count > 0)
+                foreach (var item in e.RemovedItems)
                 {
-                    var subMenuItem = flyout.Items.First(item => item.Name == "AddToSubMenuItem") as MenuFlyoutSubItem;
-                    subMenuItem.Items.Add(new MenuFlyoutSeparator());
-                    foreach (var playlist in playlistsVM.Playlists)
+                    if (item is AlbumItemViewModel itemVM)
                     {
-                        var flyoutItem = new MenuFlyoutItem
-                        {
-                            Text = playlist.Name,
-                            Tag = playlist
-                        };
-                        flyoutItem.Click += PlaylistFlyoutItem_Click;
-                        subMenuItem.Items.Add(flyoutItem);
+                        itemVM.IsSelected = false;
+                    }
+                }
+            }
+
+            if (e.AddedItems.Count > 0)
+            {
+                foreach (var item in e.AddedItems)
+                {
+                    if (item is AlbumItemViewModel itemVM)
+                    {
+                        itemVM.IsSelected = true;
                     }
                 }
             }
         }
 
-        private async void PlaylistFlyoutItem_Click(object sender, RoutedEventArgs e)
+        private void BrowseArtistContextMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuFlyoutItemBase item && item.Tag is Playlist playlist)
+            AlbumItemViewModel itemVM = null;
+            if (sender is MenuFlyoutItem flyoutItem && flyoutItem.CommandParameter != null)
             {
-                var playlistsVM = ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
-                await playlistsVM.AddToPlaylist(currentFlyoutContext, playlist);
+                itemVM = flyoutItem.CommandParameter as AlbumItemViewModel;
             }
+            else if (sender is FrameworkElement element && element.DataContext != null)
+            {
+                itemVM = element.DataContext as AlbumItemViewModel;
+            }
+
+            var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
+            parentFrame.Navigate(typeof(ArtistPage), itemVM.Item.Artist, new EntranceNavigationTransitionInfo());
         }
 
-        private void AlbumContextMenu_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+        private void MoreOptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            currentFlyoutContext = null;
+            if (sender is FrameworkElement element && element.DataContext != null && element.DataContext is AlbumItemViewModel itemVM)
+            {
+                var container = AlbumItems.ContainerFromItem(itemVM) as GridViewItem;
+                container.ContextFlyout.ShowAt(element);
+            }
         }
     }
 }

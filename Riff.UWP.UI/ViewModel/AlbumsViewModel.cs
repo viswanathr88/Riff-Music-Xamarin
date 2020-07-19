@@ -1,9 +1,12 @@
 ﻿using Mirage.ViewModel;
+using Mirage.ViewModel.Commands;
 using Riff.Data;
 using Riff.UWP.UI.Extensions;
+using Riff.UWP.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Riff.UWP.ViewModel
@@ -21,21 +24,24 @@ namespace Riff.UWP.ViewModel
         }
     }
 
-    public sealed class AlbumsViewModel : DataViewModel
+    public sealed class AlbumsViewModel : DataViewModel, IAlbumCommands
     {
-        private ObservableCollection<Album> items = new ObservableCollection<Album>();
         private readonly IMusicLibrary library;
+        private ObservableCollection<AlbumItemViewModel> items = new ObservableCollection<AlbumItemViewModel>();
         private AlbumSortType sortType = AlbumSortType.ReleaseYear;
         private SortOrder sortOrder = SortOrder.Descending;
         private bool isCollectionEmpty = false;
 
-        public AlbumsViewModel(IMusicLibrary library)
+        public AlbumsViewModel(IMusicLibrary library, IPlayer player, PlaylistsViewModel playlistsVM)
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
             library.Refreshed += Library_Refreshed;
+            PlayAlbumItem = new PlayAlbumItemCommand(player);
+            AddToPlaylistCommand = new AddAlbumToPlaylistCommand(library, playlistsVM);
+            AddToNowPlayingCommand = new AddAlbumToNowPlayingCommand(player);
         }
 
-        public ObservableCollection<Album> Items
+        public ObservableCollection<AlbumItemViewModel> Items
         {
             get => items;
             set => SetProperty(ref this.items, value);
@@ -52,6 +58,12 @@ namespace Riff.UWP.ViewModel
             get => sortOrder;
             set => SetProperty(ref this.sortOrder, value);
         }
+
+        public IAsyncCommand<AlbumItemViewModel> PlayAlbumItem { get; }
+
+        public IAsyncCommand<AlbumItemViewModel> AddToPlaylistCommand { get; }
+
+        public IAsyncCommand<AlbumItemViewModel> AddToNowPlayingCommand { get; }
 
         public bool IsCollectionEmpty
         {
@@ -70,16 +82,22 @@ namespace Riff.UWP.ViewModel
 
             if (Items.Count == 0)
             {
-                Items = new ObservableCollection<Album>(await Task.Run(() => library.Albums.Get(options)));
+                Items = new ObservableCollection<AlbumItemViewModel>();
+
+                foreach (var album in await Task.Run(() => library.Albums.Get(options)))
+                {
+                    Items.Add(new AlbumItemViewModel(album, library, this));
+                }
             }
             else
             {
-                var diffList = await Task.Run(() => {
+                var diffList = await Task.Run(() =>
+                {
                     var albums = library.Albums.Get(options);
-                    return Diff.Compare(Items, albums, new AlbumEqualityComparer());
+                    return Diff.Compare(Items.Select(itemVM => itemVM.Item).ToList(), albums, new AlbumEqualityComparer());
                 });
 
-                Items.ApplyDiff(diffList);
+                Items.ApplyDiff(diffList, (album) => new AlbumItemViewModel(album, library, this));
             }
 
             IsCollectionEmpty = (Items.Count == 0);
@@ -89,7 +107,7 @@ namespace Riff.UWP.ViewModel
 
         public async Task ReloadAsync()
         {
-            Items = new ObservableCollection<Album>();
+            Items = new ObservableCollection<AlbumItemViewModel>();
             await LoadAsync();
         }
 

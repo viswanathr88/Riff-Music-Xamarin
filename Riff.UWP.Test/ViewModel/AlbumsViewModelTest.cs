@@ -1,19 +1,19 @@
-﻿using Mirage.ViewModel;
+﻿using GalaSoft.MvvmLight.Ioc;
+using Mirage.ViewModel;
 using Moq;
 using Riff.Data;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Riff.UWP.Test.ViewModel
 {
-    public sealed class AlbumsViewModelTest
+    public sealed class AlbumsViewModelTest : IDisposable
     {
         private readonly Mock<IMusicLibrary> mockMetadata;
+        private readonly Mock<IPlayer> mockPlayer;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
         private readonly AlbumsViewModel albumsVM;
 
@@ -21,14 +21,10 @@ namespace Riff.UWP.Test.ViewModel
         {
             mockMetadata = new Mock<IMusicLibrary>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
+            mockPlayer = new Mock<IPlayer>();
             mockMetadata.Setup(library => library.Albums).Returns(albumAccessor.Object);
-            albumsVM = new AlbumsViewModel(mockMetadata.Object);
-        }
 
-        [Fact]
-        public void Constructor_NullParameter_Throw()
-        {
-            Assert.Throws<ArgumentNullException>(() => new AlbumsViewModel(null));
+            albumsVM = new AlbumsViewModel(mockMetadata.Object, mockPlayer.Object, new PlaylistsViewModel(mockPlayer.Object, mockMetadata.Object));
         }
 
         [Fact]
@@ -65,6 +61,10 @@ namespace Riff.UWP.Test.ViewModel
             Assert.NotEmpty(albumsVM.Items);
             Assert.False(albumsVM.IsCollectionEmpty);
             Assert.Single(albumsVM.Items);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
