@@ -18,6 +18,7 @@ namespace Riff.UWP.Test.UI
         private readonly Mock<IMusicLibrary> mockLibrary;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
         private readonly Mock<IThumbnailCache> mockThumbnailCache;
+        private readonly Mock<IPlayer> mockPlayer;
         private readonly UITree view = new UITree();
 
         public ArtistsPageTest()
@@ -26,11 +27,14 @@ namespace Riff.UWP.Test.UI
             mockLibrary = new Mock<IMusicLibrary>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
             mockThumbnailCache = new Mock<IThumbnailCache>();
+            mockPlayer = new Mock<IPlayer>();
             mockLibrary.Setup(library => library.Albums).Returns(albumAccessor.Object);
             mockLibrary.Setup(library => library.AlbumArts).Returns(mockThumbnailCache.Object);
 
             SimpleIoc.Default.Register(() => mockLibrary.Object);
             SimpleIoc.Default.Register(() => albumAccessor.Object);
+            SimpleIoc.Default.Register(() => mockPlayer.Object);
+            SimpleIoc.Default.Register<PlaylistsViewModel>();
             SimpleIoc.Default.Register<ArtistsViewModel>();
         }
 
@@ -46,10 +50,6 @@ namespace Riff.UWP.Test.UI
 
         public void Dispose()
         {
-            SimpleIoc.Default.Unregister<IMusicLibrary>();
-            SimpleIoc.Default.Unregister<IAlbumReadOnlyAccessor>();
-            SimpleIoc.Default.Unregister<MusicLibrary>();
-            SimpleIoc.Default.Unregister<ArtistsViewModel>();
             SimpleIoc.Default.Reset();
         }
 

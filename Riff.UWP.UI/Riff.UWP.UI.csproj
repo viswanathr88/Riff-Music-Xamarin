@@ -128,6 +128,9 @@
     <Compile Include="Controls\DeletePlaylistConfirmationDialog.xaml.cs">
       <DependentUpon>DeletePlaylistConfirmationDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\OptionsOverlayControl.xaml.cs">
+      <DependentUpon>OptionsOverlayControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ResponsiveHeader.xaml.cs">
       <DependentUpon>ResponsiveHeader.xaml</DependentUpon>
     </Compile>
@@ -248,25 +251,28 @@
     <Compile Include="ViewModel\ArtistItemViewModel.cs" />
     <Compile Include="ViewModel\ArtistsViewModel.cs" />
     <Compile Include="ViewModel\ArtistViewModel.cs" />
-    <Compile Include="ViewModel\Commands\AddAlbumToNowPlayingCommand.cs" />
+    <Compile Include="ViewModel\Commands\AddToNowPlayingCommand.cs" />
     <Compile Include="ViewModel\Commands\AddPlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\DeletePlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\DeletePlaylistsCommand.cs" />
     <Compile Include="ViewModel\Commands\IPlaylistNameCommand.cs" />
+    <Compile Include="ViewModel\Commands\PlayArtistCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayAlbumItemCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayAlbumCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayDriveItemsCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayPlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayPlaylistsCommand.cs" />
     <Compile Include="ViewModel\Commands\RenamePlaylistCommand.cs" />
-    <Compile Include="ViewModel\Commands\AddAlbumToPlaylistCommand.cs" />
+    <Compile Include="ViewModel\Commands\AddToPlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\SyncCommand.cs" />
     <Compile Include="ViewModel\FirstRunExperienceViewModel.cs" />
     <Compile Include="ViewModel\IAlbumCommands.cs" />
+    <Compile Include="ViewModel\IArtistCommands.cs" />
     <Compile Include="ViewModel\IMediaList.cs" />
     <Compile Include="ViewModel\IMediaListItem.cs" />
     <Compile Include="ViewModel\IPlayer.cs" />
     <Compile Include="ViewModel\IPlaylistCommands.cs" />
+    <Compile Include="ViewModel\ItemWithOverlayViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MediaList.cs" />
     <Compile Include="ViewModel\MediaListItem.cs" />
@@ -305,6 +311,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DeletePlaylistConfirmationDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\OptionsOverlayControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

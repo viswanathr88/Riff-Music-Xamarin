@@ -4,40 +4,15 @@ using Riff.Data;
 
 namespace Riff.UWP.ViewModel
 {
-    public sealed class AlbumItemViewModel : ItemViewModel<Album>
+    public sealed class AlbumItemViewModel : ItemWithOverlayViewModel<Album>
     {
         private readonly IMusicLibrary library;
         private readonly IAlbumCommands commands;
-        private bool isPointerOver = false;
 
         public AlbumItemViewModel(Album item, IMusicLibrary library, IAlbumCommands commands) : base(item)
         {
             this.commands = commands;
             this.library = library;
-        }
-
-        public bool ShowOverlayControls
-        {
-            get => IsPointerOver || IsSelected;
-        }
-
-        public bool IsPointerOver
-        {
-            get => isPointerOver;
-            set
-            {
-                if (SetProperty(ref this.isPointerOver, value))
-                {
-                    RaisePropertyChanged(nameof(ShowOverlayControls));
-                }
-            }
-        }
-
-        protected override void OnSelectionChanged()
-        {
-            base.OnSelectionChanged();
-
-            RaisePropertyChanged(nameof(ShowOverlayControls));
         }
 
         public IAsyncCommand<AlbumItemViewModel> Play => commands.PlayAlbumItem;

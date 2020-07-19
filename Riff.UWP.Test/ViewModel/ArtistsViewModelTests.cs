@@ -15,6 +15,8 @@ namespace Riff.UWP.Test.ViewModel
         private readonly Mock<IMusicLibrary> mockLibrary;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
         private readonly Mock<IThumbnailCache> thumbnailCache;
+        private readonly Mock<IPlayer> mockPlayer;
+        private readonly PlaylistsViewModel playlistsVM;
         private readonly ArtistsViewModel artistsVM;
 
         public ArtistsViewModelTest()
@@ -22,15 +24,17 @@ namespace Riff.UWP.Test.ViewModel
             mockLibrary = new Mock<IMusicLibrary>();
             albumAccessor = new Mock<IAlbumReadOnlyAccessor>();
             thumbnailCache = new Mock<IThumbnailCache>();
+            mockPlayer = new Mock<IPlayer>();
             mockLibrary.Setup(library => library.Albums).Returns(albumAccessor.Object);
             mockLibrary.Setup(library => library.AlbumArts).Returns(thumbnailCache.Object);
-            artistsVM = new ArtistsViewModel(mockLibrary.Object);
+            playlistsVM = new PlaylistsViewModel(mockPlayer.Object, mockLibrary.Object);
+            artistsVM = new ArtistsViewModel(mockLibrary.Object, mockPlayer.Object, playlistsVM);
         }
 
         [Fact]
         public void Constructor_NullParameter_Throw()
         {
-            Assert.Throws<ArgumentNullException>(() => new ArtistsViewModel(null));
+            Assert.Throws<ArgumentNullException>(() => new ArtistsViewModel(null, mockPlayer.Object, playlistsVM));
         }
 
         [Fact]
