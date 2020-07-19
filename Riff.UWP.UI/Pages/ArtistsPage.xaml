@@ -6,61 +6,87 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:Riff.Data"
+    xmlns:controls="using:Riff.UWP.Controls"
     xmlns:vm="using:Riff.UWP.ViewModel"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     ShowSortMenu="False">
 
+    <Page.Resources>
+
+        <!-- Context Menu -->
+        <MenuFlyout x:Name="ArtistContextMenu"
+                    local:MenuFlyoutExtensions.AssociatedList="{x:Bind ArtistList}">
+            <MenuFlyout.MenuFlyoutPresenterStyle>
+                <Style TargetType="MenuFlyoutPresenter">
+                    <Setter Property="Margin"
+                            Value="0,0,20,0" />
+                    <Setter Property="MinWidth"
+                            Value="180" />
+                </Style>
+            </MenuFlyout.MenuFlyoutPresenterStyle>
+
+            <MenuFlyoutItem x:Name="PlayArtistContextMenuItem"
+                            x:Uid="PlayArtistContextMenuItem"
+                            Icon="Play"
+                            Command="{x:Bind ViewModel.PlayArtist}">
+                <MenuFlyoutItem.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control"
+                                         Key="P"
+                                         ScopeOwner="{x:Bind ArtistList}" />
+                </MenuFlyoutItem.KeyboardAccelerators>
+            </MenuFlyoutItem>
+
+            <MenuFlyoutItem x:Name="PlayArtistNextContextMenuItem"
+                            x:Uid="PlayArtistNextContextMenuItem"
+                            Icon="Next"
+                            Command="{x:Bind ViewModel.PlayArtistNext}">
+                <MenuFlyoutItem.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control"
+                                         Key="Q"
+                                         ScopeOwner="{x:Bind ArtistList}" />
+                </MenuFlyoutItem.KeyboardAccelerators>
+            </MenuFlyoutItem>
+            
+            <MenuFlyoutSeparator />
+
+            <MenuFlyoutItem x:Name="AddToPlaylistMenuItem"
+                            x:Uid="AddToPlaylistMenuItem"
+                            Icon="MusicInfo"
+                            Command="{x:Bind ViewModel.AddToPlaylist}">
+                <MenuFlyoutItem.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control,Shift"
+                                         Key="A"
+                                         ScopeOwner="{x:Bind ArtistList}" />
+                </MenuFlyoutItem.KeyboardAccelerators>
+            </MenuFlyoutItem>
+        </MenuFlyout>
+
+    </Page.Resources>
+
     <GridView x:Name="ArtistList"
               ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}"
-              SelectionMode="None"
+              SelectionMode="Single"
               IsItemClickEnabled="True"
-              ItemClick="ArtistList_ItemClick">
+              ItemClick="ArtistList_ItemClick"
+              SingleSelectionFollowsFocus="True"
+              SelectionChanged="ArtistItems_SelectionChanged">
         <GridView.ItemContainerStyle>
             <Style TargetType="GridViewItem">
                 <Setter Property="Margin"
                         Value="0,0,20,20" />
-                <Setter Property="ContextFlyout">
-                    <Setter.Value>
-                        <MenuFlyout x:Name="ArtistContextMenu"
-                                    Opening="ArtistContextMenu_Opening"
-                                    Closing="ArtistContextMenu_Closing">
-                            <MenuFlyout.MenuFlyoutPresenterStyle>
-                                <Style TargetType="MenuFlyoutPresenter">
-                                    <Setter Property="Margin"
-                                            Value="0,0,20,0" />
-                                    <Setter Property="MinWidth"
-                                            Value="180" />
-                                </Style>
-                            </MenuFlyout.MenuFlyoutPresenterStyle>
-                            <MenuFlyoutItem x:Name="PlayArtistContextMenuItem"
-                                            x:Uid="PlayArtistContextMenuItem"
-                                            Text=""
-                                            Click="PlayArtistContextMenuItem_Click"
-                                            Icon="Play" />
-
-                            <MenuFlyoutSubItem x:Name="AddToSubMenuItem"
-                                               x:Uid="AddToSubMenuItem"
-                                               Text=""
-                                               Icon="Add">
-                                <MenuFlyoutItem x:Name="AddToNowPlayingListMenuItem"
-                                                x:Uid="AddToNowPlayingListMenuItem"
-                                                Text=""
-                                                Click="AddToNowPlayingListMenuItem_Click" />
-
-                                <!-- Populate all playlists when the sub menu opens -->
-                            </MenuFlyoutSubItem>
-
-                        </MenuFlyout>
-                    </Setter.Value>
-                </Setter>
+                <Setter Property="ContextFlyout"
+                        Value="{StaticResource ArtistContextMenu}" />
             </Style>
         </GridView.ItemContainerStyle>
         <GridView.ItemTemplate>
             <DataTemplate x:DataType="vm:ArtistItemViewModel">
                 <Grid Height="120"
                       Width="220"
-                      Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                      Background="{ThemeResource SystemControlBackgroundBaseLowBrush}"
+                      PointerEntered="Grid_PointerEntered"
+                      PointerCanceled="Grid_PointerExited"
+                      PointerExited="Grid_PointerExited">
                     
                     <ParallaxView Source="{Binding ElementName=ArtistList}"
                                   VerticalShift="100">
@@ -68,19 +94,67 @@
                                x:Name="ArtistAlbumArt"
                                Source="{x:Bind AlbumArt}" />
                     </ParallaxView>
-                    
 
-                    <StackPanel Orientation="Vertical"
-                                VerticalAlignment="Bottom"
-                                Background="{ThemeResource SystemControlAcrylicElementBrush}"
-                                Padding="12">
-                        <TextBlock x:Name="ArtistName" 
-                                   Text="{x:Bind Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}" />
-                        <TextBlock x:Name="AlbumCount"
-                                   Text="{x:Bind local:ArtistsPage.FormatAlbumsCount(AlbumsCount)}"
-                                   Style="{ThemeResource CaptionTextBlockStyle}"
-                                   Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}" />
-                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <controls:OptionsOverlayControl x:Name="OverlayControl"
+                                                        PlayCommand="{x:Bind Play}"
+                                                        PlayCommandParameter="{x:Bind}"
+                                                        PlayNextCommand="{x:Bind PlayNext}"
+                                                        PlayNextCommandParameter="{x:Bind}"
+                                                        AddToPlaylistCommand="{x:Bind AddToPlaylist}"
+                                                        AddToPlaylistCommandParameter="{x:Bind}"
+                                                        Visibility="{x:Bind ShowOverlayControls, Mode=OneWay}" />
+
+                        <StackPanel Orientation="Vertical"
+                                    VerticalAlignment="Bottom"
+                                    Grid.Row="1"
+                                    Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                                    Padding="12">
+                            
+                            
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock x:Name="ArtistName"
+                                           Text="{x:Bind Name, Converter={StaticResource TaglessItemsConverter}, ConverterParameter='artist'}" />
+                                
+                                <TextBlock x:Name="AlbumCount"
+                                           Text="{x:Bind local:ArtistsPage.FormatAlbumsCount(AlbumsCount)}"
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource SystemControlPageTextBaseMediumBrush}"
+                                           HorizontalAlignment="Stretch"
+                                           Grid.Row="1"
+                                           Grid.Column="0"/>
+                                
+                                <Button x:Name="MoreOptionsButton"
+                                        Grid.Column="1"
+                                        Style="{ThemeResource TextBlockButtonStyle}"
+                                        Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+                                        Margin="5,0,0,0"
+                                        Padding="0"
+                                        Grid.RowSpan="2"
+                                        Flyout="{StaticResource ArtistContextMenu}">
+                                    <Button.Content>
+                                        <SymbolIcon Symbol="More" />
+                                    </Button.Content>
+                                </Button>
+                            </Grid>
+                            
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </DataTemplate>
         </GridView.ItemTemplate>

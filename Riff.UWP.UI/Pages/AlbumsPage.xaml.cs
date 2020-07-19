@@ -1,11 +1,7 @@
-﻿using CommonServiceLocator;
-using Riff.UWP.ViewModel;
+﻿using Riff.UWP.ViewModel;
 using System;
-using Windows.System;
-using Windows.UI.Input.Preview.Injection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
@@ -137,15 +133,6 @@ namespace Riff.UWP.Pages
 
             var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
             parentFrame.Navigate(typeof(ArtistPage), itemVM.Item.Artist, new EntranceNavigationTransitionInfo());
-        }
-
-        private void MoreOptionsButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is FrameworkElement element && element.DataContext != null && element.DataContext is AlbumItemViewModel itemVM)
-            {
-                var container = AlbumItems.ContainerFromItem(itemVM) as GridViewItem;
-                container.ContextFlyout.ShowAt(element);
-            }
         }
     }
 }

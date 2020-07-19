@@ -24,7 +24,7 @@ namespace Riff.UWP.ViewModel
         {
             this.library = library ?? throw new ArgumentNullException(nameof(library));
             albums = new Lazy<AlbumsViewModel>(() => new AlbumsViewModel(this.library, player, playlistsVM));
-            artists = new Lazy<ArtistsViewModel>(() => new ArtistsViewModel(this.library));
+            artists = new Lazy<ArtistsViewModel>(() => new ArtistsViewModel(this.library, player, playlistsVM));
             tracks = new Lazy<TracksViewModel>(() => new TracksViewModel(this.library));
         }
 

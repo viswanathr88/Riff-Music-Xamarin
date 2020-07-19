@@ -22,4 +22,24 @@ namespace Riff.UWP.ViewModel.Commands
             await player.PlayAsync(album.Item, autoplay: false);
         }
     }
+
+    public sealed class AddArtistToNowPlayingCommand : AsyncCommand<ArtistItemViewModel>
+    {
+        private readonly IPlayer player;
+
+        public AddArtistToNowPlayingCommand(IPlayer player)
+        {
+            this.player = player;
+        }
+
+        public override bool CanExecute(ArtistItemViewModel artist)
+        {
+            return artist.Item.Id.HasValue;
+        }
+
+        protected override async Task RunAsync(ArtistItemViewModel artist)
+        {
+            await player.PlayAsync(artist.Item, autoplay: false);
+        }
+    }
 }

@@ -300,20 +300,20 @@
   <data name="PauseSyncButton.Content" xml:space="preserve">
     <value>Pause sync</value>
   </data>
-  <data name="PlayAlbumButtonTooltip" xml:space="preserve">
-    <value>Play (Ctrl+P)</value>
-  </data>
   <data name="PlayAlbumContextMenuItem.Text" xml:space="preserve">
     <value>Play</value>
-  </data>
-  <data name="PlayAlbumNextButtonTooltip" xml:space="preserve">
-    <value>Play next (Ctrl+Q)</value>
   </data>
   <data name="PlayAlbumNextContextMenuItem.Text" xml:space="preserve">
     <value>Play next</value>
   </data>
   <data name="PlayArtistContextMenuItem.Text" xml:space="preserve">
     <value>Play</value>
+  </data>
+  <data name="PlayArtistNextContextMenuItem.Text" xml:space="preserve">
+    <value>Play next</value>
+  </data>
+  <data name="PlayButtonTooltip" xml:space="preserve">
+    <value>Play (Ctrl+P)</value>
   </data>
   <data name="PlaylistPageHeader" xml:space="preserve">
     <value>Playlist</value>
@@ -338,6 +338,9 @@
   </data>
   <data name="PlaylistToolbarRenameButton.Label" xml:space="preserve">
     <value>Rename</value>
+  </data>
+  <data name="PlayNextButtonTooltip" xml:space="preserve">
+    <value>Play next (Ctrl+Q)</value>
   </data>
   <data name="PlayPlaylistContextMenuItem.Text" xml:space="preserve">
     <value>Play</value>

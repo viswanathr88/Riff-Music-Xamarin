@@ -1,7 +1,5 @@
-﻿using CommonServiceLocator;
-using Riff.UWP.ViewModel;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
+﻿using Riff.UWP.ViewModel;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -18,8 +16,6 @@ namespace Riff.UWP.Pages
     /// </summary>
     public sealed partial class ArtistsPage : ArtistsPageBase
     {
-        private ArtistItemViewModel currentFlyoutContext;
-
         public ArtistsPage()
         {
             this.InitializeComponent();
@@ -45,42 +41,50 @@ namespace Riff.UWP.Pages
         {
             if (e.ClickedItem != null)
             {
-                var item = e.ClickedItem as ArtistItemViewModel;
+                var artistVM = e.ClickedItem as ArtistItemViewModel;
                 var parentFrame = VisualTreeHelperExtensions.FindParent<Frame>(Frame, "ContentFrame");
-                parentFrame.Navigate(typeof(ArtistPage), item.Model, new EntranceNavigationTransitionInfo());
+                parentFrame.Navigate(typeof(ArtistPage), artistVM.Item, new EntranceNavigationTransitionInfo());
             }
         }
 
-        private async void PlayArtistContextMenuItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void Grid_PointerEntered(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            await AddToPlayingListAsync(autoplay: true);
-        }
-
-        private async void AddToNowPlayingListMenuItem_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            await AddToPlayingListAsync(autoplay: false);
-        }
-
-        private void ArtistContextMenu_Opening(object sender, object e)
-        {
-            if (sender is MenuFlyout flyout && flyout.Target is GridViewItem gvitem)
+            if (sender is FrameworkElement element && element.DataContext is ArtistItemViewModel itemVM)
             {
-                var index = ArtistList.IndexFromContainer(gvitem);
-                currentFlyoutContext = ViewModel.Items[index];
+                itemVM.IsPointerOver = true;
             }
         }
 
-        private void ArtistContextMenu_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+        private void Grid_PointerExited(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            currentFlyoutContext = null;
+            if (sender is FrameworkElement element && element.DataContext is ArtistItemViewModel itemVM)
+            {
+                itemVM.IsPointerOver = false;
+            }
         }
 
-        private async Task AddToPlayingListAsync(bool autoplay)
+        private void ArtistItems_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (currentFlyoutContext != null)
+            if (e.RemovedItems.Count > 0)
             {
-                var player = ServiceLocator.Current.GetInstance<IPlayer>();
-                await player.PlayAsync(currentFlyoutContext.Model, autoplay);
+                foreach (var item in e.RemovedItems)
+                {
+                    if (item is ArtistItemViewModel itemVM)
+                    {
+                        itemVM.IsSelected = false;
+                    }
+                }
+            }
+
+            if (e.AddedItems.Count > 0)
+            {
+                foreach (var item in e.AddedItems)
+                {
+                    if (item is ArtistItemViewModel itemVM)
+                    {
+                        itemVM.IsSelected = true;
+                    }
+                }
             }
         }
     }

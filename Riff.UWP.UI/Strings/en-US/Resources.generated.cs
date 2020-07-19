@@ -353,28 +353,15 @@ namespace Riff.UWP.Strings{
         }
         #endregion
 
-        #region PlayAlbumButtonTooltip
+        #region PlayButtonTooltip
         /// <summary>
         ///   Looks up a localized string similar to: Play (Ctrl+P)
         /// </summary>
-        public static string PlayAlbumButtonTooltip
+        public static string PlayButtonTooltip
         {
             get
             {
-                return _resourceLoader.GetString("PlayAlbumButtonTooltip");
-            }
-        }
-        #endregion
-
-        #region PlayAlbumNextButtonTooltip
-        /// <summary>
-        ///   Looks up a localized string similar to: Play next (Ctrl+Q)
-        /// </summary>
-        public static string PlayAlbumNextButtonTooltip
-        {
-            get
-            {
-                return _resourceLoader.GetString("PlayAlbumNextButtonTooltip");
+                return _resourceLoader.GetString("PlayButtonTooltip");
             }
         }
         #endregion
@@ -401,6 +388,19 @@ namespace Riff.UWP.Strings{
             get
             {
                 return _resourceLoader.GetString("PlaylistsPageHeader");
+            }
+        }
+        #endregion
+
+        #region PlayNextButtonTooltip
+        /// <summary>
+        ///   Looks up a localized string similar to: Play next (Ctrl+Q)
+        /// </summary>
+        public static string PlayNextButtonTooltip
+        {
+            get
+            {
+                return _resourceLoader.GetString("PlayNextButtonTooltip");
             }
         }
         #endregion
@@ -649,10 +649,10 @@ namespace Riff.UWP.Strings{
             MusicLibraryPageHeader,
             NavViewSettingsContent,
             NowPlayingPageHeader,
-            PlayAlbumButtonTooltip,
-            PlayAlbumNextButtonTooltip,
+            PlayButtonTooltip,
             PlaylistPageHeader,
             PlaylistsPageHeader,
+            PlayNextButtonTooltip,
             SearchItemAlbumDescriptionFormat,
             SearchItemArtistDescriptionFormat,
             SearchItemGenreDescriptionFormat,
