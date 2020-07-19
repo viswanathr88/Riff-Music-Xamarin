@@ -1,4 +1,5 @@
-﻿using Mirage.ViewModel;
+﻿using GalaSoft.MvvmLight.Ioc;
+using Mirage.ViewModel;
 using Moq;
 using Riff.Data;
 using Riff.UWP.ViewModel;
@@ -9,7 +10,7 @@ using Xunit;
 
 namespace Riff.UWP.Test.ViewModel
 {
-    public sealed class ArtistsViewModelTest
+    public sealed class ArtistsViewModelTest : IDisposable
     {
         private readonly Mock<IMusicLibrary> mockLibrary;
         private readonly Mock<IAlbumReadOnlyAccessor> albumAccessor;
@@ -64,6 +65,10 @@ namespace Riff.UWP.Test.ViewModel
             Assert.NotEmpty(artistsVM.Items);
             Assert.False(artistsVM.IsCollectionEmpty);
             Assert.Single(artistsVM.Items);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

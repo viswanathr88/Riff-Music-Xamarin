@@ -5,14 +5,12 @@ using Riff.Data;
 using Riff.UWP.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Riff.UWP.Test.ViewModel
 {
-    public sealed class AlbumsViewModelTest
+    public sealed class AlbumsViewModelTest : IDisposable
     {
         private readonly Mock<IMusicLibrary> mockMetadata;
         private readonly Mock<IPlayer> mockPlayer;
@@ -26,12 +24,7 @@ namespace Riff.UWP.Test.ViewModel
             mockPlayer = new Mock<IPlayer>();
             mockMetadata.Setup(library => library.Albums).Returns(albumAccessor.Object);
 
-            SimpleIoc.Default.Register(() => mockMetadata.Object);
-            SimpleIoc.Default.Register(() => mockPlayer.Object);
-            SimpleIoc.Default.Register<PlaylistsViewModel>();
-            SimpleIoc.Default.Register<AlbumsViewModel>();
-
-            albumsVM = SimpleIoc.Default.GetInstance<AlbumsViewModel>();
+            albumsVM = new AlbumsViewModel(mockMetadata.Object, mockPlayer.Object, new PlaylistsViewModel(mockPlayer.Object, mockMetadata.Object));
         }
 
         [Fact]
@@ -68,6 +61,10 @@ namespace Riff.UWP.Test.ViewModel
             Assert.NotEmpty(albumsVM.Items);
             Assert.False(albumsVM.IsCollectionEmpty);
             Assert.Single(albumsVM.Items);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
