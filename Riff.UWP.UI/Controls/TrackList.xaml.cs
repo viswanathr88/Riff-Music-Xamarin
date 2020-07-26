@@ -450,9 +450,17 @@ namespace Riff.UWP.Controls
             }
         }
 
-        private void AddToPlaylistMenuItem_Click(object sender, RoutedEventArgs e)
+        private async void AddToPlaylistMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            var currentItem = (sender as MenuFlyoutItem).CommandParameter as DriveItem;
+            AddToPlaylistDialog dialog = new AddToPlaylistDialog();
+            var result = await dialog.ShowAsync();
 
+            if (result == ContentDialogResult.Primary)
+            {
+                var playlists = ServiceLocator.Current.GetInstance<PlaylistsViewModel>();
+                await playlists.AddToPlaylist(new List<DriveItem>() { currentItem }, dialog.SelectedPlaylist);
+            }
         }
     }
 }
