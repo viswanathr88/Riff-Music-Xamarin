@@ -16,7 +16,6 @@ namespace Riff.UWP.Controls
 {
     public sealed partial class TrackList : UserControl
     {
-        private DriveItem currentFlyoutContext;
         public TrackList()
         {
             this.InitializeComponent();
@@ -108,6 +107,17 @@ namespace Riff.UWP.Controls
         // Using a DependencyProperty as the backing store for EnableTrackReordering.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty EnableTrackReorderingProperty =
             DependencyProperty.Register("EnableTrackReordering", typeof(bool), typeof(TrackList), new PropertyMetadata(false));
+
+        public bool AllowAddToPlaylist
+        {
+            get { return (bool)GetValue(AllowAddToPlaylistProperty); }
+            set { SetValue(AllowAddToPlaylistProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AllowAddToPlaylist.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AllowAddToPlaylistProperty =
+            DependencyProperty.Register("AllowAddToPlaylist", typeof(bool), typeof(TrackList), new PropertyMetadata(true));
+
 
         #region Public Column Visibility Methods
 
@@ -346,30 +356,6 @@ namespace Riff.UWP.Controls
             ShowReleaseYear = EnableReleaseYear && ShowTrackReleaseYearGridItem;
         }
 
-        private async void TrackListView_ItemClick(object sender, ItemClickEventArgs args)
-        {
-            if (args.ClickedItem != null)
-            {
-                if (PlayableTracks != null && PlayableTracks.Count > 0)
-                {
-                    uint? index = null;
-                    if (args.ClickedItem is DriveItem item)
-                    {
-                        index = Convert.ToUInt32(PlayableTracks.IndexOf(item));
-                    }
-                    else if (args.ClickedItem is PlaylistItem playlistItem)
-                    {
-                        index = Convert.ToUInt32(PlayableTracks.IndexOf(playlistItem.DriveItem));
-                    }
-
-                    if (index.HasValue)
-                    {
-                        await Player.PlayAsync(PlayableTracks, index.Value);
-                    }
-                }
-            }
-        }
-
         public async Task Play()
         {
             if (PlayableTracks != null && PlayableTracks.Count > 0)
@@ -379,69 +365,6 @@ namespace Riff.UWP.Controls
         }
 
         private IPlayer Player => ServiceLocator.Current.GetInstance<IPlayer>();
-
-        private IMusicLibrary Library => ServiceLocator.Current.GetInstance<IMusicLibrary>();
-
-        private void TracksList_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.InRecycleQueue)
-            {
-                var templateRoot = args.ItemContainer.ContentTemplateRoot as FrameworkElement;
-                var image = (Image)templateRoot.FindName("TrackArt");
-
-                if (image != null)
-                {
-                    image.Source = null;
-                }
-            }
-
-            if (args.Phase == 0)
-            {
-                args.RegisterUpdateCallback(2, LoadImageAsync);
-                args.Handled = true;
-            }
-        }
-
-        private async void LoadImageAsync(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (args.Phase == 2)
-            {
-                var templateRoot = args.ItemContainer.ContentTemplateRoot as FrameworkElement;
-                var image = (Image)templateRoot.FindName("TrackArt");
-
-                if (image != null)
-                {
-                    image.Opacity = 1;
-
-                    var list = Items as IList<object>;
-                    var item = list[args.ItemIndex] as DriveItem;
-                    if (item != null)
-                    {
-                        await LoadArtAsync(image, item.Track);
-                    }
-                }
-            }
-        }
-
-        private async Task<bool> LoadArtAsync(Image image, Track track)
-        {
-            bool loaded = false;
-            if (Library.AlbumArts.Exists(track.Album.Id.Value))
-            {
-                using (var stream = Library.AlbumArts.Get(track.Album.Id.Value))
-                {
-                    using (var rtStream = stream.AsRandomAccessStream())
-                    {
-                        var bm = new BitmapImage();
-                        await bm.SetSourceAsync(rtStream);
-                        image.Source = bm;
-                        loaded = true;
-                    }
-                }
-            }
-
-            return loaded;
-        }
 
         private async void Player_CurrentTrackChanged(object sender, EventArgs e)
         {
@@ -471,39 +394,65 @@ namespace Riff.UWP.Controls
 
         private async void PlayTrackContextMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (currentFlyoutContext != null && PlayableTracks != null && PlayableTracks.Count > 0)
+            if (sender is MenuFlyoutItem flyoutItem && flyoutItem.CommandParameter != null && PlayableTracks != null && PlayableTracks.Count > 0)
             {
-                var index = Convert.ToUInt32(PlayableTracks.IndexOf(currentFlyoutContext));
-                await Player.PlayAsync(PlayableTracks, index);
-            }
-        }
-
-        private async void AddToNowPlayingListMenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (currentFlyoutContext != null)
-            {
-                await Player.PlayAsync(new List<DriveItem>() { currentFlyoutContext }, 0, autoplay:false);
-            }
-        }
-
-        private void TrackContextMenu_Opening(object sender, object e)
-        {
-            if (sender is MenuFlyout flyout && flyout.Target is ListViewItem lvitem)
-            {
-                if (lvitem.Content is DriveItem item)
+                DriveItem driveItem = null;
+                if (flyoutItem.CommandParameter is DriveItem dt)
                 {
-                    currentFlyoutContext = item;
+                    driveItem = dt;
                 }
-                else if (lvitem.Content is PlaylistItem playlistItem)
+                else if (flyoutItem.CommandParameter is PlaylistItem pt)
                 {
-                    currentFlyoutContext = playlistItem.DriveItem;
+                    driveItem = pt.DriveItem;
+                }
+
+                var index = Convert.ToUInt32(PlayableTracks.IndexOf(driveItem));
+                await Player.PlayAsync(PlayableTracks, index, autoplay: true);
+            }
+        }
+
+        private async void PlayTrackNextContextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuFlyoutItem flyoutItem && flyoutItem.CommandParameter != null && PlayableTracks != null && PlayableTracks.Count > 0)
+            {
+                DriveItem driveItem = null;
+                if (flyoutItem.CommandParameter is DriveItem dt)
+                {
+                    driveItem = dt;
+                }
+                else if (flyoutItem.CommandParameter is PlaylistItem pt)
+                {
+                    driveItem = pt.DriveItem;
+                }
+
+                await Player.PlayAsync(new List<DriveItem>() { driveItem }, 0, autoplay: false);
+            }
+        }
+
+        private async void TrackListView_DoubleTapped(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        {
+            if (PlayableTracks != null && PlayableTracks.Count > 0)
+            {
+                uint? index = null;
+                if (TrackListView.SelectedItem is DriveItem item)
+                {
+                    index = Convert.ToUInt32(PlayableTracks.IndexOf(item));
+                }
+                else if (TrackListView.SelectedItem is PlaylistItem playlistItem)
+                {
+                    index = Convert.ToUInt32(PlayableTracks.IndexOf(playlistItem.DriveItem));
+                }
+
+                if (index.HasValue)
+                {
+                    await Player.PlayAsync(PlayableTracks, index.Value);
                 }
             }
         }
 
-        private void TrackContextMenu_Closing(Windows.UI.Xaml.Controls.Primitives.FlyoutBase sender, Windows.UI.Xaml.Controls.Primitives.FlyoutBaseClosingEventArgs args)
+        private void AddToPlaylistMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            currentFlyoutContext = null;
+
         }
     }
 }

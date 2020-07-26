@@ -17,7 +17,8 @@
                         EnableGenre="True"
                         EnableReleaseYear="True"
                         EnableTrackNumbers="False"
-                        EnableTrackReordering="True">
+                        EnableTrackReordering="True"
+                        AllowAddToPlaylist="False">
 
         <controls:TrackList.Header>
             <controls:ResponsiveHeader x:Name="PlaylistHeader"
