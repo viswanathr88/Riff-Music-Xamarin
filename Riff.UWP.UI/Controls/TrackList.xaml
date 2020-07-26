@@ -5,33 +5,76 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:data="using:Riff.Data"
+             xmlns:local="using:Riff.UWP.Pages"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="400">
 
+    <UserControl.Resources>
+        <MenuFlyout x:Name="TrackContextMenu"
+                    local:MenuFlyoutExtensions.AssociatedList="{x:Bind TrackListView}">
+
+            <MenuFlyout.MenuFlyoutPresenterStyle>
+                <Style TargetType="MenuFlyoutPresenter">
+                    <Setter Property="Margin"
+                            Value="0,0,20,0" />
+                    <Setter Property="MinWidth"
+                            Value="180" />
+                </Style>
+            </MenuFlyout.MenuFlyoutPresenterStyle>
+
+            <MenuFlyoutItem x:Name="PlayTrackContextMenuItem"
+                            x:Uid="PlayTrackContextMenuItem"
+                            Icon="Play"
+                            Click="PlayTrackContextMenuItem_Click">
+                <MenuFlyoutItem.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control"
+                                         Key="P"
+                                         ScopeOwner="{x:Bind TrackListView}" />
+                </MenuFlyoutItem.KeyboardAccelerators>
+            </MenuFlyoutItem>
+
+            <MenuFlyoutItem x:Name="PlayTrackNextContextMenuItem"
+                            x:Uid="PlayTrackNextContextMenuItem"
+                            Icon="Next"
+                            Click="PlayTrackNextContextMenuItem_Click">
+                <MenuFlyoutItem.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control"
+                                         Key="Q"
+                                         ScopeOwner="{x:Bind TrackListView}" />
+                </MenuFlyoutItem.KeyboardAccelerators>
+            </MenuFlyoutItem>
+
+            <MenuFlyoutSeparator Visibility="{x:Bind AllowAddToPlaylist, Mode=OneWay}" />
+
+            <MenuFlyoutItem x:Name="AddToPlaylistMenuItem"
+                            x:Uid="AddToPlaylistMenuItem"
+                            Icon="MusicInfo"
+                            Click="AddToPlaylistMenuItem_Click"
+                            Visibility="{x:Bind AllowAddToPlaylist, Mode=OneWay}">
+                <MenuFlyoutItem.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control,Shift"
+                                         Key="A"
+                                         ScopeOwner="{x:Bind TrackListView}" />
+                </MenuFlyoutItem.KeyboardAccelerators>
+            </MenuFlyoutItem>
+
+        </MenuFlyout>
+            
+    </UserControl.Resources>
+
     <ListView x:Name="TrackListView"
-              SingleSelectionFollowsFocus="False"
-              IsItemClickEnabled="True"
+              IsItemClickEnabled="False"
               SelectionMode="Single"
+              IsDoubleTapEnabled="True"
+              DoubleTapped="TrackListView_DoubleTapped"
               ShowsScrollingPlaceholders="False"
               ItemsSource="{x:Bind Items, Mode=OneWay}"
               Header="{x:Bind Header, Mode=OneWay}"
-              ItemClick="TrackListView_ItemClick"
               IsSynchronizedWithCurrentItem="False"
               CanReorderItems="{x:Bind EnableTrackReordering, Mode=OneWay}"
               AllowDrop="{x:Bind EnableTrackReordering, Mode=OneWay}"
               CanDragItems="{x:Bind EnableTrackReordering, Mode=OneWay}">
-
-        <ListView.Resources>
-            <SolidColorBrush x:Key="ListViewItemBackgroundSelected"
-                             Color="Transparent" />
-            <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver"
-                             Color="Transparent" />
-            <SolidColorBrush x:Key="ListViewItemForegroundSelected"
-                             Color="{ThemeResource SystemAccentColor}" />
-            <SolidColorBrush x:Key="ListViewItemForegroundSelectedPointerOver"
-                             Color="{ThemeResource SystemAccentColor}" />
-        </ListView.Resources>
 
         <ListView.ItemsPanel>
             <ItemsPanelTemplate>
@@ -48,38 +91,7 @@
                         Value="Stretch" />
                 <Setter Property="Padding"
                         Value="10" />
-                <Setter Property="ContextFlyout">
-                    <Setter.Value>
-                        <MenuFlyout x:Name="TrackContextMenu"
-                                    Opening="TrackContextMenu_Opening"
-                                    Closing="TrackContextMenu_Closing">
-                            <MenuFlyout.MenuFlyoutPresenterStyle>
-                                <Style TargetType="MenuFlyoutPresenter">
-                                    <Setter Property="Margin"
-                                            Value="0,0,20,0" />
-                                    <Setter Property="MinWidth"
-                                            Value="180" />
-                                </Style>
-                            </MenuFlyout.MenuFlyoutPresenterStyle>
-                            <MenuFlyoutItem x:Name="PlayTrackContextMenuItem"
-                                            x:Uid="PlayTrackContextMenuItem"
-                                            Text=""
-                                            Click="PlayTrackContextMenuItem_Click"
-                                            Icon="Play" />
-
-                            <MenuFlyoutSubItem x:Name="AddToSubMenuItem"
-                                               x:Uid="AddToSubMenuItem"
-                                               Text=""
-                                               Icon="Add">
-                                <MenuFlyoutItem x:Name="AddToNowPlayingListMenuItem"
-                                                x:Uid="AddToNowPlayingListMenuItem"
-                                                Text=""
-                                                Click="AddToNowPlayingListMenuItem_Click" />
-
-                                <!-- Populate all playlists when the sub menu opens -->
-                            </MenuFlyoutSubItem>
-                        </MenuFlyout>
-                    </Setter.Value>
+                <Setter Property="ContextFlyout" Value="{StaticResource TrackContextMenu}">
                 </Setter>
             </Style>
         </ListView.ItemContainerStyle>
@@ -102,6 +114,8 @@
                             <!-- Track Year -->
                             <ColumnDefinition Width="{Binding ElementName=TrackListControl, Path=ShowReleaseYear, Converter={StaticResource GridColumnVisibilityConverter}, ConverterParameter='*'}" />
                             <!-- Track Duration -->
+                            <ColumnDefinition Width="Auto" />
+                            <!-- Options button -->
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
@@ -218,6 +232,20 @@
                                    FontSize="13"
                                    Grid.Column="6"
                                    Margin="0,0,10,0" />
+                        
+                        <!-- Options button -->
+                        <Button x:Name="TrackOptionsButton"
+                                Grid.Column="7"
+                                HorizontalAlignment="Stretch"
+                                Style="{ThemeResource TextBlockButtonStyle}"
+                                Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+                                Margin="5,0,0,0"
+                                Padding="0"
+                                Flyout="{StaticResource TrackContextMenu}">
+                            <Button.Content>
+                                <SymbolIcon Symbol="More" />
+                            </Button.Content>
+                        </Button>
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup>

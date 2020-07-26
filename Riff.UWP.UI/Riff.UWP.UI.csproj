@@ -262,6 +262,7 @@
     <Compile Include="ViewModel\Commands\PlayDriveItemsCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayPlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\PlayPlaylistsCommand.cs" />
+    <Compile Include="ViewModel\Commands\PlayTracksCommand.cs" />
     <Compile Include="ViewModel\Commands\RenamePlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\AddToPlaylistCommand.cs" />
     <Compile Include="ViewModel\Commands\SyncCommand.cs" />
@@ -273,6 +274,7 @@
     <Compile Include="ViewModel\IPlayer.cs" />
     <Compile Include="ViewModel\IPlaylistCommands.cs" />
     <Compile Include="ViewModel\ItemWithOverlayViewModel.cs" />
+    <Compile Include="ViewModel\ITrackCommands.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\MediaList.cs" />
     <Compile Include="ViewModel\MediaListItem.cs" />
