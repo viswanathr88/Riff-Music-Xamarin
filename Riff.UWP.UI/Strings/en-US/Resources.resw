@@ -216,6 +216,9 @@
   <data name="ClearPlaylistsSelectionButton.Label" xml:space="preserve">
     <value>Clear selection</value>
   </data>
+  <data name="CollectionSettingsHeader.Text" xml:space="preserve">
+    <value>Collection</value>
+  </data>
   <data name="DeletePlaylistConfirmationDialogCancelButtonText" xml:space="preserve">
     <value>Cancel</value>
   </data>

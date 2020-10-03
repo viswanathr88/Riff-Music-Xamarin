@@ -94,7 +94,7 @@ namespace Riff.UWP.ViewModel
                 var diffList = await Task.Run(() =>
                 {
                     var albums = library.Albums.Get(options);
-                    return Diff.Compare(Items.Select(itemVM => itemVM.Item).ToList(), albums, new AlbumEqualityComparer());
+                    return Diff.Compare(Items, albums, (albumItemVM, album) => albumItemVM.Item.Id == album.Id);
                 });
 
                 Items.ApplyDiff(diffList, (album) => new AlbumItemViewModel(album, library, this));

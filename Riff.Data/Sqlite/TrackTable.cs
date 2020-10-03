@@ -218,9 +218,11 @@ namespace Riff.Data.Sqlite
                 builder.AppendLine("ReleaseYear = @ReleaseYear,");
                 builder.AppendLine("AlbumId = @AlbumId,");
                 builder.AppendLine("GenreId = @GenreId");
+                builder.AppendLine($"WHERE Id = @TrackId");
 
                 command.CommandText = builder.ToString();
                 AddParameters(track, command);
+                command.Parameters.AddWithValue("@TrackId", track.Id.Value);
 
                 command.ExecuteNonQuery();
             }

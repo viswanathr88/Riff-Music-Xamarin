@@ -204,7 +204,7 @@ namespace Riff.Sync
                     if (deltaUrl == string.Empty)
                     {
                         // Read delta url from a previous sync
-                        deltaUrl = preferences.DeltaUrl ?? baseDeltaUrl;
+                        deltaUrl = string.IsNullOrEmpty(preferences.DeltaUrl) ? baseDeltaUrl : preferences.DeltaUrl;
                     }
 
                     var request = new HttpRequestMessage(HttpMethod.Get, deltaUrl);
@@ -271,7 +271,9 @@ namespace Riff.Sync
                         if (response.StatusCode == System.Net.HttpStatusCode.Gone)
                         {
                             // Look for the location header
-                            deltaUrl = response.Headers.Location.ToString();
+                            // deltaUrl = response.Headers.Location.ToString();
+                            deltaUrl = baseDeltaUrl;
+                            preferences.DeltaUrl = string.Empty;
                         }
                     }
                 }
