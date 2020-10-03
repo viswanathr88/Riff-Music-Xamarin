@@ -111,5 +111,22 @@
                      Content="Windows Default"
                      IsChecked="{x:Bind IsChecked(ViewModel.AppTheme, storage:Theme.Default), BindBack=SetTheme, Mode=TwoWay}"
                      Margin="0,0,0,20"/>
+        
+        <!-- Group header for Collection settings -->
+        <!--<TextBlock x:Name="CollectionSettingsHeader"
+                   x:Uid="CollectionSettingsHeader"
+                   Text="Collection"
+                   Style="{StaticResource SubtitleTextBlockStyle}"
+                   Margin="0,0,0,20" />
+
+        <Button x:Name="ClearSyncInfoButton" 
+                Content="Clear sync info"
+                Click="ClearSyncInfoButton_Click"
+                Margin="0,0,0,10"/>
+
+        <Button x:Name="ClearCollectionButton" 
+                Content="Clear collection"
+                Margin="0,0,0,10"/>-->
+
     </StackPanel>
 </local:SettingsPageBase>

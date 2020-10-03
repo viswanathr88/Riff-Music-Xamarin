@@ -100,5 +100,10 @@ namespace Riff.UWP.ViewModel
 
             IsLoggedIn = await this.loginManager.LoginExistsAsync();
         }
+
+        public void ClearSyncInfo()
+        {
+            this.preferences.DeltaUrl = string.Empty;
+        }
     }
 }

@@ -10,25 +10,30 @@ namespace Riff.UWP.UI.Extensions
         Equal
     };
 
-    public sealed class DiffListItem<T>
+    public sealed class DiffListItem<TSource, TTarget>
     {
         public DiffAction Action { get; set; }
 
-        public T SourceItem { get; set; }
+        public TSource SourceItem { get; set; }
 
-        public T TargetItem { get; set; }
+        public TTarget TargetItem { get; set; }
     }
 
-    public sealed class DiffList<T> : List<DiffListItem<T>>
+    public sealed class DiffList<TSource, TTarget> : List<DiffListItem<TSource, TTarget>>
     {
 
     }
 
     public static class Diff
     {
-        public static DiffList<T> Compare<T>(IList<T> source, IList<T> target)
+        public static DiffList<T, T> Compare<T>(IList<T> source, IList<T> target)
         {
             return Compare(source, target, EqualityComparer<T>.Default);
+        }
+
+        public static DiffList<T, T> Compare<T>(IList<T> source, IList<T> target, IEqualityComparer<T> comparer)
+        {
+            return Compare(source, target, (sourceItem, targetItem) => comparer.Equals(sourceItem, targetItem));
         }
 
         /// <summary>
@@ -39,9 +44,9 @@ namespace Riff.UWP.UI.Extensions
         /// <param name="target">Target list</param>
         /// <param name="comparer">Equality comparer</param>
         /// <returns></returns>
-        public static DiffList<T> Compare<T>(IList<T> source, IList<T> target, IEqualityComparer<T> comparer)
+        public static DiffList<TSource, TTarget> Compare<TSource, TTarget>(IList<TSource> source, IList<TTarget> target, Func<TSource, TTarget, bool> match)
         {
-            var diffList = new DiffList<T>();
+            var diffList = new DiffList<TSource, TTarget>();
 
             if (source == target)
             {
@@ -61,12 +66,12 @@ namespace Riff.UWP.UI.Extensions
             var matrix = new int[sourceCount + 1, targetCount + 1];
 
             // Build the LCS matrix
-            int i,j = 0;
+            int i, j;
             for (i = 1; i < sourceCount + 1; i++)
             {
                 for (j = 1; j < targetCount + 1; j++)
                 {
-                    if (comparer.Equals(source[i - 1], target[j - 1]))
+                    if (match(source[i - 1], target[j - 1]))
                     {
                         matrix[i, j] = matrix[i - 1, j - 1] + 1;
                     }
@@ -83,9 +88,9 @@ namespace Riff.UWP.UI.Extensions
 
             while (i > 0 || j > 0)
             {
-                if (i > 0 && j > 0 && comparer.Equals(source[i - 1], target[j - 1]))
+                if (i > 0 && j > 0 && match(source[i - 1], target[j - 1]))
                 {
-                    diffList.Add(new DiffListItem<T>()
+                    diffList.Add(new DiffListItem<TSource, TTarget>()
                     {
                         Action = DiffAction.Equal,
                         SourceItem = source[i - 1],
@@ -98,7 +103,7 @@ namespace Riff.UWP.UI.Extensions
                 {
                     if (j > 0 && (i == 0 || matrix[i, j - 1] >= matrix[i, j - 1]))
                     {
-                        diffList.Add(new DiffListItem<T>()
+                        diffList.Add(new DiffListItem<TSource, TTarget>()
                         {
                             Action = DiffAction.Add,
                             SourceItem = default,
@@ -108,7 +113,7 @@ namespace Riff.UWP.UI.Extensions
                     }
                     else if (i > 0 && (j == 0 || matrix[i,j - 1] < matrix[i - 1, j]))
                     {
-                        diffList.Add(new DiffListItem<T>()
+                        diffList.Add(new DiffListItem<TSource, TTarget>()
                         {
                             Action = DiffAction.Remove,
                             SourceItem = source[i - 1],
@@ -123,7 +128,7 @@ namespace Riff.UWP.UI.Extensions
             return diffList;
         }
 
-        public static void ApplyDiff<T>(this IList<T> list, DiffList<T> diffs)
+        public static void ApplyDiff<T>(this IList<T> list, DiffList<T,T> diffs)
         {
             int index = 0;
             foreach (var diff in diffs)
@@ -144,7 +149,7 @@ namespace Riff.UWP.UI.Extensions
             }
         }
 
-        public static void ApplyDiff<TDest, TSource>(this IList<TDest> list, DiffList<TSource> diffs, Func<TSource, TDest> createDestFn)
+        public static void ApplyDiff<TTarget, TSource>(this IList<TSource> list, DiffList<TSource, TTarget> diffs, Func<TTarget, TSource> createDestFn)
         {
             int index = 0;
             foreach (var diff in diffs)
@@ -163,17 +168,6 @@ namespace Riff.UWP.UI.Extensions
                     index++;
                 }
             }
-        }
-
-        public static void TransformInfo<T>(this IList<T> source, IList<T> target)
-        {
-            TransformInfo(source, target, EqualityComparer<T>.Default);
-        }
-
-        public static void TransformInfo<T>(this IList<T> source, IList<T> target, IEqualityComparer<T> comparer)
-        {
-            var diffList = Compare<T>(source, target, comparer);
-            ApplyDiff(source, diffList);
         }
     }
 }

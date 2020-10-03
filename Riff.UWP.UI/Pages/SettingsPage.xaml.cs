@@ -49,5 +49,10 @@ namespace Riff.UWP.Pages
                 }
             }
         }
+
+        private void ClearSyncInfoButton_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.ClearSyncInfo();
+        }
     }
 }
