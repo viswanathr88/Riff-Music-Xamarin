@@ -301,7 +301,7 @@
       <Version>2.3.200213001</Version>
     </PackageReference>
     <PackageReference Include="Mirage.Mvvm">
-      <Version>3.0.31</Version>
+      <Version>3.0.33</Version>
     </PackageReference>
     <PackageReference Include="MvvmLightLibs">
       <Version>5.4.1.1</Version>

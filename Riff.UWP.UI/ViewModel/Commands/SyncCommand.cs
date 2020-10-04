@@ -17,7 +17,7 @@ namespace Riff.UWP.ViewModel.Commands
 
         protected override bool CanExecute()
         {
-            return syncEngine.State != SyncState.NotStarted || syncEngine.State != SyncState.Syncing;
+            return syncEngine.State != SyncState.NotStarted && syncEngine.State != SyncState.Syncing && syncEngine.State != SyncState.Stopped;
         }
 
         protected override void Run()
